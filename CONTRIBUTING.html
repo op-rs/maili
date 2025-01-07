@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Contributing - The op-alloy Book</title>
+    <title>Contributing - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/CONTRIBUTING.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/CONTRIBUTING.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -277,11 +277,11 @@ please read through this document and discuss the change you wish to make via is
 </ul>
 <h2 id="pull-request-process"><a class="header" href="#pull-request-process">Pull Request Process</a></h2>
 <ol>
-<li><a href="https://github.com/alloy-rs/op-alloy/issues/new">Create an issue</a> for any significant changes. Trivial changes may skip this step.</li>
+<li><a href="https://github.com/op-rs/maili/issues/new">Create an issue</a> for any significant changes. Trivial changes may skip this step.</li>
 <li>Once the change is implemented, ensure that all checks are passing before creating a PR.
 The full CI pipeline can be run locally via the <code>Justfile</code>s in the repository.</li>
 <li>Be sure to update any documentation that has gone stale as a result of the change,
-in the <code>README</code> files, the <a href="https://github.com/alloy-rs/op-alloy/tree/main/book">book</a>, and in rustdoc comments.</li>
+in the <code>README</code> files, the <a href="https://github.com/op-rs/maili/tree/main/book">book</a>, and in rustdoc comments.</li>
 <li>Once your PR is approved by a maintainer, you may merge your pull request yourself
 if you have permissions to do so. Otherwise, the maintainer who approves your pull
 request will add it to the merge queue.</li>
@@ -289,19 +289,19 @@ request will add it to the merge queue.</li>
 <h2 id="working-with-op-stack-specs"><a class="header" href="#working-with-op-stack-specs">Working with OP Stack Specs</a></h2>
 <p>The <a href="https://docs.optimism.io/stack/getting-started">OP Stack</a> is a set of standardized open-source specifications
 that powers Optimism, developed by the Optimism Collective.</p>
-<p><code>op-alloy</code> is a rust implementation of core OP Stack types, transports,
-middleware and more. Not all types and implementation details in <code>op-alloy</code>
+<p><code>maili</code> is a rust implementation of distinguished OP Stack types, transports,
+middleware and more. Not all types and implementation details in <code>maili</code>
 are present in the OP Stack <a href="https://specs.optimism.io/">specs</a>, and on the flipside, not all
-specifications are implemented by <code>op-alloy</code>. That said, <code>op-alloy</code> is
+specifications are implemented by <code>maili</code>. That said, <code>maili</code> is
 entirely <em>based off</em> of the <a href="https://specs.optimism.io/">specs</a>, and new functionality or
-core modifications to <code>op-alloy</code> must be reflected in the <a href="https://specs.optimism.io/">specs</a>.</p>
+core modifications to <code>maili</code> must be reflected in the <a href="https://specs.optimism.io/">specs</a>.</p>
 <p>As such, the first step for introducing changes to the OP Stack is to
 <a href="https://github.com/ethereum-optimism/specs/pulls">open a pr</a> in the <a href="https://github.com/ethereum-optimism/specs">specs repository</a>. These
 changes should target a <a href="https://specs.optimism.io/protocol/isthmus/overview.html">protocol upgrade</a> so that all
 implementations of the OP Stack are able to synchronize and implement
 the changes.</p>
 <p>Once changes are merged in the OP Stack <a href="https://specs.optimism.io/">specs</a> repo, they
-may be added to <code>op-alloy</code> in a <strong>backwards-compatible</strong> way such
+may be added to <code>maili</code> in a <strong>backwards-compatible</strong> way such
 that pre-upgrade functionality persists. The primary way to enable
 backwards-compatibility is by using timestamp-based activation for
 protocol upgrades.</p>

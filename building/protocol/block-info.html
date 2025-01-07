@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>BlockInfo and L2BlockInfo Types - The op-alloy Book</title>
+    <title>BlockInfo and L2BlockInfo Types - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/protocol/block-info.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/protocol/block-info.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -261,14 +261,14 @@
 <p>Optimism defines block info types that encapsulate minimal block header
 information needed by protocol operations.</p>
 <h2 id="blockinfo"><a class="header" href="#blockinfo">BlockInfo</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> type is straightforward, containing the block hash,
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> type is straightforward, containing the block hash,
 number, parent hash, and timestamp.</p>
 <h2 id="l2blockinfo"><a class="header" href="#l2blockinfo">L2BlockInfo</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> extends the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> type for the canonical
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> extends the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.BlockInfo.html"><code>BlockInfo</code></a> type for the canonical
 L2 chain. It contains the "L1 origin" which is a set of block info for the L1
 block that this L2 block "originated".</p>
-<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> provides a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html#method.from_block_and_genesis"><code>from_block_and_gensis</code></a> method to
-construct the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> from a block and <code>ChainGenesis</code>.</p>
+<p><a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> provides a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.L2BlockInfo.html#method.from_block_and_genesis"><code>from_block_and_gensis</code></a> method to
+construct the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.L2BlockInfo.html"><code>L2BlockInfo</code></a> from a block and <code>ChainGenesis</code>.</p>
 <!-- Links -->
 
                     </main>

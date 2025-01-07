@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>System Config - The op-alloy Book</title>
+    <title>System Config - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/genesis/system-config.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/genesis/system-config.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -258,34 +258,6 @@
 
 </style>
 <h1 id="system-config"><a class="header" href="#system-config">System Config</a></h1>
-<p>The system configuration is a set of configurable chain parameters
-defined in a contract on L1. These parameters can be changed through
-the system config contract, emitting events that are picked up by
-the <a href="https://specs.optimism.io/protocol/derivation.html">rollup node derivation process</a>. To dive deeper
-into the System Config, visit the
-<a href="https://specs.optimism.io/protocol/system-config.html#system-config">OP Stack Specifications</a>.</p>
-<h2 id="systemconfig-type"><a class="header" href="#systemconfig-type"><code>SystemConfig</code> Type</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type is defined in
-<a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a>.</p>
-<p>Parameters defined in the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> are expected to be
-updated through L1 receipts, using the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts"><code>update_with_receipts</code></a> method.</p>
-<h2 id="holocene-updates"><a class="header" href="#holocene-updates">Holocene Updates</a></h2>
-<p>The <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene Hardfork</a> introduced an update to the
-<a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type, adding EIP-1559 parameters to the config.</p>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html"><code>SystemConfig</code></a> type in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> provides
-a method called <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params"><code>eip_1559_params</code></a> that returns the EIP-1559 parameters
-encoded as a <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.B64.html"><code>B64</code></a>.</p>
-<!-- Links -->
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-protocol -->
-<!-- op-alloy-consensus -->
-<!-- Hardforks -->
-<!-- OP Stack Specs -->
-<!-- External -->
-<!-- Alloy -->
-<!-- Kona links -->
-<!-- People -->
 
                     </main>
 

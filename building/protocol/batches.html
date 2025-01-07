@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Batches - The op-alloy Book</title>
+    <title>Batches - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/protocol/batches.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/protocol/batches.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -258,27 +258,27 @@
 
 </style>
 <h1 id="batches"><a class="header" href="#batches">Batches</a></h1>
-<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> contains a list of transactions to be included in a specific
+<p>A <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html">Batch</a> contains a list of transactions to be included in a specific
 L2 block. Since the <a href="https://specs.optimism.io/protocol/delta/overview.html">Delta hardfork</a>, there are two Batch types or
-variants: <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.</p>
+variants: <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> and <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.</p>
 <h2 id="where-batches-fit-in-the-op-stack"><a class="header" href="#where-batches-fit-in-the-op-stack">Where Batches fit in the OP Stack</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> is the highest-level data type in the OP Stack
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html">Batch</a> is the highest-level data type in the OP Stack
 derivation process that comes prior to building payload attributes.
-A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> is constructed by taking the raw data from a
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>, decompressing it, and decoding the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a>
+A <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html">Batch</a> is constructed by taking the raw data from a
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html">Channel</a>, decompressing it, and decoding the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html">Batch</a>
 from this decompressed data.</p>
-<p>Alternatively, when looking at the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a> type from a batching
-perspective, and not from the derivation perspective, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html">Batch</a>
+<p>Alternatively, when looking at the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html">Batch</a> type from a batching
+perspective, and not from the derivation perspective, the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html">Batch</a>
 type contains a list of L2 transactions and is compressed into the
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> type. In turn, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> is split
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a> type. In turn, the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a> is split
 into frames which are posted to the data availability layer through batcher
 transactions.</p>
 <h2 id="contents-of-a-batch"><a class="header" href="#contents-of-a-batch">Contents of a <code>Batch</code></a></h2>
-<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> is either a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> or a
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>, each with their own contents. Below,
+<p>A <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> is either a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> or a
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>, each with their own contents. Below,
 these types are broken down in their respective sections.</p>
 <h3 id="singlebatch-type"><a class="header" href="#singlebatch-type"><code>SingleBatch</code> Type</a></h3>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> type contains the following.</p>
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> type contains the following.</p>
 <ul>
 <li>A <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.BlockHash.html"><code>BlockHash</code></a> parent hash that represents the parent L2 block.</li>
 <li>A <code>u64</code> epoch number that identifies the <a href="https://specs.optimism.io/glossary.html?highlight=Epoch#sequencing-epoch">epoch</a> for this batch.</li>
@@ -286,11 +286,11 @@ these types are broken down in their respective sections.</p>
 <li>The timestamp for the batch as a <code>u64</code>.</li>
 <li>A list of EIP-2718 encoded transactions (represented as <a href="https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html"><code>Bytes</code></a>).</li>
 </ul>
-<p>In order to validate the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> once decoded,
-the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.check_batch"><code>SingleBatch::check_batch</code></a> method should be used,
+<p>In order to validate the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> once decoded,
+the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html#method.check_batch"><code>SingleBatch::check_batch</code></a> method should be used,
 providing the rollup config, l1 blocks, l2 safe head, and inclusion block.</p>
 <h3 id="spanbatch-type"><a class="header" href="#spanbatch-type"><code>SpanBatch</code> Type</a></h3>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a> type (available since the <a href="https://specs.optimism.io/protocol/delta/overview.html">Delta hardfork</a>)
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a> type (available since the <a href="https://specs.optimism.io/protocol/delta/overview.html">Delta hardfork</a>)
 comprises the data needed to build a "span" of multiple L2 blocks. It contains
 the following data.</p>
 <ul>
@@ -298,36 +298,36 @@ the following data.</p>
 <li>The l1 origin check (the first 20 bytes of the last block's l1 origin hash).</li>
 <li>The genesis timestamp.</li>
 <li>The chain id.</li>
-<li>A list of <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatchElement.html"><code>SpanBatchElement</code></a>s. These are similar to
-the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> type but don't contain the parent hash
+<li>A list of <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatchElement.html"><code>SpanBatchElement</code></a>s. These are similar to
+the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> type but don't contain the parent hash
 and epoch hash for this L2 block.</li>
 <li>Origin bits.</li>
 <li>Block transaction counts.</li>
 <li>Span batch transactions which contain information for transactions in a span batch.</li>
 </ul>
-<p>Similar to the <code>SingleBatch</code> type discussed above, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a> type
-must be validated once decoded. For this, the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html#method.check_batch"><code>SpanBatch::check_batch</code></a>
+<p>Similar to the <code>SingleBatch</code> type discussed above, the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a> type
+must be validated once decoded. For this, the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html#method.check_batch"><code>SpanBatch::check_batch</code></a>
 method is available.</p>
 <p>After the <a href="https://specs.optimism.io/protocol/holocene/overview.html">Holocene hardfork</a> was introduced, span batch validation is greatly
 simplified to be forwards-invalidating instead of backwards-invalidating, so a new
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html#method.check_batch_prefix"><code>SpanBatch::check_batch_prefix</code></a> method provides a way to validate
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html#method.check_batch_prefix"><code>SpanBatch::check_batch_prefix</code></a> method provides a way to validate
 each batch as it is loaded, in an iterative fashion.</p>
 <h2 id="batch-encoding"><a class="header" href="#batch-encoding">Batch Encoding</a></h2>
 <p>The first byte of the decompressed channel data is the
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.BatchType.html"><code>BatchType</code></a>, which identifies whether the batch is a
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> or a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.
-From there, the respective type is decoded, and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.RawSpanBatch.html#method.derive">derived</a>
-in the case of the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.</p>
-<p>The <code>Batch</code> encoding format for the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> is
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.BatchType.html"><code>BatchType</code></a>, which identifies whether the batch is a
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> or a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.
+From there, the respective type is decoded, and <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.RawSpanBatch.html#method.derive">derived</a>
+in the case of the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html"><code>SpanBatch</code></a>.</p>
+<p>The <code>Batch</code> encoding format for the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html"><code>SingleBatch</code></a> is
 broken down <a href="https://specs.optimism.io/protocol/derivation.html#batch-format">in the specs</a>.</p>
 <h2 id="the-batch-type"><a class="header" href="#the-batch-type">The <code>Batch</code> Type</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> type itself only provides two useful methods.</p>
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> type itself only provides two useful methods.</p>
 <ul>
-<li><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html#method.timestamp"><code>timestamp</code></a> returns the timestamp of the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a></li>
-<li><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html#method.decode"><code>deocde</code></a>, constructs a new <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> from the provided
+<li><a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html#method.timestamp"><code>timestamp</code></a> returns the timestamp of the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a></li>
+<li><a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html#method.decode"><code>deocde</code></a>, constructs a new <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> from the provided
 raw, decompressed batch data and rollup config.</li>
 </ul>
-<p>Within each <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> variant, the individual types contain
+<p>Within each <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> variant, the individual types contain
 more functionality.</p>
 <!-- Links -->
 

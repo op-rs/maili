@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Create a new L1BlockInfoTx Hardfork Variant - The op-alloy Book</title>
+    <title>Create a new L1BlockInfoTx Hardfork Variant - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/examples/new-l1-block-info-tx-hardfork.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/examples/new-l1-block-info-tx-hardfork.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -257,92 +257,7 @@
 }
 
 </style>
-<h1 id="create-a-l1blockinfotx-variant-for-a-new-hardfork"><a class="header" href="#create-a-l1blockinfotx-variant-for-a-new-hardfork">Create a L1BlockInfoTx Variant for a new Hardfork</a></h1>
-<p>This example walks through creating a variant of the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.L1BlockInfoTx.html"><code>L1BlockInfoTx</code></a>
-for a new Hardfork.</p>
-<div class="mdbook-alerts mdbook-alerts-note">
-<p class="mdbook-alerts-title">
-  <span class="mdbook-alerts-icon"></span>
-  note
-</p>
-<p>This example is very verbose.
-To grok required changes, view <a href="https://github.com/alloy-rs/op-alloy/pull/130/files">this PR diff</a>
-which introduces Isthmus hardfork changes to the <code>L1BlockInfoTx</code> with a new variant.</p>
-</div>
-<h2 id="required-genesis-updates"><a class="header" href="#required-genesis-updates">Required Genesis Updates</a></h2>
-<p>The first updates that need to be made are to <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/index.html"><code>op-alloy-genesis</code></a>
-types, namely the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/struct.RollupConfig.html"><code>RollupConfig</code></a> and <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/struct.HardForkConfiguration.html"><code>HardForkConfiguration</code></a>.</p>
-<p>First, add a timestamp field to the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/struct.RollupConfig.html"><code>RollupConfig</code></a>. Let's use the
-hardfork name "Glacier" as an example.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub struct RollupConfig {
-   ...
-   /// `glacier_time` sets the activation time for the Glacier network upgrade.
-   /// Active if `glacier_time` != None &amp;&amp; L2 block timestamp &gt;= Some(glacier_time), inactive
-   /// otherwise.
-   #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-   pub glacier_time: Option&lt;u64&gt;,
-   ...
-}
-<span class="boring">}</span></code></pre></pre>
-<p>Add an accessor on the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/struct.RollupConfig.html"><code>RollupConfig</code></a> to provide a way of checking whether the
-"Glacier" hardfork is active for a given timestamp. Also update the prior hardfork
-accessor to call this method (let's use "Isthmus" as the prior hardfork).</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>    /// Returns true if Isthmus is active at the given timestamp.
-    pub fn is_isthmus_active(&amp;self, timestamp: u64) -&gt; bool {
-        self.isthmus_time.map_or(false, |t| timestamp &gt;= t) || self.is_glacier_active(timestamp)
-    }
-
-    /// Returns true if Glacier is active at the given timestamp.
-    pub fn is_glacier_active(&amp;self, timestamp: u64) -&gt; bool {
-        self.glacier_time.map_or(false, |t| timestamp &gt;= t)
-    }
-<span class="boring">}</span></code></pre></pre>
-<p>Lastly, add the "Glacier" timestamp to the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/struct.HardForkConfiguration.html"><code>HardForkConfiguration</code></a>.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub struct HardForkConfiguration {
-    ...
-    /// Glacier hardfork activation time
-    pub glacier_time: Option&lt;u64&gt;,
-}
-<span class="boring">}</span></code></pre></pre>
-<h2 id="protocol-changes"><a class="header" href="#protocol-changes">Protocol Changes</a></h2>
-<p>Introduce a new <code>glacier.rs</code> module containing a <code>L1BlockInfoGlacier</code> type
-in <a href="https://github.com/alloy-rs/op-alloy/blob/main/crates/protocol/src/info/mod.rs"><code>op_alloy_genesis::info</code> module</a>.</p>
-<p>This should include a few methods used in the <code>L1BlockInfoTx</code> later.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>    pub fn encode_calldata(&amp;self) -&gt; Bytes { ... }
-
-    pub fn decode_calldata(r: &amp;[u8]) -&gt; Result&lt;Self, DecodeError&gt; { ... }
-<span class="boring">}</span></code></pre></pre>
-<p>Use other hardfork variants like the <a href="https://github.com/alloy-rs/op-alloy/blob/main/crates/protocol/src/info/ecotone.rs"><code>L1BlockInfoEcotone</code></a>
-for reference.</p>
-<p>Next, add the new "Glacier" variant to the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.L1BlockInfoTx.html"><code>L1BlockInfoTx</code></a>.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>pub enum L1BlockInfoTx {
-   ...
-   Glacier(L1BlockInfoGlacier)
-}
-<span class="boring">}</span></code></pre></pre>
-<p>Update <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.L1BlockInfoTx.html#method.try_new"><code>L1BlockInfoTx::try_new</code></a> to construct the <code>L1BlockInfoGlacier</code>
-if the hardfork is active using the <code>RollupConfig::is_glacier_active</code>.</p>
-<p>Also, be sure to update <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.L1BlockInfoTx.html#method.decode_calldata"><code>L1BlockInfoTx::decode_calldata</code></a>
-with the new variant decoding, as well as other <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.L1BlockInfoTx.html"><code>L1BlockInfoTx</code></a>
-methods.</p>
-<p>Once some tests are added surrounding the decoding and encoding of the new
-<code>L1BlockInfoGlacier</code> variant, all required changes are complete!</p>
-<p>Now, <a href="https://github.com/alloy-rs/op-alloy/pull/130/files">this example PR diff</a> introducing the Isthmus changes should
-make sense, since it effectively implements the above changes for the Isthmus
-hardfork (replacing "Glacier" with "Isthmus"). Notice, Isthmus introduces
-some new "operator fee" fields as part of it's <code>L1BlockInfoIsthmus</code> type.
-Some new error variants to the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.BlockInfoError.html"><code>BlockInfoError</code></a> are needed as well.</p>
-<!-- Links -->
+<h1 id="create-a-new-l1blockinfotx-hardfork-variant"><a class="header" href="#create-a-new-l1blockinfotx-hardfork-variant">Create a new L1BlockInfoTx Hardfork Variant</a></h1>
 
                     </main>
 

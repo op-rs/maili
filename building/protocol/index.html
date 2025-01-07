@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Protocol - The op-alloy Book</title>
+    <title>Protocol - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/protocol/README.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/protocol/README.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -258,32 +258,32 @@
 
 </style>
 <h1 id="protocol"><a class="header" href="#protocol">Protocol</a></h1>
-<p><a href="https://crates.io/crates/op-alloy-protocol"><img src="https://img.shields.io/crates/v/op-alloy-protocol.svg" alt="op-alloy-protocol crate"></a></p>
-<p>The <a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> crate contains types, constants, and methods
+<p><a href="https://crates.io/crates/maili-protocol"><img src="https://img.shields.io/crates/v/maili-protocol.svg" alt="maili-protocol crate"></a></p>
+<p>The <a href="https://crates.io/crates/maili-protocol"><code>maili-protocol</code></a> crate contains types, constants, and methods
 specific to Optimism derivation and batch-submission.</p>
-<p><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> supports <code>no_std</code>.</p>
+<p><a href="https://crates.io/crates/maili-protocol"><code>maili-protocol</code></a> supports <code>no_std</code>.</p>
 <h2 id="background"><a class="header" href="#background">Background</a></h2>
 <p>Protocol types are primarily used for L2 chain derivation. This section will
 break down L2 chain derivation as it relates to types defined in
-<code>op-alloy-protocol</code> - that is, from the raw L2 chain data posted to L1, to the
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> type. And since the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> type naively breaks up
+<code>maili-protocol</code> - that is, from the raw L2 chain data posted to L1, to the
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> type. And since the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> type naively breaks up
 into the payload attributes, once executed, it becomes the canonical L2 block!
 Note though, this provides an incredibly simplified introduction. It is advised
 to reference <a href="https://specs.optimism.io/protocol/derivation.html#overview">the specs</a> for the most up-to-date information regarding
 derivation.</p>
 <p>The L2 chain is derived from data posted to the L1 chain - either as calldata
 or blob data. Data is iteratively pulled from each L1 block and translated
-into the first type defined by <code>op-alloy-protocol</code>: the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> type.</p>
-<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frames">parsed</a> from the raw data. Each <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>
-is a part of a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>, the next type one level up in deriving
-L2 blocks. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>s have IDs that frames reference. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s
-are <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame">added</a> iteratively to the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a>. Once a
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.is_ready">is ready</a>, it can be used to read a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>.</p>
-<p>Since a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> stitches together frames, it contains the raw frame
-data. In order to turn this <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html"><code>Channel</code></a> data into a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>,
+into the first type defined by <code>maili-protocol</code>: the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a> type.</p>
+<p><a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s are <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.parse_frames">parsed</a> from the raw data. Each <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>
+is a part of a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a>, the next type one level up in deriving
+L2 blocks. <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a>s have IDs that frames reference. <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s
+are <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html#method.add_frame">added</a> iteratively to the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a>. Once a
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a> <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html#method.is_ready">is ready</a>, it can be used to read a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a>.</p>
+<p>Since a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a> stitches together frames, it contains the raw frame
+data. In order to turn this <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html"><code>Channel</code></a> data into a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a>,
 it needs to be decompressed using the respective (de)compression algorithm
 (see <a href="https://specs.optimism.io/protocol/derivation.html#channel-format">the channel specs</a> for more detail on this). Once
-decompressed, the raw data can be <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html#method.decode">decoded</a> into the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>
+decompressed, the raw data can be <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html#method.decode">decoded</a> into the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a>
 type.</p>
 <h2 id="sections"><a class="header" href="#sections">Sections</a></h2>
 <h4 id="core-derviation-types-discussed-above"><a class="header" href="#core-derviation-types-discussed-above">Core Derviation Types (discussed above)</a></h4>

@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Transform a Batch into Frames - The op-alloy Book</title>
+    <title>Transform a Batch into Frames - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/examples/batch-to-frames.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/examples/batch-to-frames.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -272,40 +272,40 @@
 </p>
 <p>Steps and handling of types with respect to chain tip, ordering of frames, re-orgs, and
 more are not covered by this example. This example solely demonstrates the most trivial
-way to transform an individual <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
+way to transform an individual <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> into <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
 </div>
-<p>This example walks through transforming a <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> into <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
+<p>This example walks through transforming a <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> into <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s.</p>
 <p>Effectively, this example demonstrates the <em>encoding</em> process from an L2 batch into the
 serialized bytes that are posted to the data availability layer.</p>
 <h2 id="walkthrough"><a class="header" href="#walkthrough">Walkthrough</a></h2>
 <p>The high level transformation is the following.</p>
 <pre><code>Batch -&gt; decompressed batch data -&gt; ChannelOut -&gt; frames[] -&gt; bytes[]
 </code></pre>
-<p>Given the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a>, the first step to encode the batch
-using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode"><code>Batch::encode()</code></a> method. The output bytes
+<p>Given the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a>, the first step to encode the batch
+using the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html#method.encode"><code>Batch::encode()</code></a> method. The output bytes
 need to then be compressed prior to adding them to the
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.</p>
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.</p>
 <div class="mdbook-alerts mdbook-alerts-note">
 <p class="mdbook-alerts-title">
   <span class="mdbook-alerts-icon"></span>
   note
 </p>
-<p>The <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a> type also provides a method for adding
-the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html"><code>Batch</code></a> itself, handling encoding and compression, but
+<p>The <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a> type also provides a method for adding
+the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html"><code>Batch</code></a> itself, handling encoding and compression, but
 this method is not available yet.</p>
 </div>
-<p>Once compressed using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/fn.compress_brotli.html"><code>compress_brotli</code></a> method, the
-compressed bytes can be added to a newly constructed <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.
-As long as the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a> has <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.ready_bytes"><code>ready_bytes()</code></a>,
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s can be constructed using the
-<a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.output_frame"><code>ChannelOut::output_frame()</code></a> method, specifying the maximum
+<p>Once compressed using the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/fn.compress_brotli.html"><code>compress_brotli</code></a> method, the
+compressed bytes can be added to a newly constructed <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>.
+As long as the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a> has <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html#method.ready_bytes"><code>ready_bytes()</code></a>,
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s can be constructed using the
+<a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html#method.output_frame"><code>ChannelOut::output_frame()</code></a> method, specifying the maximum
 frame size.</p>
-<p>Once <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are returned from the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>,
-they can be <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a> into raw, serialized data
+<p>Once <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s are returned from the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html"><code>ChannelOut</code></a>,
+they can be <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a> into raw, serialized data
 ready to be batch-submitted to the data-availability layer.</p>
 <h2 id="running-this-example"><a class="header" href="#running-this-example">Running this example:</a></h2>
 <ul>
-<li>Clone the examples repository: <code>git clone git@github.com:alloy-rs/op-alloy.git</code></li>
+<li>Clone the examples repository: <code>git clone git@github.com:op-rs/maili.git</code></li>
 <li>Run: <code>cargo run --example batch_to_frames</code></li>
 </ul>
 <pre><pre class="playground"><code class="language-rust">//! An example encoding and decoding a [SingleBatch].
@@ -325,10 +325,10 @@ ready to be batch-submitted to the data-availability layer.</p>
 #[cfg(feature = "std")]
 fn main() {
     use alloy_primitives::BlockHash;
-    use op_alloy_genesis::RollupConfig;
-    use op_alloy_protocol::{
+    use maili_protocol::{
         Batch, ChannelId, ChannelOut, CompressionAlgo, SingleBatch, VariantCompressor,
     };
+    use op_alloy_genesis::RollupConfig;
 
     // Use the example transaction
     let transactions = example_transactions();
@@ -422,10 +422,8 @@ fn main() {
     /* not implemented for no_std */
 }</code></pre></pre>
 <!-- Links -->
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-protocol -->
-<!-- op-alloy-consensus -->
+<!-- maili -->
+<!-- maili-protocol -->
 <!-- Hardforks -->
 <!-- OP Stack Specs -->
 <!-- External -->

@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Getting Started - The op-alloy Book</title>
+    <title>Getting Started - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/starting.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/starting.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -258,33 +258,27 @@
 
 </style>
 <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
-<p><a href="https://github.com/alloy-rs/op-alloy">op-alloy</a> consists of a number of crates that provide a range of functionality
+<p>[maili][maili] consists of a number of crates that provide a range of functionality
 essential for interfacing with any OP Stack chain.</p>
-<p>The most succinct way to work with <code>op-alloy</code> is to add the <a href="https://crates.io/crates/op-alloy"><code>op-alloy</code></a> crate
+<p>The most succinct way to work with <code>maili</code> is to add the <a href="https://crates.io/crates/maili"><code>maili</code></a> crate
 with the <code>full</code> feature flag from the command-line using Cargo.</p>
-<pre><code class="language-txt">cargo add op-alloy --features full
+<pre><code class="language-txt">cargo add maili --features full
 </code></pre>
 <p>Alternatively, you can add the following to your <code>Cargo.toml</code> file.</p>
-<pre><code class="language-txt">op-alloy = { version = "0.5", features = ["full"] }
+<pre><code class="language-txt">maili = { version = "0.5", features = ["full"] }
 </code></pre>
 <p>For more fine-grained control over the features you wish to include, you can add the individual
-crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> crate with the features you need.</p>
-<p>After <code>op-alloy</code> is added as a dependency, crates re-exported by <code>op-alloy</code> are now available.</p>
+crates to your <code>Cargo.toml</code> file, or use the <code>maili</code> crate with the features you need.</p>
+<p>After <code>maili</code> is added as a dependency, crates re-exported by <code>maili</code> are now available.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>use op_alloy::{
-   genesis::{RollupConfig, SystemConfig},
-   consensus::OpBlock,
+</span>use maili::{
    protocol::BlockInfo,
-   network::Optimism,
    provider::ext::engine::OpEngineApi,
-   rpc_types::OpTransactionReceipt,
-   rpc_jsonrpsee::traits::RollupNode,
-   rpc_types_engine::OpAttributesWithParent,
 };
 <span class="boring">}</span></code></pre></pre>
 <h2 id="features"><a class="header" href="#features">Features</a></h2>
-<p>The <a href="https://crates.io/crates/op-alloy"><code>op-alloy</code></a> defines many <a href="https://docs.rs/crate/op-alloy/latest/features">feature flags</a> including the following.</p>
+<p>The <a href="https://crates.io/crates/maili"><code>maili</code></a> defines many <a href="https://docs.rs/crate/maili/latest/features">feature flags</a> including the following.</p>
 <p>Default</p>
 <ul>
 <li><code>std</code></li>
@@ -295,7 +289,7 @@ crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> cr
 <ul>
 <li><code>full</code></li>
 </ul>
-<p>The <code>k256</code> feature flag enables the <code>k256</code> feature on the <code>op-alloy-consensus</code> crate.</p>
+<p>The <code>k256</code> feature flag enables the <code>k256</code> feature on the <code>maili-consensus</code> crate.</p>
 <ul>
 <li><code>k256</code></li>
 </ul>
@@ -308,34 +302,22 @@ crates to your <code>Cargo.toml</code> file, or use the <code>op-alloy</code> cr
 <li><code>serde</code></li>
 </ul>
 <p>Additionally, individual crates can be enabled using their shorthand names.
-For example, the <code>consensus</code> feature flag provides the <code>op-alloy-consensus</code> re-export
-so <code>op-alloy-consensus</code> types can be used from <code>op-alloy</code> through <code>op_alloy::consensus::InsertTypeHere</code>.</p>
+For example, the <code>protocol</code> feature flag provides the <code>maili-protocol</code> re-export
+so <code>maili-protocol</code> types can be used from <code>maili</code> through <code>maili::protocol::InsertTypeHere</code>.</p>
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
 <ul>
-<li><a href="https://crates.io/crates/op-alloy-network"><code>op-alloy-network</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-provider"><code>op-alloy-provider</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-jsonrpsee"><code>op-alloy-rpc-jsonrpsee</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a> (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/maili-protocol"><code>maili-protocol</code></a> (supports <code>no_std</code>)</li>
+<li><a href="https://crates.io/crates/maili-provider"><code>maili-provider</code></a></li>
 </ul>
 <h2 id="no_std"><a class="header" href="#no_std"><code>no_std</code></a></h2>
 <p>As noted above, the following crates are <code>no_std</code> compatible.</p>
 <ul>
-<li><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-protocol"><code>op-alloy-protocol</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types-engine"><code>op-alloy-rpc-types-engine</code></a></li>
-<li><a href="https://crates.io/crates/op-alloy-rpc-types"><code>op-alloy-rpc-types</code></a></li>
+<li><a href="https://crates.io/crates/maili-protocol"><code>maili-protocol</code></a></li>
 </ul>
-<p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh">check_no_std</a>
+<p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/op-rs/maili/blob/main/scripts/check_no_std.sh">check_no_std</a>
 script is updated to include this crate once <code>no_std</code> compatible.</p>
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-protocol -->
-<!-- op-alloy-consensus -->
+<!-- maili -->
+<!-- maili-protocol -->
 <!-- Hardforks -->
 <!-- OP Stack Specs -->
 <!-- External -->

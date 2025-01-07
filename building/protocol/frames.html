@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Frames - The op-alloy Book</title>
+    <title>Frames - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/protocol/frames.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/protocol/frames.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -258,18 +258,18 @@
 
 </style>
 <h1 id="frames"><a class="header" href="#frames">Frames</a></h1>
-<p><a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s are the lowest level data format in the OP Stack protocol.</p>
+<p><a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s are the lowest level data format in the OP Stack protocol.</p>
 <h2 id="where-frames-fit-in-the-op-stack"><a class="header" href="#where-frames-fit-in-the-op-stack">Where Frames fit in the OP Stack</a></h2>
 <p>Transactions posted to the data availability layer of the rollup
-contain one or multiple <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a>s. Frames are chunks of raw data that
-belong to a given <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html">Channel</a>, the next, higher up data format in the
+contain one or multiple <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html">Frame</a>s. Frames are chunks of raw data that
+belong to a given <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html">Channel</a>, the next, higher up data format in the
 OP Stack protocol. Importantly, a given transaction can contain
 a variety of frames from <em>different</em> channels, allowing maximum flexibility
 when breaking up channels into batcher transactions.</p>
 <h2 id="contents-of-a-frame"><a class="header" href="#contents-of-a-frame">Contents of a Frame</a></h2>
-<p>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html">Frame</a> is comprised of the following items.</p>
+<p>A <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html">Frame</a> is comprised of the following items.</p>
 <ul>
-<li>A <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html"><code>ChannelId</code></a> which is a 16 byte long identifier for the channel that
+<li>A <a href="https://docs.rs/maili-protocol/latest/maili_protocol/type.ChannelId.html"><code>ChannelId</code></a> which is a 16 byte long identifier for the channel that
 the given frame belongs to.</li>
 <li>A <code>number</code> that identifies the index of the frame within the channel. Frames
 are 0-indexed and are bound to <code>u16</code> size limit.</li>
@@ -285,25 +285,25 @@ The encoding can be represented as the following concatenated bytes.</p>
 <p>Where <code>DERIVATION_VERSION_0</code> is a single byte (<code>0x00</code>) indicating the derivation
 version including how the frames are encoded. Currently, the only supported
 derivation version is <code>0</code>.</p>
-<p><code>encoded_frame_0</code>, <code>encoded_frame_1</code>, and so on, are all <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s encoded
-as raw bytes. A single encoded <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> can be represented by the following
+<p><code>encoded_frame_0</code>, <code>encoded_frame_1</code>, and so on, are all <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s encoded
+as raw bytes. A single encoded <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a> can be represented by the following
 concatenation of it's fields.</p>
 <pre><code>encoded_frame = channel_id ++ frame_number ++ frame_data_length ++ frame_data ++ is_last
 </code></pre>
 <p>Where <code>++</code> represents concatenation. The frame's fields map to it's encoding.</p>
 <ul>
-<li><code>channel_id</code> is the 16 byte long <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.id"><code>Frame::id</code></a>.</li>
-<li><code>frame_number</code> is the 2 byte long (or <code>u16</code>) <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.number"><code>Frame::number</code></a>.</li>
+<li><code>channel_id</code> is the 16 byte long <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.id"><code>Frame::id</code></a>.</li>
+<li><code>frame_number</code> is the 2 byte long (or <code>u16</code>) <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.number"><code>Frame::number</code></a>.</li>
 <li><code>frame_data_length</code> and <code>frame_data</code> provide the necessary details to decode
-the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.data"><code>Frame::data</code></a>, where <code>frame_data_length</code> is 4 bytes long (or <code>u32</code>).</li>
-<li><code>is_last</code> is a single byte <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.is_last"><code>Frame::is_last</code></a>.</li>
+the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.data"><code>Frame::data</code></a>, where <code>frame_data_length</code> is 4 bytes long (or <code>u32</code>).</li>
+<li><code>is_last</code> is a single byte <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.is_last"><code>Frame::is_last</code></a>.</li>
 </ul>
-<h2 id="op-alloys-frame-type"><a class="header" href="#op-alloys-frame-type">op-alloy's <code>Frame</code> Type</a></h2>
-<p><a href="https://crates.io/crate/op-alloy-protocol"><code>op-alloy-protocol</code></a> provides the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a> type with a few useful
-methods. <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html"><code>Frame</code></a>s can be encoded and decoded using the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a>
-and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode"><code>Frame::decode</code></a> methods. Given the raw batcher transaction data or blob data
+<h2 id="mailis-frame-type"><a class="header" href="#mailis-frame-type">maili's <code>Frame</code> Type</a></h2>
+<p><a href="https://crates.io/crate/maili-protocol"><code>maili-protocol</code></a> provides the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a> type with a few useful
+methods. <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html"><code>Frame</code></a>s can be encoded and decoded using the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.encode"><code>Frame::encode</code></a>
+and <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.decode"><code>Frame::decode</code></a> methods. Given the raw batcher transaction data or blob data
 containing the concatenated derivation version and contiguous list of encoded frames,
-the <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frame"><code>Frame::parse_frame</code></a> and <a href="https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frames"><code>Frame::parse_frames</code></a> methods
+the <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.parse_frame"><code>Frame::parse_frame</code></a> and <a href="https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.parse_frames"><code>Frame::parse_frames</code></a> methods
 provide ways to decode single and multiple frames, respectively.</p>
 <!-- Links -->
 

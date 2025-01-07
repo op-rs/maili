@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Rollup Config - The op-alloy Book</title>
+    <title>Rollup Config - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/genesis/rollup-config.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/genesis/rollup-config.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -257,44 +257,7 @@
 }
 
 </style>
-<h1 id="rollup-configs"><a class="header" href="#rollup-configs">Rollup Configs</a></h1>
-<p>Rollup configurations are a consensus construct used to configure an Optimism Consensus client.
-When an OP Stack chain is deployed into production or consensus nodes are configured to sync the chain,
-certain consensus parameters can be configured. These parameters are defined in the
-<a href="https://specs.optimism.io/protocol/configurability.html">OP Stack specs</a>.</p>
-<p>Consensus parameters are consumed by OP Stack software through the <code>RollupConfig</code> type defined in the
-<a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> crate.</p>
-<h2 id="rollupconfig-type"><a class="header" href="#rollupconfig-type"><code>RollupConfig</code> Type</a></h2>
-<p>The <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/struct.RollupConfig.html"><code>RollupConfig</code></a> type is defined in <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a>.</p>
-<p>A predefined rollup config can be loaded from a given L2 chain id using
-the <a href="https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/fn.rollup_config_from_chain_id.html"><code>rollup_config_from_chain_id</code></a> method. An example is shown below.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use op_alloy_genesis::{OP_MAINNET_CONFIG, rollup_config_from_chain_id};
-
-let op_mainnet_config = rollup_config_from_chain_id(10).expect("infallible");
-assert_eq!(OP_MAINNET_CONFIG, op_mainnet_config);
-<span class="boring">}</span></code></pre></pre>
-<p>The <code>OP_MAINNET_CONFIG</code> is one of the predefined rollup configs exported by
-the <a href="https://crates.io/crates/op-alloy-genesis"><code>op-alloy-genesis</code></a> crate. Other predefined configs include
-the following.</p>
-<ul>
-<li><code>OP_MAINNET_CONFIG</code></li>
-<li><code>OP_SEPOLIA_CONFIG</code></li>
-<li><code>BASE_MAINNET_CONFIG</code></li>
-<li><code>BASE_SEPOLIA_CONFIG</code></li>
-</ul>
-<!-- Links -->
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-protocol -->
-<!-- op-alloy-consensus -->
-<!-- Hardforks -->
-<!-- OP Stack Specs -->
-<!-- External -->
-<!-- Alloy -->
-<!-- Kona links -->
-<!-- People -->
+<h1 id="rollup-config"><a class="header" href="#rollup-config">Rollup Config</a></h1>
 
                     </main>
 

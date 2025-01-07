@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Consensus - The op-alloy Book</title>
+    <title>Consensus - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/building/consensus.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/building/consensus.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -258,75 +258,6 @@
 
 </style>
 <h1 id="consensus"><a class="header" href="#consensus">Consensus</a></h1>
-<p><a href="https://crates.io/crates/op-alloy-consensus"><img src="https://img.shields.io/crates/v/op-alloy-consensus.svg" alt="op-alloy-consensus crate"></a></p>
-<p>The <code>op-alloy-consensus</code> crate provides an Optimism consensus interface.
-It contains constants, types, and functions for implementing Optimism EL
-consensus and communication. This includes an extended <code>OpTxEnvelope</code> type
-with <a href="https://specs.optimism.io/protocol/deposits.html">deposit transactions</a>, and receipts containing OP Stack
-specific fields (<code>deposit_nonce</code> + <code>deposit_receipt_version</code>).</p>
-<p>In general a type belongs in this crate if it exists in the
-<code>alloy-consensus</code> crate, but was modified from the base Ethereum protocol
-in the OP Stack. For consensus types that are not modified by the OP Stack,
-the <code>alloy-consensus</code> types should be used instead.</p>
-<h2 id="block"><a class="header" href="#block">Block</a></h2>
-<p><a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> exports an Optimism block type, <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html"><code>OpBlock</code></a>.</p>
-<p>This type simply re-uses the <code>alloy-consensus</code> block type, with <code>OpTxEnvelope</code>
-as the type of transactions in the block.</p>
-<h2 id="transactions"><a class="header" href="#transactions">Transactions</a></h2>
-<p>Optimism extends the Ethereum <a href="https://eips.ethereum.org/EIPS/eip-2718">EIP-2718</a> transaction envelope to include a
-deposit variant.</p>
-<h3 id="optxenvelope"><a class="header" href="#optxenvelope"><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a></a></h3>
-<p>The <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html"><code>OpTxEnvelope</code></a> type is based on <a href="https://github.com/alloy-rs/alloy">Alloy</a>'s
-<a href="https://docs.rs/alloy-consensus/latest/alloy_consensus/transaction/enum.TxEnvelope.html"><code>TxEnvelope</code></a> type.</p>
-<p>Optimism modifies the <code>TxEnvelope</code> to the following.</p>
-<ul>
-<li>Legacy</li>
-<li>EIP-2930</li>
-<li>EIP-1559</li>
-<li>EIP-7702</li>
-<li>Deposit</li>
-</ul>
-<p>Deposit is a custom transaction type that is either an L1 attributes
-deposit transaction or a user-submitted deposit transaction. Read more
-about deposit transactions in <a href="https://specs.optimism.io">the specs</a>.</p>
-<h3 id="transaction-types-optxtype"><a class="header" href="#transaction-types-optxtype">Transaction Types (<a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html"><code>OpTxType</code></a>)</a></h3>
-<p>The <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html"><code>OpTxType</code></a> enumerates the transaction types using their byte identifier,
-represents as a <code>u8</code> in rust.</p>
-<h2 id="receipt-types"><a class="header" href="#receipt-types">Receipt Types</a></h2>
-<p>Just like <a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> defines transaction types,
-it also defines associated receipt types.</p>
-<p><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html"><code>OpReceiptEnvelope</code></a> defines an <a href="https://eips.ethereum.org/EIPS/eip-2718">Eip-2718</a> receipt envelope type
-modified for the OP Stack. It contains the following variants - mapping
-directly to the <code>OpTxEnvelope</code> variants defined above.</p>
-<ul>
-<li>Legacy</li>
-<li>EIP-2930</li>
-<li>EIP-1559</li>
-<li>EIP-7702</li>
-<li>Deposit</li>
-</ul>
-<p>There is also an <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/struct.OpDepositReceipt.html"><code>OpDepositReceipt</code></a> type, extending the alloy receipt
-type with a deposit nonce and deposit receipt version.</p>
-<h2 id="hardforks"><a class="header" href="#hardforks">Hardforks</a></h2>
-<p>Aside from transactions and receipts, <a href="https://crates.io/crates/op-alloy-consensus"><code>op-alloy-consensus</code></a> exports
-one other core primitive called <a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html"><code>Hardforks</code></a>.</p>
-<p>Hardforks provides hardfork transaction constructors - that is, it provides
-methods that return upgrade transactions for each hardfork. Some of these
-are the following.</p>
-<ul>
-<li><a href="https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/hardforks/struct.Hardforks.html#method.ecotone_txs"><code>Hardforks::ecotone_txs()</code></a></li>
-<li><a href="https://specs.optimism.io/protocol/fjord/overview.html"><code>Hardforks::fjord_txs()</code></a></li>
-</ul>
-<!-- op-alloy -->
-<!-- op-alloy-genesis -->
-<!-- op-alloy-protocol -->
-<!-- op-alloy-consensus -->
-<!-- Hardforks -->
-<!-- OP Stack Specs -->
-<!-- External -->
-<!-- Alloy -->
-<!-- Kona links -->
-<!-- People -->
 
                     </main>
 

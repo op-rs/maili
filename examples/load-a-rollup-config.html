@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>Load a Rollup Config - The op-alloy Book</title>
+    <title>Load a Rollup Config - The maili Book</title>
 
 
     <!-- Custom HTML head -->
@@ -151,16 +151,16 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">The op-alloy Book</h1>
+                    <h1 class="menu-title">The maili Book</h1>
 
                     <div class="right-buttons">
                         <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy" title="Git repository" aria-label="Git repository">
+                        <a href="https://github.com/op-rs/" title="Git repository" aria-label="Git repository">
                             <i id="git-repository-button" class="fa fa-github"></i>
                         </a>
-                        <a href="https://github.com/alloy-rs/op-alloy/edit/main/book/src/examples/load-a-rollup-config.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <a href="https://github.com/op-rs/maili/edit/main/book/src/examples/load-a-rollup-config.md" title="Suggest an edit" aria-label="Suggest an edit">
                             <i id="git-edit-button" class="fa fa-edit"></i>
                         </a>
 
@@ -257,34 +257,7 @@
 }
 
 </style>
-<h1 id="loading-a-rollup-config-from-a-chain-id"><a class="header" href="#loading-a-rollup-config-from-a-chain-id">Loading a Rollup Config from a Chain ID</a></h1>
-<p>In this section, the code examples demonstrate loading the
-rollup config for the given L2 Chain ID.</p>
-<p>Let's load the Rollup Config for OP Mainnet which hash chain id 10.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use op_alloy_genesis::{OP_MAINNET_CONFIG, rollup_config_from_chain_id};
-
-// The chain id for OP Mainnet
-let op_mainnet_id = 10;
-
-// Load a rollup config from the chain id.
-let op_mainnet_config = rollup_config_from_chain_id(op_mainnet_id).expect("infallible");
-
-// The chain id should match the hardcoded chain id.
-assert_eq!(OP_MAINNET_CONFIG, op_mainnet_config);
-<span class="boring">}</span></code></pre></pre>
-<blockquote>
-<p>⚠️ Available Configs</p>
-<p>The <code>rollup_config_from_chain_id</code> method in <code>op-alloy-genesis</code> uses hardcoded
-rollup configs. But, there are only a few of these hardcoded rollup configs in
-<code>op-alloy-genesis</code>. This method and these configs are provided for <code>no_std</code>
-environments where dynamic filesystem loading at runtime is not supported
-in <code>no_std</code> environments.</p>
-<p>In a <code>std</code> environment, the <a href="https://crates.io/crates/superchain">superchain</a> crate may be used which
-dynamically provides all rollup configs from the <a href="https://github.com/ethereum-optimism/superchain-registry">superchain-registry</a>
-for their respective chain ids.</p>
-</blockquote>
+<h1 id="load-a-rollup-config"><a class="header" href="#load-a-rollup-config">Load a Rollup Config</a></h1>
 
                     </main>
 

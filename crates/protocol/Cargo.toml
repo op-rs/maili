@@ -1,5 +1,5 @@
 [package]
-name = "op-alloy-protocol"
+name = "maili-protocol"
 description = "Optimism protocol-specific types"
 
 version.workspace = true
@@ -15,7 +15,7 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-# Workspace
+# OP-Alloy
 op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true
 

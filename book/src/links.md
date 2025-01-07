@@ -1,58 +1,34 @@
-<!-- op-alloy -->
+<!-- maili -->
 
-[check-no-std]: https://github.com/alloy-rs/op-alloy/blob/main/scripts/check_no_std.sh
-[contributing]: https://alloy-rs.github.io/op-alloy
-[op-alloy-crate]: https://crates.io/crates/op-alloy
-[op-alloy-ff]: https://docs.rs/crate/op-alloy/latest/features
+[check-no-std]: https://github.com/op-rs/maili/blob/main/scripts/check_no_std.sh
+[contributing]: https://op-rs.github.io/maili
+[maili-crate]: https://crates.io/crates/maili
+[maili-ff]: https://docs.rs/crate/maili/latest/features
 
-[op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
-[op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
-[op-alloy-network]: https://crates.io/crates/op-alloy-network
-[op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
-[op-alloy-provider]: https://crates.io/crates/op-alloy-provider
-[op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
-[op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
-[op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
+[maili-protocol]: https://crates.io/crates/maili-protocol
+[maili-provider]: https://crates.io/crates/maili-provider
 
-<!-- op-alloy-genesis -->
+<!-- maili-protocol -->
 
-[genesis]: https://crates.io/crates/op-alloy-genesis
-[rc]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/struct.RollupConfig.html
-[rcid]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/rollup/fn.rollup_config_from_chain_id.html
-[eip]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.eip_1559_params
-[update]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html#method.update_with_receipts
-[system-config]: https://docs.rs/op-alloy-genesis/latest/op_alloy_genesis/system/struct.SystemConfig.html
-
-<!-- op-alloy-protocol -->
-
-[compress-brotli]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/fn.compress_brotli.html
-[encode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.encode
-[encode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode
-[add-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.add_frame
-[decode-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html#method.decode
-[single-batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.SingleBatch.html
+[compress-brotli]: https://docs.rs/maili-protocol/latest/maili_protocol/fn.compress_brotli.html
+[encode-batch]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html#method.encode
+[encode-frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.encode
+[add-frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html#method.add_frame
+[decode-batch]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html#method.decode
+[single-batch]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html
 [bytes]: https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html
-[channel-id]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html
-[channel]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html
-[channel-out]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html
-[ready-bytes]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.ready_bytes
-[output-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.ChannelOut.html#method.output_frame
-[decode-frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode
+[channel-id]: https://docs.rs/maili-protocol/latest/maili_protocol/type.ChannelId.html
+[channel]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html
+[channel-out]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html
+[ready-bytes]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html#method.ready_bytes
+[output-frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.ChannelOut.html#method.output_frame
+[decode-frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.decode
 [hex]: https://docs.rs/hex-literal/latest/hex_literal/macro.hex.html
 [fjord]: https://specs.optimism.io/protocol/fjord/overview.html
-[frame-data]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.frame_data
-[is-ready]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html#method.is_ready
-[frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html
-[batch]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/enum.Batch.html
-
-<!-- op-alloy-consensus -->
-
-[consensus]: https://crates.io/crates/op-alloy-consensus
-[odr]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/struct.OpDepositReceipt.html
-[ore]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpReceiptEnvelope.html
-[op-block]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/type.OpBlock.html
-[ty]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxType.html
-[envelope]: https://docs.rs/op-alloy-consensus/latest/op_alloy_consensus/enum.OpTxEnvelope.html
+[frame-data]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html#method.frame_data
+[is-ready]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html#method.is_ready
+[frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html
+[batch]: https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html
 
 <!-- Hardforks -->
 

@@ -1,6 +1,6 @@
-# `op-alloy-book`
+# `maili-book`
 
-This repository contains the source code for the op-alloy book, which is available at [alloy-rs.github.io/op-alloy](https://alloy-rs.github.io/op-alloy/).
+This repository contains the source code for the maili book, which is available at [op-rs.github.io/maili](https://op-rs.github.io/maili/).
 
 ## Contributing
 

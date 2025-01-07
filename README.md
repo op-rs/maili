@@ -1,38 +1,31 @@
-# op-alloy
+# maili
 
-<a href="https://github.com/alloy-rs/op-alloy/actions/workflows/ci.yml"><img src="https://github.com/alloy-rs/op-alloy/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
-<a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
-<a href="https://github.com/alloy-rs/op-alloy/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
-<a href="https://alloy-rs.github.io/op-alloy"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
+<a href="https://github.com/op-rs/maili/actions/workflows/ci.yml"><img src="https://github.com/op-rs/maili/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
+<a href="https://github.com/op-rs/maili/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
+<a href="https://github.com/op-rs/maili/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
+<a href="https://op-rs.github.io/maili"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
-Built on [Alloy][alloy], op-alloy connects applications to the OP Stack.
+OP Stack unique types and interfaces.
 
 
 ## Usage
 
-The following crates are provided by `op-alloy`.
+The following crates are provided by `maili`.
 
-- [`op-alloy-consensus`][op-alloy-consensus]
-- [`op-alloy-genesis`][op-alloy-genesis]
-- [`op-alloy-network`][op-alloy-network]
-- [`op-alloy-protocol`][op-alloy-protocol]
-- [`op-alloy-registry`][op-alloy-registry]
-- [`op-alloy-provider`][op-alloy-provider]
-- [`op-alloy-rpc-jsonrpsee`][op-alloy-rpc-jsonrpsee]
-- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
-- [`op-alloy-rpc-types`][op-alloy-rpc-types]
+- [`maili-protocol`][maili-protocol]
+- [`maili-provider`][maili-provider]
 
 
 ## Development Status
 
-`op-alloy` is currently in active development, and is not yet ready for use in production.
+`maili` is currently in active development, and is not yet ready for use in production.
 
 
 ## Supported Rust Versions (MSRV)
 
 The current MSRV (minimum supported rust version) is 1.81.
 
-Unlike Alloy, op-alloy may use the latest stable release,
+Unlike Alloy, maili may use the latest stable release,
 to benefit from the latest features.
 
 The MSRV is not increased automatically, and will be updated
@@ -41,7 +34,7 @@ only as part of a patch (pre-1.0) or minor (post-1.0) release.
 
 ## Contributing
 
-op-alloy is built by open source contributors like you, thank you for improving the project!
+maili is built by open source contributors like you, thank you for improving the project!
 
 A [contributing guide][contributing] is available that sets guidelines for contributing.
 
@@ -51,17 +44,13 @@ linting rules and passes clippy.
 
 ## `no_std`
 
-op-alloy is intended to be `no_std` compatible, initially for use in [kona][kona].
+maili is intended to be `no_std` compatible, initially for use in [kona][kona].
 
 The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
-- [`op-alloy-genesis`][op-alloy-genesis]
-- [`op-alloy-protocol`][op-alloy-protocol]
-- [`op-alloy-registry`][op-alloy-registry] (note: requires `serde`)
-- [`op-alloy-consensus`][op-alloy-consensus]
-- [`op-alloy-rpc-types`][op-alloy-rpc-types]
-- [`op-alloy-rpc-types-engine`][op-alloy-rpc-types-engine]
+- [`maili-protocol`][maili-protocol]
+- [`maili-provider`][maili-provider]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
@@ -69,7 +58,7 @@ please make sure to update [scripts/check_no_std.sh][check-no-std].
 
 ## Credits
 
-op-alloy is inspired by the work of several teams and projects, most notably [the Alloy project][alloy].
+maili implements the OP-unique spec, [op-alloy][op-alloy] is the glue that sticks OP to Ethereum.
 
 This would not be possible without the hard work from open source contributors. Thank you.
 
@@ -89,15 +78,8 @@ shall be dual licensed as above, without any additional terms or conditions.
 [check-no-std]: ./scripts/check_no_std.sh
 
 [kona]: https://github.com/anton-rs/kona
-[alloy]: https://github.com/alloy-rs/alloy
-[contributing]: https://alloy-rs.github.io/op-alloy
+[op-alloy]: https://github.com/alloy-rs/op-alloy
+[contributing]: https://op-rs.github.io/maili
 
-[op-alloy-consensus]: https://crates.io/crates/op-alloy-consensus
-[op-alloy-genesis]: https://crates.io/crates/op-alloy-genesis
-[op-alloy-network]: https://crates.io/crates/op-alloy-network
-[op-alloy-protocol]: https://crates.io/crates/op-alloy-protocol
-[op-alloy-registry]: https://crates.io/crates/op-alloy-registry
-[op-alloy-provider]: https://crates.io/crates/op-alloy-provider
-[op-alloy-rpc-jsonrpsee]: https://crates.io/crates/op-alloy-rpc-jsonrpsee
-[op-alloy-rpc-types-engine]: https://crates.io/crates/op-alloy-rpc-types-engine
-[op-alloy-rpc-types]: https://crates.io/crates/op-alloy-rpc-types
+[maili-protocol]: https://crates.io/crates/maili-protocol
+[maili-provider]: https://crates.io/crates/maili-provider

@@ -43,7 +43,7 @@ to wind up with the example's desired [`Batch`][batch].
 
 ## Running this example:
 
-- Clone the examples repository: `git clone git@github.com:alloy-rs/op-alloy.git`
+- Clone the examples repository: `git clone git@github.com:op-rs/maili.git`
 - Run: `cargo run --example frames_to_batch`
 
 ```rust

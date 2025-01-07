@@ -55,9 +55,9 @@ Where `++` represents concatenation. The frame's fields map to it's encoding.
 - `is_last` is a single byte [`Frame::is_last`][is_last].
 
 
-## op-alloy's `Frame` Type
+## maili's `Frame` Type
 
-[`op-alloy-protocol`][protocol] provides the [`Frame`][frame] type with a few useful
+[`maili-protocol`][protocol] provides the [`Frame`][frame] type with a few useful
 methods. [`Frame`][frame]s can be encoded and decoded using the [`Frame::encode`][encode]
 and [`Frame::decode`][decode] methods. Given the raw batcher transaction data or blob data
 containing the concatenated derivation version and contiguous list of encoded frames,
@@ -67,19 +67,19 @@ provide ways to decode single and multiple frames, respectively.
 
 <!-- Links -->
 
-[encode]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.encode
-[decode]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.decode
+[encode]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.encode
+[decode]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.decode
 
-[parse_frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frame
-[parse_frames]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#method.parse_frames
+[parse_frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.parse_frame
+[parse_frames]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#method.parse_frames
 
-[protocol]: https://crates.io/crate/op-alloy-protocol
+[protocol]: https://crates.io/crate/maili-protocol
 
-[id]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.id
-[number]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.number
-[data]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.data
-[is_last]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html#structfield.is_last
+[id]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.id
+[number]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.number
+[data]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.data
+[is_last]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html#structfield.is_last
 
-[cid]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/type.ChannelId.html
-[channel]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Channel.html
-[frame]: https://docs.rs/op-alloy-protocol/latest/op_alloy_protocol/struct.Frame.html
+[cid]: https://docs.rs/maili-protocol/latest/maili_protocol/type.ChannelId.html
+[channel]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html
+[frame]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Frame.html

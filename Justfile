@@ -54,7 +54,7 @@ check:
 
 # Runs `cargo hack check` against the workspace
 hack:
-  cargo hack check --feature-powerset --no-dev-deps --exclude op-alloy --workspace
+  cargo hack check --feature-powerset --no-dev-deps --workspace
 
 # Updates the git submodule source
 source:

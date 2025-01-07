@@ -35,12 +35,12 @@ Before working with this repository locally, you'll need to install a few depend
 The [OP Stack][op-stack] is a set of standardized open-source specifications
 that powers Optimism, developed by the Optimism Collective.
 
-`op-alloy` is a rust implementation of core OP Stack types, transports,
-middleware and more. Not all types and implementation details in `op-alloy`
+`maili` is a rust implementation of distinguished OP Stack types, transports,
+middleware and more. Not all types and implementation details in `maili`
 are present in the OP Stack [specs][specs], and on the flipside, not all
-specifications are implemented by `op-alloy`. That said, `op-alloy` is
+specifications are implemented by `maili`. That said, `maili` is
 entirely _based off_ of the [specs][specs], and new functionality or
-core modifications to `op-alloy` must be reflected in the [specs][specs].
+core modifications to `maili` must be reflected in the [specs][specs].
 
 As such, the first step for introducing changes to the OP Stack is to
 [open a pr][specs-pr] in the [specs repository][specs-repo]. These
@@ -49,7 +49,7 @@ implementations of the OP Stack are able to synchronize and implement
 the changes.
 
 Once changes are merged in the OP Stack [specs][specs] repo, they
-may be added to `op-alloy` in a **backwards-compatible** way such
+may be added to `maili` in a **backwards-compatible** way such
 that pre-upgrade functionality persists. The primary way to enable
 backwards-compatibility is by using timestamp-based activation for
 protocol upgrades.
@@ -62,5 +62,5 @@ protocol upgrades.
 [specs-pr]: https://github.com/ethereum-optimism/specs/pulls
 [specs]: https://specs.optimism.io/
 [op-stack]: https://docs.optimism.io/stack/getting-started
-[book]: https://github.com/alloy-rs/op-alloy/tree/main/book
-[new-issue]: https://github.com/alloy-rs/op-alloy/issues/new
+[book]: https://github.com/op-rs/maili/tree/main/book
+[new-issue]: https://github.com/op-rs/maili/issues/new

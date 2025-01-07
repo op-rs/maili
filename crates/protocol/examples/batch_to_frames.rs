@@ -15,10 +15,10 @@
 #[cfg(feature = "std")]
 fn main() {
     use alloy_primitives::BlockHash;
-    use op_alloy_genesis::RollupConfig;
-    use op_alloy_protocol::{
+    use maili_protocol::{
         Batch, ChannelId, ChannelOut, CompressionAlgo, SingleBatch, VariantCompressor,
     };
+    use op_alloy_genesis::RollupConfig;
 
     // Use the example transaction
     let transactions = example_transactions();

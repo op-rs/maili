@@ -1,5 +1,5 @@
 [package]
-name = "op-alloy-provider"
+name = "maili-provider"
 description = "Interface with an OP Stack blockchain"
 
 version.workspace = true
@@ -15,7 +15,7 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-# Workspace
+# OP-Alloy
 op-alloy-rpc-types-engine = { workspace = true, features = ["serde"] }
 
 # Alloy

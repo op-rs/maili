@@ -15,6 +15,7 @@ body:
       options:
         - protocol
         - provider
+        - registry
         - other
     validations:
       required: true

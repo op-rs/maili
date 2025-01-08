@@ -4,7 +4,7 @@
 <a href="https://crates.io/crates/maili-registry"><img src="https://img.shields.io/crates/v/maili-registry.svg?label=maili-registry&labelColor=2a2f35" alt="maili-registry"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="MIT License"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="Apache License"></a>
-<a href="https://alloy-rs.github.io/maili"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
+<a href="https://op-rs.github.io/maili"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
 
 [`maili-registry`][sc] is a `no_std` crate that exports rust type definitions for chains

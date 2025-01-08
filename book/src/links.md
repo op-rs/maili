@@ -7,6 +7,7 @@
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
 [maili-provider]: https://crates.io/crates/maili-provider
+[maili-registry]: https://crates.io/crates/maili-registry
 
 <!-- maili-protocol -->
 

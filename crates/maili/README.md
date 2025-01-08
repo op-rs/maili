@@ -1,29 +1,29 @@
-# maili
+## `maili`
 
 <a href="https://github.com/op-rs/maili/actions/workflows/ci.yml"><img src="https://github.com/op-rs/maili/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
+<a href="https://crates.io/crates/maili"><img src="https://img.shields.io/crates/v/maili.svg" alt="op-alloy crate"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://op-rs.github.io/maili"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
-OP Stack unique types and interfaces.
+
+Built on [Alloy][alloy], `maili` connects applications to the OP Stack.
 
 
-## Usage
+### Usage
 
-The following crates are provided by `maili`.
+To use `maili`, add the crate as a dependency to a `Cargo.toml`.
 
-- [`maili-protocol`][maili-protocol]
-- [`maili-provider`][maili-provider]
-- [`maili-registry`][maili-registry]
-- [`maili-rpc-types-engine`][maili-rpc-types-engine]
+```toml
+maili = "0.6"
+```
 
-
-## Development Status
+### Development Status
 
 `maili` is currently in active development, and is not yet ready for use in production.
 
 
-## Supported Rust Versions (MSRV)
+### Supported Rust Versions (MSRV)
 
 The current MSRV (minimum supported rust version) is 1.81.
 
@@ -34,9 +34,9 @@ The MSRV is not increased automatically, and will be updated
 only as part of a patch (pre-1.0) or minor (post-1.0) release.
 
 
-## Contributing
+### Contributing
 
-maili is built by open source contributors like you, thank you for improving the project!
+Maili is built by open source contributors like you, thank you for improving the project!
 
 A [contributing guide][contributing] is available that sets guidelines for contributing.
 
@@ -44,30 +44,27 @@ Pull requests will not be merged unless CI passes, so please ensure that your co
 linting rules and passes clippy.
 
 
-## `no_std`
+### `no_std`
 
-maili is intended to be `no_std` compatible, initially for use in [kona][kona].
+Maili is intended to be `no_std` compatible, initially for use in [kona][kona].
 
 The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
 - [`maili-protocol`][maili-protocol]
-- [`maili-provider`][maili-provider]
-- [`maili-registry`][maili-registry] (note: requires `serde`)
-- [`maili-rpc-types-engine`][maili-rpc-types-engine]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
 
 
-## Credits
+### Credits
 
-maili implements the OP-unique spec, [op-alloy][op-alloy] is the glue that sticks OP to Ethereum.
+Maili is inspired by the work of several teams and projects, most notably [the Alloy project][alloy].
 
 This would not be possible without the hard work from open source contributors. Thank you.
 
 
-## License
+### License
 
 Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
 2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
@@ -79,13 +76,10 @@ shall be dual licensed as above, without any additional terms or conditions.
 
 <!-- Hyperlinks -->
 
-[check-no-std]: ./scripts/check_no_std.sh
+[check-no-std]: https://github.com/op-rs/maili/blob/main/scripts/check_no_std.sh
 
 [kona]: https://github.com/anton-rs/kona
-[op-alloy]: https://github.com/alloy-rs/op-alloy
+[alloy]: https://github.com/alloy-rs/alloy
 [contributing]: https://op-rs.github.io/maili
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
-[maili-provider]: https://crates.io/crates/maili-provider
-[maili-registry]: https://crates.io/crates/maili-registry
-[maili-rpc-types-engine]: https://crates.io/crates/maili-rpc-types-engine

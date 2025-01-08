@@ -3,6 +3,9 @@
 mod variant;
 pub use variant::L1BlockInfoTx;
 
+mod isthmus;
+pub use isthmus::L1BlockInfoIsthmus;
+
 mod bedrock;
 pub use bedrock::L1BlockInfoBedrock;
 

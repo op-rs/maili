@@ -1,0 +1,53 @@
+[package]
+name = "maili"
+description = "Connect applications to the OP Stack"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+exclude.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[lints]
+workspace = true
+
+[dependencies]
+# Workspace
+maili-protocol = { workspace = true, optional = true }
+maili-provider = { workspace = true, optional = true }
+maili-registry = { workspace = true, optional = true }
+
+[features]
+default = ["std", "serde"]
+
+std = [
+  "maili-protocol?/std",
+  "maili-registry?/std",
+]
+
+full = [
+  "maili-protocol",
+  "maili-provider",
+  "maili-registry",
+]
+
+arbitrary = [
+  "maili-protocol?/arbitrary",
+]
+
+serde = [
+  "maili-protocol?/serde",
+]
+
+# `no_std` support
+registry = ["dep:maili-registry"]
+protocol = ["dep:maili-protocol"]
+
+# std features
+provider = ["dep:maili-provider"]

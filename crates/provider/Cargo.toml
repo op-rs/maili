@@ -27,3 +27,7 @@ alloy-rpc-types-engine = { workspace = true, features = ["serde"] }
 
 # misc
 async-trait.workspace = true
+
+[dev-dependencies]
+# `serde` must be explicitly enabled to test with `--no-default-features`
+maili-protocol = { workspace = true, features = ["serde"] }

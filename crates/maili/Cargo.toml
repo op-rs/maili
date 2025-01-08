@@ -32,9 +32,9 @@ std = [
 ]
 
 full = [
-  "maili-protocol",
-  "maili-provider",
-  "maili-registry",
+  "protocol",
+  "provider",
+  "registry",
 ]
 
 arbitrary = [

@@ -14,7 +14,7 @@ various chains into instantiated objects, the [`maili-registry`][sc] crate requi
 as a dependency to a `Cargo.toml`.
 
 ```toml
-maili-registry = "0.6.7"
+maili-registry = "0.1.0"
 ```
 
 [`maili-registry`][sc] declares lazy evaluated statics that expose `ChainConfig`s, `RollupConfig`s,
@@ -41,14 +41,14 @@ Add the following to your `Cargo.toml`.
 
 ```toml
 [dependencies]
-maili-registry = "0.6.7"
+maili-registry = "0.1.0"
 ```
 
 To make `maili-registry` `no_std`, toggle `default-features` off like so.
 
 ```toml
 [dependencies]
-maili-registry = { version = "0.6.7", default-features = false }
+maili-registry = { version = "0.1.0", default-features = false }
 ```
 
 Below demonstrates getting the `RollupConfig` for OP Mainnet (Chain ID `10`).

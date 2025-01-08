@@ -22,6 +22,7 @@ workspace = true
 maili-protocol = { workspace = true, optional = true }
 maili-provider = { workspace = true, optional = true }
 maili-registry = { workspace = true, optional = true }
+maili-rpc-types-engine = { workspace = true, optional = true }
 
 [features]
 default = ["std", "serde"]
@@ -29,6 +30,7 @@ default = ["std", "serde"]
 std = [
   "maili-protocol?/std",
   "maili-registry?/std",
+  "maili-rpc-types-engine?/std",
 ]
 
 full = [
@@ -43,11 +45,13 @@ arbitrary = [
 
 serde = [
   "maili-protocol?/serde",
+  "maili-rpc-types-engine?/serde",
 ]
 
 # `no_std` support
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
+rpc-types-engine = ["dep:maili-rpc-types-engine"]
 
 # std features
 provider = ["dep:maili-provider"]

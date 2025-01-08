@@ -15,6 +15,9 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
+# Workspace
+maili-rpc-types-engine = { workspace = true, features = ["serde"] }
+
 # OP-Alloy
 op-alloy-rpc-types-engine = { workspace = true, features = ["serde"] }
 

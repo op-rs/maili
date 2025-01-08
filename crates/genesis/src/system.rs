@@ -36,6 +36,10 @@ pub struct SystemConfig {
     pub eip1559_denominator: Option<u32>,
     /// EIP-1559 elasticity
     pub eip1559_elasticity: Option<u32>,
+    /// The operator fee scalar (isthmus hardfork)
+    pub operator_fee_scalar: Option<u32>,
+    /// The operator fee constant (isthmus hardfork)
+    pub operator_fee_constant: Option<u64>,
 }
 
 /// Represents type of update to the system config.
@@ -52,6 +56,8 @@ pub enum SystemConfigUpdateType {
     UnsafeBlockSigner = 3,
     /// EIP-1559 parameters update type
     Eip1559 = 4,
+    /// Operator fee parameter update
+    OperatorFee = 5,
 }
 
 impl TryFrom<u64> for SystemConfigUpdateType {
@@ -64,6 +70,7 @@ impl TryFrom<u64> for SystemConfigUpdateType {
             2 => Ok(Self::GasLimit),
             3 => Ok(Self::UnsafeBlockSigner),
             4 => Ok(Self::Eip1559),
+            5 => Ok(Self::OperatorFee),
             _ => Err(SystemConfigUpdateError::LogProcessing(
                 LogProcessingError::InvalidSystemConfigUpdateType(value),
             )),
@@ -180,6 +187,9 @@ impl SystemConfig {
             SystemConfigUpdateType::Eip1559 => {
                 self.update_eip1559_params(log_data).map_err(SystemConfigUpdateError::Eip1559)
             }
+            SystemConfigUpdateType::OperatorFee => self
+                .update_operator_fee_params(log_data)
+                .map_err(SystemConfigUpdateError::OperatorFee),
             // Ignored in derivation
             SystemConfigUpdateType::UnsafeBlockSigner => {
                 Ok(SystemConfigUpdateType::UnsafeBlockSigner)
@@ -323,6 +333,41 @@ impl SystemConfig {
 
         Ok(SystemConfigUpdateType::Eip1559)
     }
+
+    /// Updates the operator fee parameters of the [SystemConfig] given the log data.
+    pub fn update_operator_fee_params(
+        &mut self,
+        log_data: &[u8],
+    ) -> Result<SystemConfigUpdateType, OperatorFeeUpdateError> {
+        if log_data.len() != 128 {
+            return Err(OperatorFeeUpdateError::InvalidDataLen(log_data.len()));
+        }
+
+        let Ok(pointer) = <sol!(uint64)>::abi_decode(&log_data[0..32], true) else {
+            return Err(OperatorFeeUpdateError::PointerDecodingError);
+        };
+        if pointer != 32 {
+            return Err(OperatorFeeUpdateError::InvalidDataPointer(pointer));
+        }
+        let Ok(length) = <sol!(uint64)>::abi_decode(&log_data[32..64], true) else {
+            return Err(OperatorFeeUpdateError::LengthDecodingError);
+        };
+        if length != 64 {
+            return Err(OperatorFeeUpdateError::InvalidDataLength(length));
+        }
+
+        let Ok(operator_fee_scalar) = <sol!(uint32)>::abi_decode(&log_data[64..80], true) else {
+            return Err(OperatorFeeUpdateError::ScalarDecodingError);
+        };
+        let Ok(operator_fee_constant) = <sol!(uint64)>::abi_decode(&log_data[80..], true) else {
+            return Err(OperatorFeeUpdateError::ConstantDecodingError);
+        };
+
+        self.operator_fee_scalar = Some(operator_fee_scalar);
+        self.operator_fee_constant = Some(operator_fee_constant);
+
+        Ok(SystemConfigUpdateType::OperatorFee)
+    }
 }
 
 /// An error for processing the [SystemConfig] update log.
@@ -344,6 +389,9 @@ pub enum SystemConfigUpdateError {
     /// An EIP-1559 parameter update error.
     #[error("EIP-1559 parameter update error: {0}")]
     Eip1559(EIP1559UpdateError),
+    /// An operator fee parameter update error.
+    #[error("Operator fee parameter update error: {0}")]
+    OperatorFee(OperatorFeeUpdateError),
 }
 
 /// An error occurred while processing the update log.
@@ -464,6 +512,33 @@ pub enum EIP1559UpdateError {
     /// Failed to decode the eip1559 params argument from the eip 1559 update log.
     #[error("Failed to decode eip1559 parameter update log: eip1559 parameters")]
     EIP1559DecodingError,
+}
+
+/// An error for updating the operator fee parameters on the [SystemConfig].
+#[derive(Debug, thiserror::Error, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub enum OperatorFeeUpdateError {
+    /// Invalid data length.
+    #[error("Invalid config update log: invalid data length: {0}")]
+    InvalidDataLen(usize),
+    /// Failed to decode the data pointer argument from the eip 1559 update log.
+    #[error("Failed to decode eip1559 parameter update log: data pointer")]
+    PointerDecodingError,
+    /// The data pointer is invalid.
+    #[error("Invalid config update log: invalid data pointer: {0}")]
+    InvalidDataPointer(u64),
+    /// Failed to decode the data length argument from the eip 1559 update log.
+    #[error("Failed to decode eip1559 parameter update log: data length")]
+    LengthDecodingError,
+    /// The data length is invalid.
+    #[error("Invalid config update log: invalid data length: {0}")]
+    InvalidDataLength(u64),
+    /// Failed to decode the scalar argument from the update log.
+    #[error("Failed to decode operator fee parameter update log: scalar")]
+    ScalarDecodingError,
+    /// Failed to decode the constant argument from the update log.
+    #[error("Failed to decode operator fee parameter update log: constant")]
+    ConstantDecodingError,
 }
 
 /// System accounts

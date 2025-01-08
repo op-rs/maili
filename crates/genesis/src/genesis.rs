@@ -60,6 +60,8 @@ mod tests {
                 blob_base_fee_scalar: None,
                 eip1559_denominator: None,
                 eip1559_elasticity: None,
+                operator_fee_scalar: None,
+                operator_fee_constant: None,
             }),
         }
     }

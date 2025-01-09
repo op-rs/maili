@@ -3,7 +3,7 @@
 use crate::{Batch, ChannelCompressor, ChannelId, CompressorError, Frame};
 use alloc::{vec, vec::Vec};
 use op_alloy_genesis::RollupConfig;
-use rand::{rngs::OsRng, RngCore};
+use rand::{rngs::SmallRng, RngCore, SeedableRng};
 
 /// The frame overhead.
 const FRAME_V0_OVERHEAD: usize = 23;
@@ -68,7 +68,11 @@ where
         self.frame_number = 0;
         self.closed = false;
         self.compressor.reset();
-        OsRng.fill_bytes(&mut self.id);
+        // `getrandom` isn't available for wasm and risc targets
+        // Thread-based RNGs are not available for no_std
+        // So we must use a seeded RNG.
+        let mut small_rng = SmallRng::seed_from_u64(43);
+        SmallRng::fill_bytes(&mut small_rng, &mut self.id);
     }
 
     /// Accepts the given [crate::Batch] data into the [ChannelOut], compressing it

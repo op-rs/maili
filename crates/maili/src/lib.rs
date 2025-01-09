@@ -19,6 +19,10 @@ pub use maili_registry as registry;
 #[doc(inline)]
 pub use maili_provider as provider;
 
+#[cfg(feature = "rpc-jsonrpsee")]
+#[doc(inline)]
+pub use maili_rpc_jsonrpsee as rpc_jsonrpsee;
+
 #[cfg(feature = "common")]
 #[doc(inline)]
 pub use maili_common as common;

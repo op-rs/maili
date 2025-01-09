@@ -15,7 +15,7 @@ Built on [Alloy][alloy], `maili` connects applications to the OP Stack.
 To use `maili`, add the crate as a dependency to a `Cargo.toml`.
 
 ```toml
-maili = "0.6"
+maili = "0.1"
 ```
 
 ### Development Status
@@ -27,8 +27,7 @@ maili = "0.6"
 
 The current MSRV (minimum supported rust version) is 1.81.
 
-Unlike Alloy, maili may use the latest stable release,
-to benefit from the latest features.
+Maili may use the latest stable release, to benefit from the latest features.
 
 The MSRV is not increased automatically, and will be updated
 only as part of a patch (pre-1.0) or minor (post-1.0) release.
@@ -52,6 +51,8 @@ The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
 - [`maili-protocol`][maili-protocol]
+- [`maili-registry`][maili-registry]
+- [`maili-rpc-types-engine`][maili-rpc-types-engine]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
@@ -83,3 +84,5 @@ shall be dual licensed as above, without any additional terms or conditions.
 [contributing]: https://op-rs.github.io/maili
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
+[maili-registry]: https://crates.io/crates/maili-registry
+[maili-rpc-types-engine]: https://crates.io/crates/maili-rpc-types-engine

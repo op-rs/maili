@@ -202,8 +202,9 @@ mod tests {
         channel.reset();
         assert_eq!(channel.rlp_length, 0);
         assert_eq!(channel.frame_number, 0);
-        // The odds of this flaking are so astronomically low
-        // the randomized [u8; 16] is about 1/255^16
+        // The odds of a randomized channel id being equal to the
+        // default are so astronomically low, this test will always pass.
+        // The randomized [u8; 16] is about 1/255^16.
         assert!(channel.id != ChannelId::default());
         assert!(!channel.closed);
     }

@@ -89,6 +89,7 @@ ethereum_ssz = "0.8.2"
 miniz_oxide = "0.8.2"
 alloc-no-stdlib = "2.0.4"
 brotli = { version = "7.0.0", default-features = false }
+getrandom = { version = "0.2.15", features = ["js"] } # required for brotli to wasm32-unkown-unkown
 
 # rpc
 jsonrpsee = { version = "0.24.7", features = [

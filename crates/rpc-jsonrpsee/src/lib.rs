@@ -10,3 +10,6 @@
 extern crate alloc;
 
 pub mod traits;
+
+#[allow(unused_imports)]
+use getrandom as _; // required for compiling wasm32-unknown-unknown

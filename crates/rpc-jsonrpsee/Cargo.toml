@@ -28,6 +28,7 @@ alloy-primitives.workspace = true
 
 # rpc
 jsonrpsee.workspace = true
+getrandom.workspace = true
 
 [features]
 default = ["std"]

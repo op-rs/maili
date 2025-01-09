@@ -3,6 +3,7 @@
 use crate::{Batch, ChannelCompressor, ChannelId, CompressorError, Frame};
 use alloc::{vec, vec::Vec};
 use op_alloy_genesis::RollupConfig;
+use rand::{rngs::SmallRng, RngCore, SeedableRng};
 
 /// The frame overhead.
 const FRAME_V0_OVERHEAD: usize = 23;
@@ -67,7 +68,11 @@ where
         self.frame_number = 0;
         self.closed = false;
         self.compressor.reset();
-        // TODO: read random bytes into the channel id.
+        // `getrandom` isn't available for wasm and risc targets
+        // Thread-based RNGs are not available for no_std
+        // So we must use a seeded RNG.
+        let mut small_rng = SmallRng::seed_from_u64(43);
+        SmallRng::fill_bytes(&mut small_rng, &mut self.id);
     }
 
     /// Accepts the given [crate::Batch] data into the [ChannelOut], compressing it
@@ -185,6 +190,27 @@ mod tests {
         fn get_compressed(&self) -> Vec<u8> {
             self.compressed.as_ref().unwrap().to_vec()
         }
+    }
+
+    #[test]
+    fn test_channel_out_reset() {
+        let config = RollupConfig::default();
+        let mut channel = ChannelOut {
+            id: ChannelId::default(),
+            config: &config,
+            rlp_length: 10,
+            closed: true,
+            frame_number: 11,
+            compressor: MockCompressor::default(),
+        };
+        channel.reset();
+        assert_eq!(channel.rlp_length, 0);
+        assert_eq!(channel.frame_number, 0);
+        // The odds of a randomized channel id being equal to the
+        // default are so astronomically low, this test will always pass.
+        // The randomized [u8; 16] is about 1/255^16.
+        assert!(channel.id != ChannelId::default());
+        assert!(!channel.closed);
     }
 
     #[test]

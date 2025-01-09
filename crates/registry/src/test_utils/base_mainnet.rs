@@ -42,7 +42,7 @@ pub const BASE_MAINNET_CONFIG: RollupConfig = RollupConfig {
     ecotone_time: Some(1710374401),
     fjord_time: Some(1720627201),
     granite_time: Some(1_726_070_401_u64),
-    holocene_time: None,
+    holocene_time: Some(1736445601),
     isthmus_time: None,
     batch_inbox_address: address!("ff00000000000000000000000000000000008453"),
     deposit_contract_address: address!("49048044d57e1c92a77f79988d21fa8faf74e97e"),

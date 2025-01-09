@@ -156,7 +156,7 @@ pub trait SupervisorApi {
     #[method(name = "checkMessages")]
     async fn check_messages(
         &self,
-        messages: Vec<ExecutingMessage>,
+        messages: &[ExecutingMessage],
         min_safety: SafetyLevel,
     ) -> RpcResult<()>;
 }

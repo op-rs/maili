@@ -27,7 +27,6 @@ alloy-eips.workspace = true
 alloy-consensus.workspace = true
 
 # Misc
-rand = { workspace = true, features = ["getrandom"] }
 derive_more = { workspace = true, default-features = false, features = ["from", "as_ref"] }
 tracing.workspace = true
 thiserror.workspace = true
@@ -45,6 +44,9 @@ arbitrary = { workspace = true, features = ["derive"], optional = true }
 # `serde` feature
 serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
+
+# `std` feature
+rand = { workspace = true, features = ["getrandom"], optional = true }
 
 # `test-utils` feature
 spin = { workspace = true, optional = true }
@@ -78,5 +80,5 @@ arbitrary = [
   "alloy-primitives/rand",
   "alloy-primitives/arbitrary",
 ]
-std = ["op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
+std = ["dep:rand", "op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
 serde = ["dep:serde", "dep:alloy-serde", "op-alloy-consensus/serde", "op-alloy-genesis/serde"]

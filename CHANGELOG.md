@@ -5,11 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0](https://github.com/op-rs/maili
-/releases/tag/v0.1.0) - 2025-01-08
+## [0.1.1](https://github.com/op-rs/maili
+/releases/tag/v0.1.1) - 2025-01-09
 
 ### Bug Fixes
 
+- [protocol] Channel ID Randomization ([#13](https://github.com/op-rs/maili/issues/13))
+- Channel id randomization
+- Fixes
+- Fixes
+- Only use rand in std
+- [protocol] Randomize channel out id on reset
+- Fix compile maili-rpc-jsonrpsee to wasm32-unkown-unkown
+- [docs] Update `maili-registry` version in readme ([#19](https://github.com/op-rs/maili/issues/19))
 - Fixes
 - [registry] Reset version of registry in workspace manifest and fix book links ([#7](https://github.com/op-rs/maili/issues/7))
 - Fix reset version of registry in workspace manifest, and book links
@@ -73,6 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- [deps] Bump op-alloy to 0.9.2 ([#25](https://github.com/op-rs/maili/issues/25))
+- Bump op-alloy to 0.9.2
 - Quick Version Bumps ([#362](https://github.com/op-rs/maili/issues/362))
 - Bump alloy 0.9 ([#350](https://github.com/op-rs/maili/issues/350))
 - Bump alloy 081 ([#344](https://github.com/op-rs/maili/issues/344))
@@ -236,6 +246,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Document Crate Releases ([#15](https://github.com/op-rs/maili/issues/15))
+- Document crate releases
+- [docs] Update doc headers ([#26](https://github.com/op-rs/maili/issues/26))
+- [rpc] Migrate `alloy-rs/op-alloy-rpc-jsonrpsee`->`op-rs/maili-rpc-jsonrpsee` ([#24](https://github.com/op-rs/maili/issues/24))
+- [meta] Update issue template to include provider ([#17](https://github.com/op-rs/maili/issues/17))
+- Fix README Shields ([#11](https://github.com/op-rs/maili/issues/11))
+- Crate Shields ([#9](https://github.com/op-rs/maili/issues/9))
+- Crate badges
 - Cargo Manifest Cleanup ([#4](https://github.com/op-rs/maili/issues/4))
 - Maili Re-export Crate ([#6](https://github.com/op-rs/maili/issues/6))
 - [engine] Migrate types in engine rpc types from `op-alloy` ([#5](https://github.com/op-rs/maili/issues/5))
@@ -362,6 +380,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- Merge branch 'main' into emhane/supervsior-api
+- Smol perf improvement SupervisorApi, pass slice instead of vec as param
+- Update doc headers
+- Update doc header
+- Migrate alloy-rs/op-alloy-rpc-jsonrpsee->op-rs/maili-rpc-jsonrpsee
+- Update issue template to include provider
+- Update maili-registry version in readme
+- Update README.md
+- 0.1.0 ([#8](https://github.com/op-rs/maili/issues/8))
+- 0.1.0
 - Merge branch 'main' into rf/cargo-cleanup
 - Add rpc-types-engine
 - Merge branch 'main' into rf/re-export-crate
@@ -431,6 +459,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow git
 - Some cleanup
 - Initial commit
+
+### Performance
+
+- [rpc] Smol perf improvement `SupervisorApi`, pass slice instead of vec as param ([#28](https://github.com/op-rs/maili/issues/28))
 
 ### Refactor
 

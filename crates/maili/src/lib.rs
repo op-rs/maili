@@ -21,4 +21,4 @@ pub use maili_provider as provider;
 
 #[cfg(feature = "rpc-types-engine")]
 #[doc(inline)]
-pub use maili_rpc_types_engine as rpc_types_engine;
+pub use maili_common as rpc_types_engine;

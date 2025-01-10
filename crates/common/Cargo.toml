@@ -1,6 +1,6 @@
 [package]
-name = "maili-rpc-types-engine"
-description = "Optimism RPC types for the `engine` namespace"
+name = "maili-common"
+description = "Optimism common types"
 
 version.workspace = true
 edition.workspace = true

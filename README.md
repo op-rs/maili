@@ -16,7 +16,7 @@ The following crates are provided by `maili`.
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
 - ![maili-provider](https://img.shields.io/crates/v/maili-provider?label=maili-provider)
-- ![maili-rpc-types-engine](https://img.shields.io/crates/v/maili-rpc-types-engine?label=maili-rpc-types-engine)
+- ![maili-common](https://img.shields.io/crates/v/maili-common?label=maili-common)
 
 
 ## Development Status
@@ -55,7 +55,7 @@ Notice, provider crates do not support `no_std` compatibility.
 - [`maili-protocol`][maili-protocol]
 - [`maili-provider`][maili-provider]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
-- [`maili-rpc-types-engine`][maili-rpc-types-engine]
+- [`maili-common`][maili-common]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
@@ -89,4 +89,4 @@ shall be dual licensed as above, without any additional terms or conditions.
 [maili-protocol]: https://crates.io/crates/maili-protocol
 [maili-provider]: https://crates.io/crates/maili-provider
 [maili-registry]: https://crates.io/crates/maili-registry
-[maili-rpc-types-engine]: https://crates.io/crates/maili-rpc-types-engine
+[maili-common]: https://crates.io/crates/maili-common

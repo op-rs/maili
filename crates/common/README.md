@@ -1,4 +1,4 @@
-## `maili-common
+## `maili-common`
 
 <a href="https://github.com/op-rs/maili/actions/workflows/ci.yml"><img src="https://github.com/op-rs/maili/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
 <a href="https://crates.io/crates/maili-common"><img src="https://img.shields.io/crates/v/maili-common.svg" alt="maili-common crate"></a>

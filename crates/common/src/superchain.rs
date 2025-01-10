@@ -1,4 +1,4 @@
-//! Optimism RPC types for the `engine` namespace
+//! Common engine types
 
 use alloc::{
     format,

@@ -9,7 +9,11 @@
 
 extern crate alloc;
 
-pub mod traits;
+mod api;
 
-#[allow(unused_imports)]
-use getrandom as _; // required for compiling wasm32-unknown-unknown
+mod js_types;
+pub use js_types::{
+    Connectedness, Direction, Genesis, GossipScores, L1BlockRef, L2BlockRef, OutputResponse,
+    PeerDump, PeerInfo, PeerScores, PeerStats, ReqRespScores, RollupConfig, SafeHeadResponse,
+    SyncStatus, SystemConfig, TopicScores,
+};

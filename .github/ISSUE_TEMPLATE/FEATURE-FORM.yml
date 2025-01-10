@@ -16,6 +16,7 @@ body:
         - protocol
         - provider
         - registry
+        - rpc
         - other
     validations:
       required: true

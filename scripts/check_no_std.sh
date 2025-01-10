@@ -3,9 +3,9 @@ set -eo pipefail
 
 no_std_packages=(
   maili
+  maili-common
   maili-protocol
   maili-registry
-  maili-rpc-types-engine
 )
 
 for package in "${no_std_packages[@]}"; do

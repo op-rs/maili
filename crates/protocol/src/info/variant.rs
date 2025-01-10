@@ -1,6 +1,7 @@
 //! Contains the `L1BlockInfoTx` enum, containing different variants of the L1 block info
 //! transaction.
 
+use crate::utils::flz_compress_len;
 use alloc::{format, string::ToString};
 use alloy_consensus::Header;
 use alloy_eips::{eip7840::BlobParams, BlockNumHash};
@@ -12,6 +13,22 @@ use crate::{
     BlockInfoError, DecodeError, DepositSourceDomain, L1BlockInfoBedrock, L1BlockInfoEcotone,
     L1InfoDepositSource,
 };
+
+/// <https://github.com/ethereum-optimism/op-geth/blob/647c346e2bef36219cc7b47d76b1cb87e7ca29e4/core/types/rollup_cost.go#L79>
+const L1_COST_FASTLZ_COEF: u64 = 836_500;
+
+/// <https://github.com/ethereum-optimism/op-geth/blob/647c346e2bef36219cc7b47d76b1cb87e7ca29e4/core/types/rollup_cost.go#L78>
+/// Inverted to be used with `saturating_sub`.
+const L1_COST_INTERCEPT: u64 = 42_585_600;
+
+/// <https://github.com/ethereum-optimism/op-geth/blob/647c346e2bef36219cc7b47d76b1cb87e7ca29e4/core/types/rollup_cost.go#82>
+const MIN_TX_SIZE_SCALED: u64 = 100 * 1_000_000;
+
+/// Tx cost when posting zero bytes as L1 calldata.
+const ZERO_BYTE_COST: u64 = 4;
+
+/// Tx cost when posting non-zero bytes as L1 calldata.
+const NON_ZERO_BYTE_COST: u64 = 16;
 
 /// The system transaction gas limit post-Regolith
 const REGOLITH_SYSTEM_TX_GAS: u64 = 1_000_000;
@@ -177,6 +194,42 @@ impl L1BlockInfoTx {
         }
     }
 
+    /// Returns the l1 base fee.
+    pub fn l1_base_fee(&self) -> U256 {
+        match self {
+            Self::Bedrock(L1BlockInfoBedrock { base_fee, .. }) => U256::from(*base_fee),
+            Self::Ecotone(L1BlockInfoEcotone { base_fee, .. }) => U256::from(*base_fee),
+        }
+    }
+
+    /// Returns the l1 fee scalar.
+    pub fn l1_fee_scalar(&self) -> U256 {
+        match self {
+            Self::Bedrock(L1BlockInfoBedrock { l1_fee_scalar, .. }) => *l1_fee_scalar,
+            Self::Ecotone(L1BlockInfoEcotone { base_fee_scalar, .. }) => {
+                U256::from(*base_fee_scalar)
+            }
+        }
+    }
+
+    /// Returns the blob base fee.
+    pub fn blob_base_fee(&self) -> U256 {
+        match self {
+            Self::Bedrock(_) => U256::ZERO,
+            Self::Ecotone(L1BlockInfoEcotone { blob_base_fee, .. }) => U256::from(*blob_base_fee),
+        }
+    }
+
+    /// Returns the blob base fee scalar.
+    pub fn blob_base_fee_scalar(&self) -> U256 {
+        match self {
+            Self::Bedrock(_) => U256::ZERO,
+            Self::Ecotone(L1BlockInfoEcotone { blob_base_fee_scalar, .. }) => {
+                U256::from(*blob_base_fee_scalar)
+            }
+        }
+    }
+
     /// Returns the L1 fee overhead for the info transaction. After ecotone, this value is ignored.
     pub const fn l1_fee_overhead(&self) -> U256 {
         match self {
@@ -198,6 +251,143 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { sequence_number, .. }) => *sequence_number,
             Self::Ecotone(L1BlockInfoEcotone { sequence_number, .. }) => *sequence_number,
+        }
+    }
+
+    /// Calculate the data gas for posting the transaction on L1.
+    /// Calldata costs 16 gas per byte after compression.
+    ///
+    /// Prior to fjord, calldata costs 16 gas per non-zero byte and 4 gas per zero byte.
+    ///
+    /// Prior to regolith, an extra 68 non-zero bytes were included in the rollup data costs to
+    /// account for the empty signature.
+    pub fn data_gas(&self, input: &[u8], fjord_active: bool, regolith_active: bool) -> U256 {
+        if fjord_active {
+            let estimated_size = self.tx_estimated_size_fjord(input);
+
+            return estimated_size
+                .saturating_mul(U256::from(NON_ZERO_BYTE_COST))
+                .wrapping_div(U256::from(1_000_000));
+        };
+
+        let mut rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
+            acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
+        }));
+
+        // Prior to regolith, an extra 68 non zero bytes were included in the rollup data costs.
+        if !regolith_active {
+            rollup_data_gas_cost += U256::from(NON_ZERO_BYTE_COST) * U256::from(68);
+        }
+
+        rollup_data_gas_cost
+    }
+
+    /// Calculate the estimated compressed transaction size in bytes, scaled by 1e6.
+    /// This value is computed based on the following formula:
+    /// max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
+    fn tx_estimated_size_fjord(&self, input: &[u8]) -> U256 {
+        let fastlz_size = flz_compress_len(input) as u64;
+
+        U256::from(
+            fastlz_size
+                .saturating_mul(L1_COST_FASTLZ_COEF)
+                .saturating_sub(L1_COST_INTERCEPT)
+                .max(MIN_TX_SIZE_SCALED),
+        )
+    }
+
+    /// l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar
+    fn calculate_l1_fee_scaled_ecotone(&self) -> U256 {
+        let calldata_cost_per_byte =
+            self.l1_base_fee() - U256::from(NON_ZERO_BYTE_COST) - self.l1_fee_scalar();
+        let blob_cost_per_byte = self.blob_base_fee().saturating_mul(self.blob_base_fee_scalar());
+
+        calldata_cost_per_byte.saturating_add(blob_cost_per_byte)
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, pre-Ecotone.
+    pub fn calculate_tx_l1_cost_bedrock(
+        &self,
+        input: &[u8],
+        fjord_active: bool,
+        regolith_active: bool,
+    ) -> U256 {
+        let rollup_data_gas_cost = self.data_gas(input, fjord_active, regolith_active);
+        rollup_data_gas_cost
+            .saturating_add(self.l1_fee_overhead())
+            .saturating_mul(self.l1_base_fee())
+            .saturating_mul(self.l1_fee_scalar())
+            .wrapping_div(U256::from(1_000_000))
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Ecotone.
+    ///
+    /// ECOTONE L1 cost function:
+    /// `(calldataGas/16)*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/1e6`
+    ///
+    /// We divide "calldataGas" by 16 to change from units of calldata gas to "estimated # of bytes
+    /// when compressed". Known as "compressedTxSize" in the spec.
+    ///
+    /// Function is actually computed as follows for better precision under integer arithmetic:
+    /// `calldataGas*(l1BaseFee*16*l1BaseFeeScalar + l1BlobBaseFee*l1BlobBaseFeeScalar)/16e6`
+    fn calculate_tx_l1_cost_ecotone(
+        &self,
+        input: &[u8],
+        fjord_active: bool,
+        regolith_active: bool,
+    ) -> U256 {
+        // There is an edgecase where, for the very first Ecotone block (unless it is activated at
+        // Genesis), we must use the Bedrock cost function. To determine if this is the
+        // case, we can check if the Ecotone parameters are unset.
+        // if self.empty_scalars {
+        //     return self.calculate_tx_l1_cost_bedrock(input, fjord_active, regolith_active);
+        // }
+
+        let rollup_data_gas_cost = self.data_gas(input, fjord_active, regolith_active);
+        let l1_fee_scaled = self.calculate_l1_fee_scaled_ecotone();
+
+        l1_fee_scaled
+            .saturating_mul(rollup_data_gas_cost)
+            .wrapping_div(U256::from(1_000_000 * NON_ZERO_BYTE_COST))
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Fjord.
+    ///
+    /// FJORD L1 cost function:
+    /// `estimatedSize*(baseFeeScalar*l1BaseFee*16 + blobFeeScalar*l1BlobBaseFee)/1e12`
+    fn calculate_tx_l1_cost_fjord(&self, input: &[u8]) -> U256 {
+        let l1_fee_scaled = self.calculate_l1_fee_scaled_ecotone();
+        let estimated_size = self.tx_estimated_size_fjord(input);
+
+        estimated_size.saturating_mul(l1_fee_scaled).wrapping_div(U256::from(1_000_000_000_000u64))
+    }
+
+    /// Calculate the gas cost of a transaction based on L1 block data posted on L2,
+    /// depending on if the fjord hardfork is active passed.
+    pub fn calculate_tx_l1_cost(
+        &self,
+        input: &[u8],
+        fjord_active: bool,
+        regolith_active: bool,
+    ) -> U256 {
+        // If the input is a deposit transaction or empty, the default value is zero.
+        if input.is_empty() || input.first() == Some(&0x7F) {
+            return U256::ZERO;
+        }
+
+        // If fjord is enabled, we calculate the cost using the fjord method.
+        if fjord_active {
+            return self.calculate_tx_l1_cost_fjord(input);
+        }
+
+        // Otherwise, calculate the cost using legacy hardfork methods.
+        match self {
+            Self::Bedrock(_) => {
+                self.calculate_tx_l1_cost_bedrock(input, fjord_active, regolith_active)
+            }
+            Self::Ecotone(_) => {
+                self.calculate_tx_l1_cost_ecotone(input, fjord_active, regolith_active)
+            }
         }
     }
 }

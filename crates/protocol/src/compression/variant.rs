@@ -4,7 +4,7 @@ use crate::{
     BrotliCompressor, ChannelCompressor, CompressionAlgo, CompressorResult, CompressorWriter,
     ZlibCompressor,
 };
-use op_alloy_genesis::RollupConfig;
+use maili_genesis::RollupConfig;
 
 /// The channel compressor wraps the brotli and zlib compressor types,
 /// implementing the [ChannelCompressor] trait itself.

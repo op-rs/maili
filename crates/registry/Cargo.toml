@@ -15,7 +15,10 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
-# OP-Alloy
+# Workspace
+maili-genesis = { workspace = true, features = ["serde"] }
+
+# OP Alloy
 op-alloy-genesis = { workspace = true, features = ["serde"] }
 
 # Alloy
@@ -35,4 +38,8 @@ alloy-eips.workspace = true
 default = ["std", "map-foldhash"]
 map-hashbrown = ["alloy-primitives/map-hashbrown"]
 map-foldhash = ["alloy-primitives/map-foldhash"]
-std = ["op-alloy-genesis/std", "serde_json/std"]
+std = [
+    "maili-genesis/std",
+    "op-alloy-genesis/std",
+    "serde_json/std"
+]

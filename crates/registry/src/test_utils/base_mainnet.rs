@@ -2,7 +2,7 @@
 
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
-use op_alloy_genesis::{ChainGenesis, RollupConfig, SystemConfig, OP_MAINNET_BASE_FEE_PARAMS};
+use maili_genesis::{ChainGenesis, RollupConfig, SystemConfig, OP_MAINNET_BASE_FEE_PARAMS};
 
 /// The [RollupConfig] for Base Mainnet.
 pub const BASE_MAINNET_CONFIG: RollupConfig = RollupConfig {

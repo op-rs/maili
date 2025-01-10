@@ -4,8 +4,8 @@ use alloc::vec::Vec;
 use alloy_consensus::TxType;
 use alloy_primitives::B256;
 use alloy_rlp::{Buf, Header};
+use maili_genesis::{RollupConfig, SystemConfig};
 use op_alloy_consensus::{OpBlock, OpTxEnvelope};
-use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 use crate::{
     L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx, OpBlockConversionError, SpanBatchError,

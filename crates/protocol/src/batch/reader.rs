@@ -4,8 +4,8 @@ use crate::{decompress_brotli, Batch};
 use alloc::vec::Vec;
 use alloy_primitives::Bytes;
 use alloy_rlp::Decodable;
+use maili_genesis::RollupConfig;
 use miniz_oxide::inflate::decompress_to_vec_zlib;
-use op_alloy_genesis::RollupConfig;
 /// ZLIB Deflate Compression Method.
 const ZLIB_DEFLATE_COMPRESSION_METHOD: u8 = 8;
 
@@ -96,7 +96,7 @@ impl BatchReader {
 #[cfg(test)]
 mod test {
     use super::*;
-    use op_alloy_genesis::{MAX_RLP_BYTES_PER_CHANNEL_BEDROCK, MAX_RLP_BYTES_PER_CHANNEL_FJORD};
+    use maili_genesis::{MAX_RLP_BYTES_PER_CHANNEL_BEDROCK, MAX_RLP_BYTES_PER_CHANNEL_FJORD};
 
     fn new_compressed_batch_data() -> Bytes {
         let file_contents =

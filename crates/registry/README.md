@@ -94,6 +94,7 @@ println!("OP Mainnet Chain Config: {:?}", op_chain_config);
 
 [s]: ./crates/registry
 [sc]: https://crates.io/crates/maili-registry
+[g]: https://crates.io/crates/maili-genesis
 
 [oag]: https://crates.io/crates/op-alloy-genesis
 [chains]: https://docs.rs/maili-registry/latest/superchain/struct.CHAINS.html

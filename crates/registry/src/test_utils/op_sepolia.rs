@@ -2,7 +2,7 @@
 
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
-use op_alloy_genesis::{ChainGenesis, RollupConfig, SystemConfig, OP_SEPOLIA_BASE_FEE_PARAMS};
+use maili_genesis::{ChainGenesis, RollupConfig, SystemConfig, OP_SEPOLIA_BASE_FEE_PARAMS};
 
 /// The [RollupConfig] for OP Sepolia.
 pub const OP_SEPOLIA_CONFIG: RollupConfig = RollupConfig {

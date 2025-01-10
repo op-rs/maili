@@ -15,8 +15,10 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
+# Workspace
+maili-genesis.workspace = true
+
 # OP-Alloy
-op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true
 
 # Alloy
@@ -73,10 +75,20 @@ test-utils = [
 arbitrary = [
   "std",
   "dep:arbitrary",
+  "maili-genesis/arbitrary",
   "alloy-consensus/arbitrary",
   "alloy-eips/arbitrary",
   "alloy-primitives/rand",
   "alloy-primitives/arbitrary",
 ]
-std = ["op-alloy-consensus/std", "op-alloy-genesis/std", "brotli/std"]
-serde = ["dep:serde", "dep:alloy-serde", "op-alloy-consensus/serde", "op-alloy-genesis/serde"]
+std = [
+  "maili-genesis/std",
+  "op-alloy-consensus/std",
+  "brotli/std"
+]
+serde = [
+  "dep:serde",
+  "dep:alloy-serde",
+  "op-alloy-consensus/serde",
+  "maili-genesis/serde",
+]

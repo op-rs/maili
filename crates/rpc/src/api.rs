@@ -8,7 +8,7 @@ use core::net::IpAddr;
 
 use alloy_eips::BlockNumberOrTag;
 use alloy_primitives::{B256, U64};
-#[allow(unused_imports)]
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
 use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_common::{ProtocolVersion, SuperchainSignal};

@@ -1,5 +1,5 @@
 [package]
-name = "maili-rpc-jsonrpsee"
+name = "maili-rpc"
 description = "Optimism RPC Client"
 
 version.workspace = true
@@ -27,11 +27,12 @@ alloy-eips.workspace = true
 alloy-primitives.workspace = true
 
 # rpc
-jsonrpsee.workspace = true
-getrandom.workspace = true
+jsonrpsee = { workspace = true, optional = true }
+getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unknown
+serde.workspace = true
 
 [features]
-default = ["std"]
+default = ["std", "jsonrpsee"]
 std = [
     "maili-protocol/std",
     "maili-common/std",
@@ -39,7 +40,12 @@ std = [
     "alloy-eips/std",
     "alloy-primitives/std",
 ]
+jsonrpsee = [
+    "dep:jsonrpsee",
+    "dep:getrandom",
+]
 client = [
+    "jsonrpsee",
     "jsonrpsee/client",
     "jsonrpsee/async-client",
 ]

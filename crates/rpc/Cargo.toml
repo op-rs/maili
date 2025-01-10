@@ -1,6 +1,6 @@
 [package]
 name = "maili-rpc"
-description = "Optimism RPC Client"
+description = "Optimism RPC API"
 
 version.workspace = true
 edition.workspace = true
@@ -16,12 +16,12 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-protocol = { workspace = true, default-features = false, features = ["serde"] }
+maili-protocol = { workspace = true, optional = true, default-features = false, features = ["serde"] }
 maili-common = { workspace = true, optional = true, default-features = false, features = ["serde"] }
 
 # Alloy
-alloy-eips.workspace = true
-alloy-primitives.workspace = true
+alloy-eips = { workspace = true, features = ["serde"] }
+alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
 
 # rpc
 jsonrpsee = { workspace = true, optional = true }
@@ -34,13 +34,14 @@ serde_json.workspace = true
 [features]
 default = ["std", "jsonrpsee"]
 std = [
-    "maili-protocol/std",
+    "maili-protocol?/std",
     "maili-common?/std",
     "alloy-eips/std",
     "alloy-primitives/std",
 ]
 jsonrpsee = [
     "dep:maili-common",
+    "dep:maili-protocol",
     "dep:jsonrpsee",
     "dep:getrandom",
 ]

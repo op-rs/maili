@@ -177,6 +177,42 @@ impl L1BlockInfoTx {
         }
     }
 
+    /// Returns the l1 base fee.
+    pub fn l1_base_fee(&self) -> U256 {
+        match self {
+            Self::Bedrock(L1BlockInfoBedrock { base_fee, .. }) => U256::from(*base_fee),
+            Self::Ecotone(L1BlockInfoEcotone { base_fee, .. }) => U256::from(*base_fee),
+        }
+    }
+
+    /// Returns the l1 fee scalar.
+    pub fn l1_fee_scalar(&self) -> U256 {
+        match self {
+            Self::Bedrock(L1BlockInfoBedrock { l1_fee_scalar, .. }) => *l1_fee_scalar,
+            Self::Ecotone(L1BlockInfoEcotone { base_fee_scalar, .. }) => {
+                U256::from(*base_fee_scalar)
+            }
+        }
+    }
+
+    /// Returns the blob base fee.
+    pub fn blob_base_fee(&self) -> U256 {
+        match self {
+            Self::Bedrock(_) => U256::ZERO,
+            Self::Ecotone(L1BlockInfoEcotone { blob_base_fee, .. }) => U256::from(*blob_base_fee),
+        }
+    }
+
+    /// Returns the blob base fee scalar.
+    pub fn blob_base_fee_scalar(&self) -> U256 {
+        match self {
+            Self::Bedrock(_) => U256::ZERO,
+            Self::Ecotone(L1BlockInfoEcotone { blob_base_fee_scalar, .. }) => {
+                U256::from(*blob_base_fee_scalar)
+            }
+        }
+    }
+
     /// Returns the L1 fee overhead for the info transaction. After ecotone, this value is ignored.
     pub const fn l1_fee_overhead(&self) -> U256 {
         match self {
@@ -253,6 +289,54 @@ mod test {
             ecotone.block_hash(),
             b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3")
         );
+    }
+
+    #[test]
+    fn test_l1_base_fee() {
+        let bedrock =
+            L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { base_fee: 123, ..Default::default() });
+        assert_eq!(bedrock.l1_base_fee(), U256::from(123));
+
+        let ecotone =
+            L1BlockInfoTx::Ecotone(L1BlockInfoEcotone { base_fee: 456, ..Default::default() });
+        assert_eq!(ecotone.l1_base_fee(), U256::from(456));
+    }
+
+    #[test]
+    fn test_l1_fee_scalar() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
+            l1_fee_scalar: U256::from(123),
+            ..Default::default()
+        });
+        assert_eq!(bedrock.l1_fee_scalar(), U256::from(123));
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            base_fee_scalar: 456,
+            ..Default::default()
+        });
+        assert_eq!(ecotone.l1_fee_scalar(), U256::from(456));
+    }
+
+    #[test]
+    fn test_blob_base_fee() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { ..Default::default() });
+        assert_eq!(bedrock.blob_base_fee(), U256::ZERO);
+
+        let ecotone =
+            L1BlockInfoTx::Ecotone(L1BlockInfoEcotone { blob_base_fee: 456, ..Default::default() });
+        assert_eq!(ecotone.blob_base_fee(), U256::from(456));
+    }
+
+    #[test]
+    fn test_blob_base_fee_scalar() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { ..Default::default() });
+        assert_eq!(bedrock.blob_base_fee_scalar(), U256::ZERO);
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            blob_base_fee_scalar: 456,
+            ..Default::default()
+        });
+        assert_eq!(ecotone.blob_base_fee_scalar(), U256::from(456));
     }
 
     #[test]

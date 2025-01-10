@@ -13,6 +13,7 @@ mod api;
 
 mod js_types;
 pub use js_types::{
-    Connectedness, Direction, GossipScores, L1BlockRef, L2BlockRef, OutputResponse, PeerDump,
-    PeerInfo, PeerScores, PeerStats, ReqRespScores, SafeHeadResponse, SyncStatus, TopicScores,
+    Connectedness, Direction, Genesis, GossipScores, L1BlockRef, L2BlockRef, OutputResponse,
+    PeerDump, PeerInfo, PeerScores, PeerStats, ReqRespScores, RollupConfig, SafeHeadResponse,
+    SyncStatus, SystemConfig, TopicScores,
 };

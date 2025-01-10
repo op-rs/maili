@@ -1,3 +1,6 @@
+mod config;
+pub use config::{Genesis, RollupConfig, SystemConfig};
+
 mod net;
 pub use net::{
     Connectedness, Direction, GossipScores, PeerDump, PeerInfo, PeerScores, PeerStats,

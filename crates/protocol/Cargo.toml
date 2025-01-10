@@ -51,10 +51,11 @@ spin = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true, features = ["fmt"], optional = true }
 
 [dev-dependencies]
+maili-protocol = { workspace = true, features = ["serde"] }
 brotli = { workspace = true, features = ["std"] }
 revm.workspace = true
 spin.workspace = true
-rand.workspace = true
+rand = { workspace = true, features = ["std", "std_rng"] }
 rstest.workspace = true
 proptest.workspace = true
 serde_json.workspace = true

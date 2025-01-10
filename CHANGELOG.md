@@ -5,11 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.2](https://github.com/op-rs/maili
-/releases/tag/v0.1.2) - 2025-01-09
+## [0.1.3](https://github.com/op-rs/maili
+/releases/tag/v0.1.3) - 2025-01-10
 
 ### Bug Fixes
 
+- [no-std] Fix broken test in `no_std` `maili-protocol` ([#38](https://github.com/op-rs/maili/issues/38))
+- Add Crates to no_std Checks ([#32](https://github.com/op-rs/maili/issues/32))
+- [maili] Missing Crates ([#34](https://github.com/op-rs/maili/issues/34))
 - Missing scr ([#30](https://github.com/op-rs/maili/issues/30))
 - [protocol] Channel ID Randomization ([#13](https://github.com/op-rs/maili/issues/13))
 - Channel id randomization
@@ -118,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [protocol] L1BlockInfo Accessors ([#39](https://github.com/op-rs/maili/issues/39))
 - [interop] Define `ExecutingMessage` wrapper ([#361](https://github.com/op-rs/maili/issues/361))
 - [protocol] Compressors with Mocked Brotli Streaming ([#335](https://github.com/op-rs/maili/issues/335))
 - [protocol] Interop Types ([#352](https://github.com/op-rs/maili/issues/352))
@@ -247,6 +251,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [rpc] Migrate json types from `op-alloy` ([#37](https://github.com/op-rs/maili/issues/37))
+- [common] Migrate deposit source types from `op-alloy` ([#36](https://github.com/op-rs/maili/issues/36))
 - Document Crate Releases ([#15](https://github.com/op-rs/maili/issues/15))
 - Document crate releases
 - [docs] Update doc headers ([#26](https://github.com/op-rs/maili/issues/26))
@@ -381,6 +387,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.1.2 ([#31](https://github.com/op-rs/maili/issues/31))
 - 0.1.1 ([#29](https://github.com/op-rs/maili/issues/29))
 - Merge branch 'main' into emhane/supervsior-api
 - Smol perf improvement SupervisorApi, pass slice instead of vec as param

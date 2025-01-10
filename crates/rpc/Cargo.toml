@@ -31,6 +31,9 @@ jsonrpsee = { workspace = true, optional = true }
 getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unknown
 serde.workspace = true
 
+[dev-dependencies]
+serde_json.workspace = true
+
 [features]
 default = ["std", "jsonrpsee"]
 std = [

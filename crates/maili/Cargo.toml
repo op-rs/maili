@@ -23,7 +23,7 @@ maili-common = { workspace = true, optional = true }
 maili-protocol = { workspace = true, optional = true }
 maili-provider = { workspace = true, optional = true }
 maili-registry = { workspace = true, optional = true }
-maili-rpc-jsonrpsee = { workspace = true, optional = true }
+maili-rpc = { workspace = true, optional = true }
 
 [features]
 default = ["std", "serde"]
@@ -39,7 +39,7 @@ full = [
   "protocol",
   "provider",
   "registry",
-  "rpc-jsonrpsee",
+  "rpc",
 ]
 
 arbitrary = [
@@ -51,6 +51,8 @@ serde = [
   "maili-common?/serde",
 ]
 
+jsonrpsee = ["maili-rpc?/jsonrpsee"]
+
 # `no_std` support
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
@@ -58,4 +60,4 @@ common = ["dep:maili-common"]
 
 # std features
 provider = ["dep:maili-provider"]
-rpc-jsonrpsee = ["dep:maili-rpc-jsonrpsee"]
+rpc = ["dep:maili-rpc"]

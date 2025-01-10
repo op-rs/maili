@@ -1,3 +1,4 @@
+#![cfg(feature = "jsonrpsee")]
 #![allow(missing_docs)]
 
 //! Rollup Node
@@ -7,10 +8,13 @@ use core::net::IpAddr;
 
 use alloy_eips::BlockNumberOrTag;
 use alloy_primitives::{B256, U64};
+#[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
+use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_common::{ProtocolVersion, SuperchainSignal};
 use maili_protocol::{ExecutingMessage, SafetyLevel};
-use op_alloy_rpc_types::{
+
+use crate::{
     OutputResponse, PeerDump, PeerInfo, PeerStats, RollupConfig, SafeHeadResponse, SyncStatus,
 };
 

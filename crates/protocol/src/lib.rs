@@ -68,7 +68,8 @@ pub use deposits::{
 
 mod info;
 pub use info::{
-    BlockInfoError, DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx,
+    estimate_fjord_tx_size, BlockInfoError, DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone,
+    L1BlockInfoTx,
 };
 
 mod fee;

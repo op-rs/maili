@@ -1,5 +1,8 @@
 //! Module containing L1 Attributes types (aka the L1 block info transaction).
 
+mod fjord;
+pub use fjord::estimate_fjord_tx_size;
+
 mod variant;
 pub use variant::L1BlockInfoTx;
 

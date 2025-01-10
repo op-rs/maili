@@ -8,8 +8,8 @@ use core::net::IpAddr;
 use alloy_eips::BlockNumberOrTag;
 use alloy_primitives::{B256, U64};
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
+use maili_common::{ProtocolVersion, SuperchainSignal};
 use maili_protocol::{ExecutingMessage, SafetyLevel};
-use maili_rpc_types_engine::{ProtocolVersion, SuperchainSignal};
 use op_alloy_rpc_types::{
     OutputResponse, PeerDump, PeerInfo, PeerStats, RollupConfig, SafeHeadResponse, SyncStatus,
 };

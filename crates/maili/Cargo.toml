@@ -19,10 +19,11 @@ workspace = true
 
 [dependencies]
 # Workspace
+maili-common = { workspace = true, optional = true }
 maili-protocol = { workspace = true, optional = true }
 maili-provider = { workspace = true, optional = true }
 maili-registry = { workspace = true, optional = true }
-maili-rpc-types-engine = { workspace = true, optional = true }
+maili-rpc-jsonrpsee = { workspace = true, optional = true }
 
 [features]
 default = ["std", "serde"]
@@ -30,13 +31,15 @@ default = ["std", "serde"]
 std = [
   "maili-protocol?/std",
   "maili-registry?/std",
-  "maili-rpc-types-engine?/std",
+  "maili-common?/std",
 ]
 
 full = [
+  "common",
   "protocol",
   "provider",
   "registry",
+  "rpc-jsonrpsee",
 ]
 
 arbitrary = [
@@ -45,13 +48,14 @@ arbitrary = [
 
 serde = [
   "maili-protocol?/serde",
-  "maili-rpc-types-engine?/serde",
+  "maili-common?/serde",
 ]
 
 # `no_std` support
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
-rpc-types-engine = ["dep:maili-rpc-types-engine"]
+common = ["dep:maili-common"]
 
 # std features
 provider = ["dep:maili-provider"]
+rpc-jsonrpsee = ["dep:maili-rpc-jsonrpsee"]

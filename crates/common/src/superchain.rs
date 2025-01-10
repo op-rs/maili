@@ -1,3 +1,5 @@
+//! Optimism RPC types for the `engine` namespace
+
 use alloc::{
     format,
     string::{String, ToString},

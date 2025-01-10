@@ -51,7 +51,7 @@ serde = [
 # `no_std` support
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
-rpc-types-engine = ["dep:maili-common"]
+common = ["dep:maili-common"]
 
 # std features
 provider = ["dep:maili-provider"]

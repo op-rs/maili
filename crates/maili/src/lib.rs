@@ -19,6 +19,6 @@ pub use maili_registry as registry;
 #[doc(inline)]
 pub use maili_provider as provider;
 
-#[cfg(feature = "rpc-types-engine")]
+#[cfg(feature = "common")]
 #[doc(inline)]
-pub use maili_common as rpc_types_engine;
+pub use maili_common as common;

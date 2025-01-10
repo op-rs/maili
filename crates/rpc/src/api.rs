@@ -13,7 +13,8 @@ use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_common::{ProtocolVersion, SuperchainSignal};
 use maili_protocol::{ExecutingMessage, SafetyLevel};
-use op_alloy_rpc_types::{
+
+use crate::{
     OutputResponse, PeerDump, PeerInfo, PeerStats, RollupConfig, SafeHeadResponse, SyncStatus,
 };
 

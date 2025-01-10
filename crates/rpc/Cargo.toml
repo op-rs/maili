@@ -19,9 +19,6 @@ workspace = true
 maili-protocol = { workspace = true, default-features = false, features = ["serde"] }
 maili-common = { workspace = true, optional = true, default-features = false, features = ["serde"] }
 
-# OP-Alloy
-op-alloy-rpc-types.workspace = true
-
 # Alloy
 alloy-eips.workspace = true
 alloy-primitives.workspace = true
@@ -39,7 +36,6 @@ default = ["std", "jsonrpsee"]
 std = [
     "maili-protocol/std",
     "maili-common?/std",
-    "op-alloy-rpc-types/std",
     "alloy-eips/std",
     "alloy-primitives/std",
 ]

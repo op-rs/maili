@@ -6,7 +6,7 @@ use alloy_rpc_types_engine::{
     ExecutionPayloadV3, ForkchoiceState, ForkchoiceUpdated, PayloadId, PayloadStatus,
 };
 use alloy_transport::{Transport, TransportResult};
-use maili_rpc_types_engine::{ProtocolVersion, SuperchainSignal};
+use maili_common::{ProtocolVersion, SuperchainSignal};
 use op_alloy_rpc_types_engine::{
     OpExecutionPayloadEnvelopeV3, OpExecutionPayloadEnvelopeV4, OpPayloadAttributes,
 };

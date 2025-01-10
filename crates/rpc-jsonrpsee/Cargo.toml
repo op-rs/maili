@@ -17,7 +17,7 @@ workspace = true
 [dependencies]
 # Workspace
 maili-protocol = { workspace = true, default-features = false, features = ["serde"] }
-maili-rpc-types-engine = { workspace = true, default-features = false, features = ["serde"] }
+maili-common = { workspace = true, default-features = false, features = ["serde"] }
 
 # OP-Alloy
 op-alloy-rpc-types.workspace = true
@@ -34,7 +34,7 @@ getrandom.workspace = true
 default = ["std"]
 std = [
     "maili-protocol/std",
-    "maili-rpc-types-engine/std",
+    "maili-common/std",
     "op-alloy-rpc-types/std",
     "alloy-eips/std",
     "alloy-primitives/std",

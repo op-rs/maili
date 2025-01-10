@@ -3,7 +3,10 @@
 use alloc::{format, string::ToString, vec::Vec};
 use alloy_primitives::{Address, Bytes, B256, U256};
 
-use crate::DecodeError;
+use crate::{estimate_fjord_tx_size, DecodeError};
+
+const ZERO_BYTE_COST: u64 = 4;
+const NON_ZERO_BYTE_COST: u64 = 16;
 
 /// Represents the fields within an Ecotone L1 block info transaction.
 ///
@@ -69,6 +72,44 @@ impl L1BlockInfoEcotone {
         buf.extend_from_slice(self.block_hash.as_ref());
         buf.extend_from_slice(self.batcher_address.into_word().as_ref());
         buf.into()
+    }
+
+    /// Calculates the L1 fee for transaction data post-ecotone.
+    ///
+    /// l1BaseFee * 16 * l1BaseFeeScalar + l1BlobBaseFee * l1BlobBaseFeeScalar
+    pub fn calculate_l1_fee_scaled(&self) -> U256 {
+        let calldata_cost_per_byte = U256::from(self.base_fee)
+            * U256::from(NON_ZERO_BYTE_COST)
+            * U256::from(self.base_fee_scalar);
+        let blob_cost_per_byte =
+            U256::from(self.blob_base_fee) * U256::from(self.blob_base_fee_scalar);
+
+        calldata_cost_per_byte + blob_cost_per_byte
+    }
+
+    /// Calculates the cost to post a transaction's to L1 after the ecotone hardfork.
+    ///
+    /// This method is for *before* the FJORD hardfork.
+    /// After the FJORD hardfork, [`L1BlockInfoEcotone::calculate_tx_l1_cost_fjord`]
+    /// must be used.
+    pub fn calculate_tx_l1_cost(&self, input: &[u8]) -> U256 {
+        let l1_fee_scaled = self.calculate_l1_fee_scaled();
+
+        let rollup_data_gas_cost = U256::from(input.iter().fold(0, |acc, byte| {
+            acc + if *byte == 0x00 { ZERO_BYTE_COST } else { NON_ZERO_BYTE_COST }
+        }));
+
+        l1_fee_scaled * rollup_data_gas_cost / U256::from(1_000_000 * NON_ZERO_BYTE_COST)
+    }
+
+    /// Calculates the cost to post a transaction's data to L1 after the FJORD hardfork.
+    pub fn calculate_tx_l1_cost_fjord(&self, input: &[u8]) -> U256 {
+        let l1_fee_scaled = self.calculate_l1_fee_scaled();
+
+        let rollup_data_gas_cost =
+            estimate_fjord_tx_size(input) * U256::from(NON_ZERO_BYTE_COST) / U256::from(1_000_000);
+
+        l1_fee_scaled * rollup_data_gas_cost / U256::from(1_000_000 * NON_ZERO_BYTE_COST)
     }
 
     /// Decodes the [L1BlockInfoEcotone] object from ethereum transaction calldata.

@@ -208,7 +208,6 @@ impl core::fmt::Display for Direction {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::{self};
 
     #[test]
     fn test_direction_serialization() {

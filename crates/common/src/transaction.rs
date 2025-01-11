@@ -6,6 +6,9 @@ use crate::DepositTransaction;
 
 /// Extends [`Transaction`] for Optimistic operations.
 pub trait OpTransaction: Transaction {
+    /// Deposit transaction.
+    type DepositTx: DepositTransaction;
+
     /// Returns `true` if the transaction is a deposit transaction.
     fn is_deposit(&self) -> bool;
 
@@ -13,5 +16,5 @@ pub trait OpTransaction: Transaction {
     fn is_system_transaction(&self) -> bool;
 
     /// Returns [`DepositTransaction`] if transaction is a deposit transaction.
-    fn as_deposit(&self) -> Option<&Sealed<impl DepositTransaction>>;
+    fn as_deposit(&self) -> Option<&Sealed<Self::DepositTx>>;
 }

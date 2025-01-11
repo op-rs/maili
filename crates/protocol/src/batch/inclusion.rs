@@ -1,6 +1,8 @@
 //! Module containing the [BatchWithInclusionBlock] struct.
 
 use crate::{Batch, BatchValidationProvider, BatchValidity, BlockInfo, L2BlockInfo};
+use alloy_eips::eip2718::Encodable2718;
+use maili_common::OpTransaction;
 use op_alloy_genesis::RollupConfig;
 
 /// A batch with its inclusion block.
@@ -23,13 +25,16 @@ impl BatchWithInclusionBlock {
     /// One or more consecutive l1_blocks should be provided.
     /// In case of only a single L1 block, the decision whether a batch is valid may have to stay
     /// undecided.
-    pub async fn check_batch<BF: BatchValidationProvider>(
+    pub async fn check_batch<BF>(
         &self,
         cfg: &RollupConfig,
         l1_blocks: &[BlockInfo],
         l2_safe_head: L2BlockInfo,
         fetcher: &mut BF,
-    ) -> BatchValidity {
+    ) -> BatchValidity
+    where
+        BF: BatchValidationProvider<Transaction: OpTransaction + Encodable2718>,
+    {
         match &self.batch {
             Batch::Single(single_batch) => {
                 single_batch.check_batch(cfg, l1_blocks, l2_safe_head, &self.inclusion_block)

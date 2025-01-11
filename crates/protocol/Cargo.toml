@@ -15,6 +15,9 @@ exclude.workspace = true
 workspace = true
 
 [dependencies]
+# Workspace
+maili-common.workspace = true
+
 # OP-Alloy
 op-alloy-genesis.workspace = true
 op-alloy-consensus.workspace = true

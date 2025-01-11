@@ -177,17 +177,14 @@ impl SpanBatch {
     }
 
     /// Checks if the span batch is valid.
-    pub async fn check_batch<BV>(
+    pub async fn check_batch<BV: BatchValidationProvider>(
         &self,
         cfg: &RollupConfig,
         l1_blocks: &[BlockInfo],
         l2_safe_head: L2BlockInfo,
         inclusion_block: &BlockInfo,
         fetcher: &mut BV,
-    ) -> BatchValidity
-    where
-        BV: BatchValidationProvider<Transaction: OpTransaction + Encodable2718>,
-    {
+    ) -> BatchValidity {
         let (prefix_validity, parent_block) =
             self.check_batch_prefix(cfg, l1_blocks, l2_safe_head, inclusion_block, fetcher).await;
         if !matches!(prefix_validity, BatchValidity::Accept) {

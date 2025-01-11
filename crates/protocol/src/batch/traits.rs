@@ -2,8 +2,10 @@
 
 use alloc::{boxed::Box, string::ToString};
 use alloy_consensus::Block;
+use alloy_eips::eip2718::Encodable2718;
 use async_trait::async_trait;
 use core::fmt::Display;
+use maili_common::OpTransaction;
 
 use crate::L2BlockInfo;
 
@@ -14,7 +16,7 @@ pub trait BatchValidationProvider {
     type Error: Display + ToString;
 
     /// Signed (except for deposit) transaction.
-    type Transaction;
+    type Transaction: OpTransaction + Encodable2718;
 
     /// Returns the [L2BlockInfo] given a block number.
     ///

@@ -12,6 +12,6 @@ pub trait OpTransaction: Transaction {
     /// Returns `true` if the transaction is a system transaction.
     fn is_system_transaction(&self) -> bool;
 
-    /// Returns the [`TxDeposit`] variant if the transaction is a deposit transaction.
+    /// Returns [`DepositTransaction`] if transaction is a deposit transaction.
     fn as_deposit(&self) -> Option<&Sealed<impl DepositTransaction>>;
 }

@@ -2,7 +2,10 @@
 
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
-use maili_genesis::{ChainGenesis, RollupConfig, SystemConfig, OP_MAINNET_BASE_FEE_PARAMS};
+use maili_genesis::{
+    ChainGenesis, RollupConfig, SystemConfig, OP_MAINNET_BASE_FEE_PARAMS,
+    OP_MAINNET_BASE_FEE_PARAMS_CANYON,
+};
 
 /// The [RollupConfig] for OP Mainnet.
 pub const OP_MAINNET_CONFIG: RollupConfig = RollupConfig {
@@ -34,8 +37,8 @@ pub const OP_MAINNET_CONFIG: RollupConfig = RollupConfig {
     granite_channel_timeout: 50,
     l1_chain_id: 1_u64,
     l2_chain_id: 10_u64,
-    base_fee_params: OP_MAINNET_BASE_FEE_PARAMS.as_base_fee_params(),
-    canyon_base_fee_params: OP_MAINNET_BASE_FEE_PARAMS.as_canyon_base_fee_params(),
+    base_fee_params: OP_MAINNET_BASE_FEE_PARAMS,
+    canyon_base_fee_params: OP_MAINNET_BASE_FEE_PARAMS_CANYON,
     regolith_time: Some(0_u64),
     canyon_time: Some(1_704_992_401_u64),
     delta_time: Some(1_708_560_000_u64),

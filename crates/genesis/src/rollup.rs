@@ -4,8 +4,8 @@ use alloy_eips::eip1559::BaseFeeParams;
 use alloy_primitives::Address;
 
 use crate::{
-    constants::{base_fee_params, base_fee_params_canyon},
-    ChainGenesis, HardForkConfiguration, CHAIN_ID_OP_MAINNET,
+    base_fee_params, base_fee_params_canyon, ChainGenesis, HardForkConfiguration,
+    OP_MAINNET_CHAIN_ID,
 };
 
 /// The max rlp bytes per channel for the Bedrock hardfork.
@@ -180,8 +180,8 @@ impl Default for RollupConfig {
             granite_channel_timeout: GRANITE_CHANNEL_TIMEOUT,
             l1_chain_id: 0,
             l2_chain_id: 0,
-            base_fee_params: base_fee_params(CHAIN_ID_OP_MAINNET),
-            canyon_base_fee_params: base_fee_params_canyon(CHAIN_ID_OP_MAINNET),
+            base_fee_params: base_fee_params(OP_MAINNET_CHAIN_ID),
+            canyon_base_fee_params: base_fee_params_canyon(OP_MAINNET_CHAIN_ID),
             regolith_time: None,
             canyon_time: None,
             delta_time: None,
@@ -315,7 +315,7 @@ impl RollupConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{SystemConfig, OP_MAINNET_BASE_FEE_PARAMS};
+    use crate::{SystemConfig, OP_MAINNET_BASE_FEE_PARAMS, OP_MAINNET_BASE_FEE_PARAMS_CANYON};
     use alloy_eips::BlockNumHash;
     #[cfg(feature = "serde")]
     use alloy_primitives::U256;
@@ -553,10 +553,7 @@ mod tests {
 
         // Validate non-standard fields.
         assert_eq!(config.granite_channel_timeout, GRANITE_CHANNEL_TIMEOUT);
-        assert_eq!(config.base_fee_params, OP_MAINNET_BASE_FEE_PARAMS.as_base_fee_params());
-        assert_eq!(
-            config.canyon_base_fee_params,
-            OP_MAINNET_BASE_FEE_PARAMS.as_canyon_base_fee_params()
-        );
+        assert_eq!(config.base_fee_params, OP_MAINNET_BASE_FEE_PARAMS);
+        assert_eq!(config.canyon_base_fee_params, OP_MAINNET_BASE_FEE_PARAMS_CANYON);
     }
 }

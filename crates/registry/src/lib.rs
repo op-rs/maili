@@ -10,8 +10,7 @@
 extern crate alloc;
 
 pub use alloy_primitives::map::{DefaultHashBuilder, HashMap};
-pub use maili_genesis::RollupConfig;
-pub use op_alloy_genesis::ChainConfig;
+pub use maili_genesis::{ChainConfig, RollupConfig};
 
 pub mod chain_list;
 pub use chain_list::{Chain, ChainList};

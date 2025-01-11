@@ -2,7 +2,10 @@
 
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
-use maili_genesis::{ChainGenesis, RollupConfig, SystemConfig, BASE_SEPOLIA_BASE_FEE_PARAMS};
+use maili_genesis::{
+    ChainGenesis, RollupConfig, SystemConfig, BASE_SEPOLIA_BASE_FEE_PARAMS,
+    BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON,
+};
 
 /// The [RollupConfig] for Base Sepolia.
 pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
@@ -34,8 +37,8 @@ pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
     granite_channel_timeout: 50,
     l1_chain_id: 11155111,
     l2_chain_id: 84532,
-    base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS.as_base_fee_params(),
-    canyon_base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS.as_canyon_base_fee_params(),
+    base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS,
+    canyon_base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON,
     regolith_time: Some(0),
     canyon_time: Some(1699981200),
     delta_time: Some(1703203200),

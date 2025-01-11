@@ -18,9 +18,6 @@ workspace = true
 # Workspace
 maili-genesis = { workspace = true, features = ["serde"] }
 
-# OP Alloy
-op-alloy-genesis = { workspace = true, features = ["serde"] }
-
 # Alloy
 alloy-primitives = { workspace = true, features = ["map"] }
 
@@ -40,6 +37,5 @@ map-hashbrown = ["alloy-primitives/map-hashbrown"]
 map-foldhash = ["alloy-primitives/map-foldhash"]
 std = [
     "maili-genesis/std",
-    "op-alloy-genesis/std",
     "serde_json/std"
 ]

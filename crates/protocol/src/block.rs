@@ -147,7 +147,7 @@ impl L2BlockInfo {
             let tx = &block.body.transactions[0];
 
             let Some(tx) = tx.as_deposit() else {
-                return Err(FromBlockError::FirstTxNonDeposit(tx.id()));
+                return Err(FromBlockError::FirstTxNonDeposit(tx.ty()));
             };
 
             let l1_info = L1BlockInfoTx::decode_calldata(tx.input().as_ref())

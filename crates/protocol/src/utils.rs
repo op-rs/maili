@@ -45,7 +45,7 @@ where
         return Err(OpBlockConversionError::EmptyTransactions(block.header.hash_slow()));
     }
     let Some(tx) = block.body.transactions[0].as_deposit() else {
-        return Err(OpBlockConversionError::InvalidTxType(block.body.transactions[0].id()));
+        return Err(OpBlockConversionError::InvalidTxType(block.body.transactions[0].ty()));
     };
 
     let l1_info = L1BlockInfoTx::decode_calldata(tx.input().as_ref())?;

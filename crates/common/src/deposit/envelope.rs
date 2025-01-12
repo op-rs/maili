@@ -4,7 +4,7 @@ use alloy_consensus::{Sealed, Typed2718};
 
 use crate::DepositTransaction;
 
-/// Extends transaction envelope to encompass [`DepositTransaction`].
+/// Transaction envelope that encompasses a [`DepositTransaction`].
 pub trait DepositTxEnvelope: Typed2718 {
     /// Deposit transaction.
     type DepositTx: DepositTransaction;

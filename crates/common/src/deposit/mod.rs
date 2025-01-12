@@ -4,12 +4,12 @@ mod envelope;
 pub use envelope::DepositTxEnvelope;
 
 mod source;
-use alloy_consensus::Transaction;
 pub use source::{
     DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource,
     UserDepositSource,
 };
 
+use alloy_consensus::Transaction;
 use alloy_primitives::B256;
 
 /// Identifier for an Optimism deposit transaction

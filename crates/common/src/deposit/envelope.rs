@@ -1,4 +1,4 @@
-//! Extends l1 [`Transaction`] behavior.
+//! Transaction envelope with support for OP [`DepositTransaction`].
 
 use alloy_consensus::{Sealed, Typed2718};
 

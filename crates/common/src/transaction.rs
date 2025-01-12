@@ -1,11 +1,11 @@
 //! Extends l1 [`Transaction`] behavior.
 
-use alloy_consensus::{Sealed, Transaction};
+use alloy_consensus::Sealed;
 
 use crate::DepositTransaction;
 
 /// Extends [`Transaction`] for Optimistic operations.
-pub trait OpTransaction: Transaction {
+pub trait OpTransaction {
     /// Deposit transaction.
     type DepositTx: DepositTransaction;
 

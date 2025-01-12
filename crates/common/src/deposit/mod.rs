@@ -1,15 +1,22 @@
 //! Tramsaction types for Optimism.
 
+mod envelope;
+pub use envelope::DepositTxEnvelope;
+
 mod source;
 pub use source::{
     DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource,
     UserDepositSource,
 };
 
+use alloy_consensus::Transaction;
 use alloy_primitives::B256;
 
+/// Identifier for an Optimism deposit transaction
+pub const DEPOSIT_TX_TYPE_ID: u8 = 126; // 0x7E
+
 /// A trait representing a deposit transaction with specific attributes.
-pub trait DepositTransaction {
+pub trait DepositTransaction: Transaction {
     /// Returns the hash that uniquely identifies the source of the deposit.
     ///
     /// # Returns

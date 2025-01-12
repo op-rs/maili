@@ -1,19 +1,16 @@
 //! Extends l1 [`Transaction`] behavior.
 
-use alloy_consensus::{Sealed, Transaction};
+use alloy_consensus::{Sealed, Typed2718};
 
 use crate::DepositTransaction;
 
-/// Extends [`Transaction`] for Optimistic operations.
-pub trait OpTransaction: Transaction {
+/// Transaction envelope that encompasses a [`DepositTransaction`].
+pub trait DepositTxEnvelope: Typed2718 {
     /// Deposit transaction.
     type DepositTx: DepositTransaction;
 
     /// Returns `true` if the transaction is a deposit transaction.
     fn is_deposit(&self) -> bool;
-
-    /// Returns `true` if the transaction is a system transaction.
-    fn is_system_transaction(&self) -> bool;
 
     /// Returns [`DepositTransaction`] if transaction is a deposit transaction.
     fn as_deposit(&self) -> Option<&Sealed<Self::DepositTx>>;

@@ -4,8 +4,8 @@ use alloy_consensus::Sealed;
 
 use crate::DepositTransaction;
 
-/// Extends [`Transaction`] for Optimistic operations.
-pub trait OpTransaction {
+/// Extends transaction envelope to encompass [`DepositTransaction`].
+pub trait DepositTxEnvelope {
     /// Deposit transaction.
     type DepositTx: DepositTransaction;
 

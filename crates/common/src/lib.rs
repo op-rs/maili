@@ -11,14 +11,11 @@ extern crate alloc;
 
 mod deposit;
 pub use deposit::{
-    DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, L1InfoDepositSource,
-    UpgradeDepositSource, UserDepositSource,
+    DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, DepositTxEnvelope,
+    L1InfoDepositSource, UpgradeDepositSource, UserDepositSource,
 };
 
 mod superchain;
 pub use superchain::{
     ProtocolVersion, ProtocolVersionError, ProtocolVersionFormatV0, SuperchainSignal,
 };
-
-mod transaction;
-pub use transaction::OpTransaction;

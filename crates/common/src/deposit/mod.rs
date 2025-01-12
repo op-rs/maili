@@ -1,5 +1,8 @@
 //! Tramsaction types for Optimism.
 
+mod envelope;
+pub use envelope::DepositTxEnvelope;
+
 mod source;
 pub use source::{
     DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource,

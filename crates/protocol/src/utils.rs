@@ -4,7 +4,7 @@ use alloc::vec::Vec;
 use alloy_consensus::{Block, Transaction, TxType};
 use alloy_primitives::B256;
 use alloy_rlp::{Buf, Header};
-use maili_common::OpTransaction;
+use maili_common::DepositTxEnvelope;
 use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 use crate::{
@@ -26,7 +26,7 @@ pub fn to_system_config<T>(
     rollup_config: &RollupConfig,
 ) -> Result<SystemConfig, OpBlockConversionError>
 where
-    T: OpTransaction,
+    T: DepositTxEnvelope,
 {
     if block.header.number == rollup_config.genesis.l2.number {
         if block.header.hash_slow() != rollup_config.genesis.l2.hash {
@@ -45,7 +45,7 @@ where
         return Err(OpBlockConversionError::EmptyTransactions(block.header.hash_slow()));
     }
     let Some(tx) = block.body.transactions[0].as_deposit() else {
-        return Err(OpBlockConversionError::InvalidTxType(block.body.transactions[0].ty()));
+        return Err(OpBlockConversionError::InvalidTxType(block.body.transactions[0].id()));
     };
 
     let l1_info = L1BlockInfoTx::decode_calldata(tx.input().as_ref())?;

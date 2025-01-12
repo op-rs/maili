@@ -4,7 +4,7 @@ use crate::{DecodeError, L1BlockInfoTx};
 use alloy_consensus::{Block, Transaction};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
-use maili_common::{OpTransaction, DEPOSIT_TX_TYPE_ID};
+use maili_common::DepositTxEnvelope;
 use op_alloy_genesis::ChainGenesis;
 
 /// Block Header Info
@@ -130,7 +130,7 @@ impl L2BlockInfo {
         genesis: &ChainGenesis,
     ) -> Result<Self, FromBlockError>
     where
-        T: OpTransaction,
+        T: DepositTxEnvelope,
     {
         let block_info = BlockInfo::from(block);
 
@@ -145,12 +145,9 @@ impl L2BlockInfo {
             }
 
             let tx = &block.body.transactions[0];
-            if tx.ty() != DEPOSIT_TX_TYPE_ID {
-                return Err(FromBlockError::UnexpectedTxType(tx.ty()));
-            }
 
             let Some(tx) = tx.as_deposit() else {
-                return Err(FromBlockError::FirstTxNonDeposit(tx.ty()));
+                return Err(FromBlockError::FirstTxNonDeposit(tx.id()));
             };
 
             let l1_info = L1BlockInfoTx::decode_calldata(tx.input().as_ref())

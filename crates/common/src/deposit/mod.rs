@@ -27,10 +27,4 @@ pub trait DepositTransaction {
     /// # Returns
     /// A `bool` indicating if the transaction is a system transaction.
     fn is_system_transaction(&self) -> bool;
-
-    /// Checks if the transaction is a deposit transaction.
-    ///
-    /// # Returns
-    /// A `bool` that is always `true` for deposit transactions.
-    fn is_deposit(&self) -> bool;
 }

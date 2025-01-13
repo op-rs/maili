@@ -17,6 +17,7 @@ workspace = true
 [dependencies]
 # Alloy
 alloy-primitives.workspace = true
+alloy-consensus.workspace = true
 
 # serde
 serde = { workspace = true, optional = true }

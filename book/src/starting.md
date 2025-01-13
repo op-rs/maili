@@ -59,6 +59,7 @@ so `maili-protocol` types can be used from `maili` through `maili::protocol::Ins
 - [`maili-provider`][maili-provider]
 - [`maili-common`][maili-common] (supports `no_std`)
 - [`maili-genesis`][maili-genesis] (supports `no_std`)
+- [`maili-rpc`][maili-rpc] (supports `no_std`)
 
 ## `no_std`
 
@@ -67,6 +68,7 @@ As noted above, the following crates are `no_std` compatible.
 - [`maili-protocol`][maili-protocol]
 - [`maili-common`][maili-common]
 - [`maili-genesis`][maili-genesis]
+- [`maili-rpc`][maili-rpc] 
 
 To add `no_std` support to a crate, ensure the [check_no_std][check-no-std]
 script is updated to include this crate once `no_std` compatible.

@@ -13,10 +13,11 @@ OP Stack unique types and interfaces.
 The following crates are provided by `maili`.
 
 - ![maili](https://img.shields.io/crates/v/maili?label=maili)
+- ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
+- ![maili-common](https://img.shields.io/crates/v/maili-common?label=maili-common)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
 - ![maili-provider](https://img.shields.io/crates/v/maili-provider?label=maili-provider)
-- ![maili-common](https://img.shields.io/crates/v/maili-common?label=maili-common)
 
 
 ## Development Status

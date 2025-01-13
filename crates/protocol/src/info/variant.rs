@@ -75,7 +75,6 @@ impl L1BlockInfoTx {
                 blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
                 blob_base_fee_scalar,
                 base_fee_scalar,
-                empty_scalars: false,
                 l1_fee_overhead: U256::ZERO,
             }))
         } else {
@@ -155,7 +154,7 @@ impl L1BlockInfoTx {
     pub const fn empty_scalars(&self) -> bool {
         match self {
             Self::Bedrock(_) => false,
-            Self::Ecotone(L1BlockInfoEcotone { empty_scalars, .. }) => *empty_scalars,
+            Self::Ecotone(ecotone) => ecotone.empty_scalars(),
         }
     }
 
@@ -366,16 +365,22 @@ mod test {
 
     #[test]
     fn test_empty_scalars() {
-        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { ..Default::default() });
+        let bedrock = L1BlockInfoTx::Bedrock(Default::default());
         assert!(!bedrock.empty_scalars());
 
-        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
-            empty_scalars: true,
-            ..Default::default()
-        });
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
         assert!(ecotone.empty_scalars());
 
-        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            base_fee_scalar: 456,
+            ..Default::default()
+        });
+        assert!(!ecotone.empty_scalars());
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            blob_base_fee_scalar: 456,
+            ..Default::default()
+        });
         assert!(!ecotone.empty_scalars());
     }
 
@@ -413,7 +418,6 @@ mod test {
             blob_base_fee: 1,
             blob_base_fee_scalar: 810949,
             base_fee_scalar: 1368,
-            empty_scalars: false,
             l1_fee_overhead: U256::ZERO,
         };
 

@@ -9,10 +9,10 @@
 
 extern crate alloc;
 
-mod deposit_source;
-pub use deposit_source::{
-    DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource,
-    UserDepositSource,
+mod deposit;
+pub use deposit::{
+    DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, DepositTxEnvelope,
+    L1InfoDepositSource, UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };
 
 mod superchain;

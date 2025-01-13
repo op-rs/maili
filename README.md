@@ -15,6 +15,7 @@ The following crates are provided by `maili`.
 - ![maili](https://img.shields.io/crates/v/maili?label=maili)
 - ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
 - ![maili-common](https://img.shields.io/crates/v/maili-common?label=maili-common)
+- ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
 - ![maili-provider](https://img.shields.io/crates/v/maili-provider?label=maili-provider)
@@ -57,6 +58,7 @@ Notice, provider crates do not support `no_std` compatibility.
 - [`maili-provider`][maili-provider]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
 - [`maili-common`][maili-common]
+- [`maili-genesis`][maili-genesis]
 
 If you would like to add no_std support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].

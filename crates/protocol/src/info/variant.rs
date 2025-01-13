@@ -75,6 +75,8 @@ impl L1BlockInfoTx {
                 blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
                 blob_base_fee_scalar,
                 base_fee_scalar,
+                empty_scalars: false,
+                l1_fee_overhead: U256::ZERO,
             }))
         } else {
             Ok(Self::Bedrock(L1BlockInfoBedrock {
@@ -149,6 +151,14 @@ impl L1BlockInfoTx {
         }
     }
 
+    /// Returns whether the scalars are empty.
+    pub const fn empty_scalars(&self) -> bool {
+        match self {
+            Self::Bedrock(_) => false,
+            Self::Ecotone(L1BlockInfoEcotone { empty_scalars, .. }) => *empty_scalars,
+        }
+    }
+
     /// Returns the block hash for the [L1BlockInfoTx].
     pub const fn block_hash(&self) -> B256 {
         match self {
@@ -217,7 +227,7 @@ impl L1BlockInfoTx {
     pub const fn l1_fee_overhead(&self) -> U256 {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { l1_fee_overhead, .. }) => *l1_fee_overhead,
-            Self::Ecotone(_) => U256::ZERO,
+            Self::Ecotone(L1BlockInfoEcotone { l1_fee_overhead, .. }) => *l1_fee_overhead,
         }
     }
 
@@ -303,6 +313,21 @@ mod test {
     }
 
     #[test]
+    fn test_l1_fee_overhead() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
+            l1_fee_overhead: U256::from(123),
+            ..Default::default()
+        });
+        assert_eq!(bedrock.l1_fee_overhead(), U256::from(123));
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            l1_fee_overhead: U256::from(456),
+            ..Default::default()
+        });
+        assert_eq!(ecotone.l1_fee_overhead(), U256::from(456));
+    }
+
+    #[test]
     fn test_l1_fee_scalar() {
         let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
             l1_fee_scalar: U256::from(123),
@@ -340,6 +365,21 @@ mod test {
     }
 
     #[test]
+    fn test_empty_scalars() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { ..Default::default() });
+        assert!(!bedrock.empty_scalars());
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            empty_scalars: true,
+            ..Default::default()
+        });
+        assert!(ecotone.empty_scalars());
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
+        assert!(!ecotone.empty_scalars());
+    }
+
+    #[test]
     fn bedrock_l1_block_info_tx_roundtrip() {
         let expected = L1BlockInfoBedrock {
             number: 18334955,
@@ -373,6 +413,8 @@ mod test {
             blob_base_fee: 1,
             blob_base_fee_scalar: 810949,
             base_fee_scalar: 1368,
+            empty_scalars: false,
+            l1_fee_overhead: U256::ZERO,
         };
 
         let L1BlockInfoTx::Ecotone(decoded) =

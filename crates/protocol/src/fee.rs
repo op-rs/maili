@@ -50,6 +50,43 @@ fn tx_estimated_size_fjord(input: &[u8]) -> U256 {
         .max(U256::from(100_000_000))
 }
 
+/// Calculates the bedrock tx cost given the rollup data gas cost and the following parameters.
+/// - `l1_fee_overhead`: The L1 fee overhead.
+/// - `base_fee`: The base fee.
+/// - `l1_fee_scalar`: The L1 fee scalar.
+///
+/// This method is used internally in tx cost methods.
+fn bedrock_tx_cost(
+    rollup_data_gas_cost: U256,
+    l1_fee_overhead: U256,
+    base_fee: U256,
+    l1_fee_scalar: U256,
+) -> U256 {
+    rollup_data_gas_cost
+        .saturating_add(l1_fee_overhead)
+        .saturating_mul(base_fee)
+        .saturating_mul(l1_fee_scalar)
+        .wrapping_div(U256::from(1_000_000)) // normalize by 1e6
+}
+
+/// Calculate the gas cost of a transaction based on L1 block data posted on L2 post-ecotone.
+/// This is a special case where the gas cost function uses the bedrock gas cost function,
+/// but the data gas is calculated using the ecotone data gas function.
+pub fn calculate_tx_l1_cost_bedrock_empty_scalars(
+    input: &[u8],
+    l1_fee_overhead: U256,
+    base_fee: U256,
+    l1_fee_scalar: U256,
+) -> U256 {
+    if input.is_empty() || input.first() == Some(&0x7F) {
+        return U256::ZERO;
+    }
+
+    let rollup_data_gas_cost = data_gas_regolith(input);
+
+    bedrock_tx_cost(rollup_data_gas_cost, l1_fee_overhead, base_fee, l1_fee_scalar)
+}
+
 /// Calculate the gas cost of a transaction based on L1 block data posted on L2 post-bedrock.
 pub fn calculate_tx_l1_cost_bedrock(
     input: &[u8],
@@ -62,11 +99,8 @@ pub fn calculate_tx_l1_cost_bedrock(
     }
 
     let rollup_data_gas_cost = data_gas_bedrock(input);
-    rollup_data_gas_cost
-        .saturating_add(l1_fee_overhead)
-        .saturating_mul(base_fee)
-        .saturating_mul(l1_fee_scalar)
-        .wrapping_div(U256::from(1_000_000))
+
+    bedrock_tx_cost(rollup_data_gas_cost, l1_fee_overhead, base_fee, l1_fee_scalar)
 }
 
 /// Calculate the gas cost of a transaction based on L1 block data posted on L2 post-regolith.
@@ -81,11 +115,8 @@ pub fn calculate_tx_l1_cost_regolith(
     }
 
     let rollup_data_gas_cost = data_gas_regolith(input);
-    rollup_data_gas_cost
-        .saturating_add(l1_fee_overhead)
-        .saturating_mul(base_fee)
-        .saturating_mul(l1_fee_scalar)
-        .wrapping_div(U256::from(1_000_000))
+
+    bedrock_tx_cost(rollup_data_gas_cost, l1_fee_overhead, base_fee, l1_fee_scalar)
 }
 
 /// Calculate the gas cost of a transaction based on L1 block data posted on L2, post-Ecotone.

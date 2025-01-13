@@ -17,6 +17,7 @@ workspace = true
 [dependencies]
 # Workspace
 maili-genesis.workspace = true
+maili-common.workspace = true
 
 # OP-Alloy
 op-alloy-consensus.workspace = true
@@ -82,6 +83,7 @@ arbitrary = [
   "alloy-primitives/arbitrary",
 ]
 std = [
+  "maili-common/std",
   "maili-genesis/std",
   "op-alloy-consensus/std",
   "brotli/std",
@@ -89,6 +91,7 @@ std = [
 serde = [
   "dep:serde",
   "dep:alloy-serde",
+  "maili-common/serde",
   "maili-genesis/serde",
   "op-alloy-consensus/serde",
 ]

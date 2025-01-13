@@ -43,6 +43,15 @@ pub struct L1BlockInfoEcotone {
     pub blob_base_fee_scalar: u32,
     /// The fee scalar for L1 data
     pub base_fee_scalar: u32,
+    /// Indicates that the scalars are empty.
+    /// This is an edge case where the first block in ecotone has no scalars,
+    /// so the bedrock tx l1 cost function needs to be used.
+    pub empty_scalars: bool,
+    /// The l1 fee overhead used along with the `empty_scalars` field for the
+    /// bedrock tx l1 cost function.
+    ///
+    /// This field is deprecated in the Ecotone Hardfork.
+    pub l1_fee_overhead: U256,
 }
 
 impl L1BlockInfoEcotone {
@@ -68,6 +77,8 @@ impl L1BlockInfoEcotone {
         buf.extend_from_slice(U256::from(self.blob_base_fee).to_be_bytes::<32>().as_ref());
         buf.extend_from_slice(self.block_hash.as_ref());
         buf.extend_from_slice(self.batcher_address.into_word().as_ref());
+        // Notice: do not include the `empty_scalars` field in the calldata.
+        // Notice: do not include the `l1_fee_overhead` field in the calldata.
         buf.into()
     }
 
@@ -116,6 +127,12 @@ impl L1BlockInfoEcotone {
             blob_base_fee,
             blob_base_fee_scalar,
             base_fee_scalar,
+            // Notice: the `empty_scalars` field is not included in the calldata.
+            // This is used by the evm to indicate that the bedrock tx l1 cost function
+            // needs to be used.
+            empty_scalars: false,
+            // Notice: the `l1_fee_overhead` field is not included in the calldata.
+            l1_fee_overhead: U256::ZERO,
         })
     }
 }

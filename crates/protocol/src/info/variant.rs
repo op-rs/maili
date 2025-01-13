@@ -5,8 +5,8 @@ use alloc::{format, string::ToString};
 use alloy_consensus::Header;
 use alloy_eips::{eip7840::BlobParams, BlockNumHash};
 use alloy_primitives::{address, Address, Bytes, Sealable, TxKind, B256, U256};
+use maili_genesis::{RollupConfig, SystemConfig};
 use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
-use op_alloy_genesis::{RollupConfig, SystemConfig};
 
 use crate::{
     BlockInfoError, DecodeError, DepositSourceDomain, L1BlockInfoBedrock, L1BlockInfoEcotone,

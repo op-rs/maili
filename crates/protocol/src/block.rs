@@ -3,8 +3,8 @@
 use crate::{DecodeError, L1BlockInfoTx};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
+use maili_genesis::ChainGenesis;
 use op_alloy_consensus::{OpBlock, OpTxEnvelope, OpTxType};
-use op_alloy_genesis::ChainGenesis;
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

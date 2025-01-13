@@ -79,7 +79,7 @@ pub fn decompress_brotli(
 mod test {
     use super::*;
     use alloy_primitives::hex;
-    use op_alloy_genesis::MAX_RLP_BYTES_PER_CHANNEL_FJORD;
+    use maili_genesis::MAX_RLP_BYTES_PER_CHANNEL_FJORD;
 
     #[test]
     fn test_decompress_brotli() {

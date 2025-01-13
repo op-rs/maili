@@ -1,7 +1,7 @@
 //! Module containing the [BatchWithInclusionBlock] struct.
 
 use crate::{Batch, BatchValidationProvider, BatchValidity, BlockInfo, L2BlockInfo};
-use op_alloy_genesis::RollupConfig;
+use maili_genesis::RollupConfig;
 
 /// A batch with its inclusion block.
 #[derive(Debug, Clone, PartialEq, Eq)]

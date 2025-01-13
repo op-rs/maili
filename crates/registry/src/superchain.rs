@@ -6,7 +6,7 @@ use alloy_primitives::{
     map::{DefaultHashBuilder, HashMap},
     Address,
 };
-use op_alloy_genesis::{ChainConfig, HardForkConfiguration, RollupConfig};
+use maili_genesis::{ChainConfig, HardForkConfiguration, RollupConfig};
 
 /// A superchain configuration.
 #[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
@@ -115,7 +115,7 @@ impl Registry {
 mod tests {
     use super::*;
     use alloy_primitives::address;
-    use op_alloy_genesis::{AddressList, SuperchainLevel, OP_MAINNET_BASE_FEE_PARAMS};
+    use maili_genesis::{AddressList, SuperchainLevel, OP_MAINNET_BASE_FEE_CONFIG};
 
     #[test]
     fn test_read_chain_configs() {
@@ -139,7 +139,7 @@ mod tests {
             seq_window_size: 3600,
             max_sequencer_drift: 600,
             data_availability_type: "eth-da".to_string(),
-            optimism: Some(OP_MAINNET_BASE_FEE_PARAMS),
+            optimism: Some(OP_MAINNET_BASE_FEE_CONFIG),
             alt_da: None,
             genesis: crate::test_utils::BASE_MAINNET_CONFIG.genesis,
             addresses: Some(AddressList {

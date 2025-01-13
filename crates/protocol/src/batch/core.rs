@@ -5,7 +5,7 @@ use crate::{
 };
 use alloy_primitives::bytes;
 use alloy_rlp::{Buf, Decodable, Encodable};
-use op_alloy_genesis::RollupConfig;
+use maili_genesis::RollupConfig;
 
 /// A Batch.
 #[derive(Debug, Clone, PartialEq, Eq)]

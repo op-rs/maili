@@ -2,7 +2,9 @@
 
 use alloc::{boxed::Box, format, string::String, sync::Arc, vec::Vec};
 use alloy_consensus::Block;
+use alloy_eips::eip2718::Encodable2718;
 use async_trait::async_trait;
+use maili_common::DepositTxEnvelope;
 use spin::Mutex;
 use tracing::{Event, Level, Subscriber};
 use tracing_subscriber::{layer::Context, Layer};
@@ -41,7 +43,7 @@ impl<T> TestBatchValidator<T> {
 #[async_trait]
 impl<T> BatchValidationProvider for TestBatchValidator<T>
 where
-    T: Send + Clone,
+    T: DepositTxEnvelope + Encodable2718 + Clone,
 {
     type Error = TestBatchValidatorError;
     type Transaction = T;

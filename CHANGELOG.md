@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.3](https://github.com/op-rs/maili
-/releases/tag/v0.1.3) - 2025-01-10
+## [0.1.4](https://github.com/op-rs/maili
+/releases/tag/v0.1.4) - 2025-01-13
 
 ### Bug Fixes
 
@@ -122,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [protocol] Ecotone Marker that Scalars are Empty ([#45](https://github.com/op-rs/maili/issues/45))
 - [protocol] L1BlockInfo Accessors ([#39](https://github.com/op-rs/maili/issues/39))
 - [interop] Define `ExecutingMessage` wrapper ([#361](https://github.com/op-rs/maili/issues/361))
 - [protocol] Compressors with Mocked Brotli Streaming ([#335](https://github.com/op-rs/maili/issues/335))
@@ -252,6 +253,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [common] Migrate `DepositTransaction` trait from `op-alloy` ([#46](https://github.com/op-rs/maili/issues/46))
+- Readme Badge ([#51](https://github.com/op-rs/maili/issues/51))
+- Submodule Sync ([#50](https://github.com/op-rs/maili/issues/50))
+- [provider] Shrink scope of `OpEngineApi` to encompass only non-l1 methods ([#48](https://github.com/op-rs/maili/issues/48))
 - [rpc] Migrate json types from `op-alloy` ([#37](https://github.com/op-rs/maili/issues/37))
 - [common] Migrate deposit source types from `op-alloy` ([#36](https://github.com/op-rs/maili/issues/36))
 - Document Crate Releases ([#15](https://github.com/op-rs/maili/issues/15))
@@ -388,6 +393,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.1.3 ([#44](https://github.com/op-rs/maili/issues/44))
 - 0.1.2 ([#31](https://github.com/op-rs/maili/issues/31))
 - 0.1.1 ([#29](https://github.com/op-rs/maili/issues/29))
 - Merge branch 'main' into emhane/supervsior-api

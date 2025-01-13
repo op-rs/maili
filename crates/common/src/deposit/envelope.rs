@@ -1,11 +1,11 @@
 //! Transaction envelope with support for OP [`DepositTransaction`].
 
-use alloy_consensus::{Sealed, Typed2718};
+use alloy_consensus::Sealed;
 
 use crate::DepositTransaction;
 
 /// Transaction envelope that encompasses a [`DepositTransaction`].
-pub trait DepositTxEnvelope: Typed2718 {
+pub trait DepositTxEnvelope {
     /// Deposit transaction.
     type DepositTx: DepositTransaction;
 

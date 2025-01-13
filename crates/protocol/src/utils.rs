@@ -1,7 +1,7 @@
 //! Utility methods used by protocol types.
 
 use alloc::vec::Vec;
-use alloy_consensus::{Block, Transaction, TxType};
+use alloy_consensus::{Block, Transaction, TxType, Typed2718};
 use alloy_primitives::B256;
 use alloy_rlp::{Buf, Header};
 use maili_common::DepositTxEnvelope;
@@ -26,7 +26,7 @@ pub fn to_system_config<T>(
     rollup_config: &RollupConfig,
 ) -> Result<SystemConfig, OpBlockConversionError>
 where
-    T: DepositTxEnvelope,
+    T: DepositTxEnvelope + Typed2718,
 {
     if block.header.number == rollup_config.genesis.l2.number {
         if block.header.hash_slow() != rollup_config.genesis.l2.hash {

@@ -47,6 +47,7 @@ pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
     granite_time: Some(1723478400),
     holocene_time: Some(1732633200),
     isthmus_time: None,
+    interop_time: None,
     batch_inbox_address: address!("ff00000000000000000000000000000000084532"),
     deposit_contract_address: address!("49f53e41452c74589e85ca1677426ba426459e85"),
     l1_system_config_address: address!("f272670eb55e895584501d564afeb048bed26194"),

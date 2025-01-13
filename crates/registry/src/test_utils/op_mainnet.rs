@@ -47,6 +47,7 @@ pub const OP_MAINNET_CONFIG: RollupConfig = RollupConfig {
     granite_time: Some(1_726_070_401_u64),
     holocene_time: Some(1736445601),
     isthmus_time: None,
+    interop_time: None,
     batch_inbox_address: address!("ff00000000000000000000000000000000000010"),
     deposit_contract_address: address!("beb5fc579115071764c7423a4f12edde41f106ed"),
     l1_system_config_address: address!("229047fed2591dbec1ef1118d64f7af3db9eb290"),

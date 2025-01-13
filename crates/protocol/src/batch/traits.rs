@@ -1,7 +1,7 @@
 //! Traits for working with protocol types.
 
 use alloc::{boxed::Box, string::ToString};
-use alloy_consensus::Block;
+use alloy_consensus::{Block, Typed2718};
 use alloy_eips::eip2718::Encodable2718;
 use async_trait::async_trait;
 use core::fmt::Display;
@@ -16,7 +16,7 @@ pub trait BatchValidationProvider {
     type Error: Display + ToString;
 
     /// Signed (except for deposit) transaction.
-    type Transaction: DepositTxEnvelope + Encodable2718;
+    type Transaction: DepositTxEnvelope + Encodable2718 + Typed2718;
 
     /// Returns the [L2BlockInfo] given a block number.
     ///

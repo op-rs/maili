@@ -3,8 +3,9 @@
 use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::FixedBytes;
+use maili_common::DEPOSIT_TX_TYPE_ID;
 use maili_genesis::RollupConfig;
-use op_alloy_consensus::{DepositTxEnvelope, OpTxType};
+use op_alloy_consensus::DepositTxEnvelope;
 use tracing::{info, warn};
 
 use crate::{
@@ -267,7 +268,7 @@ impl SpanBatch {
                     );
                     return BatchValidity::Drop;
                 }
-                if tx_bytes.0[0] == OpTxType::Deposit as u8 {
+                if tx_bytes.0[0] == DEPOSIT_TX_TYPE_ID {
                     warn!("sequencers may not embed any deposits into batch data, but found tx that has one, tx_index: {}", tx_index);
                     return BatchValidity::Drop;
                 }

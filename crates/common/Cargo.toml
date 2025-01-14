@@ -29,9 +29,6 @@ alloy-serde = { workspace = true, optional = true }
 # `arbitrary` feature
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
-# misc
-derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
-
 [dev-dependencies]
 bincode.workspace = true
 rand.workspace = true

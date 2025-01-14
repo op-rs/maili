@@ -52,6 +52,7 @@ serde = [
 ]
 serde-bincode-compat = [
   "serde",
+  "arbitrary",
   "dep:serde_with"
 ]
 arbitrary = [

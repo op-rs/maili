@@ -662,6 +662,9 @@ mod tests {
     #[cfg(feature = "serde-bincode-compat")]
     #[test]
     fn test_tx_deposit_bincode_roundtrip() {
+        use arbitrary::Arbitrary;
+        use rand::Rng;
+
         #[serde_with::serde_as]
         #[derive(Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
         struct Data {

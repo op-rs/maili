@@ -5,7 +5,7 @@ use alloy_consensus::{Block, Transaction, Typed2718};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
 use maili_genesis::ChainGenesis;
-use op_alloy_consensus::{DepositTxEnvelope, OpBlock, OpTxEnvelope, OpTxType};
+use op_alloy_consensus::DepositTxEnvelope;
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -101,8 +101,8 @@ pub enum FromBlockError {
     /// The first payload transaction has an unexpected type.
     #[error("First payload transaction has unexpected type: {0}")]
     UnexpectedTxType(u8),
-    /// Failed to decode the first transaction into an [OpTxEnvelope].
-    #[error("Failed to decode the first transaction into an OpTxEnvelope: {0}")]
+    /// Failed to decode the first transaction into an OP transaction.
+    #[error("Failed to decode the first transaction into an OP transaction: {0}")]
     TxEnvelopeDecodeError(Eip2718Error),
     /// The first payload transaction is not a deposit transaction.
     #[error("First payload transaction is not a deposit transaction, type: {0}")]

@@ -5,7 +5,6 @@ use alloy_consensus::{SignableTransaction, Signed, TxEip1559};
 use alloy_eips::eip2930::AccessList;
 use alloy_primitives::{Address, PrimitiveSignature as Signature, TxKind, U256};
 use alloy_rlp::{Bytes, RlpDecodable, RlpEncodable};
-use op_alloy_consensus::OpTxEnvelope;
 
 /// The transaction data for an EIP-1559 transaction within a span batch.
 #[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
@@ -23,15 +22,15 @@ pub struct SpanBatchEip1559TransactionData {
 }
 
 impl SpanBatchEip1559TransactionData {
-    /// Converts [SpanBatchEip1559TransactionData] into an [OpTxEnvelope].
-    pub fn to_enveloped_tx(
+    /// Converts [SpanBatchEip1559TransactionData] into a signed [`TxEip1559`].
+    pub fn to_signed_tx(
         &self,
         nonce: u64,
         gas: u64,
         to: Option<Address>,
         chain_id: u64,
         signature: Signature,
-    ) -> Result<OpTxEnvelope, SpanBatchError> {
+    ) -> Result<Signed<TxEip1559>, SpanBatchError> {
         let eip1559_tx = TxEip1559 {
             chain_id,
             nonce,
@@ -52,8 +51,7 @@ impl SpanBatchEip1559TransactionData {
             access_list: self.access_list.clone(),
         };
         let signature_hash = eip1559_tx.signature_hash();
-        let signed_eip1559_tx = Signed::new_unchecked(eip1559_tx, signature, signature_hash);
-        Ok(OpTxEnvelope::Eip1559(signed_eip1559_tx))
+        Ok(Signed::new_unchecked(eip1559_tx, signature, signature_hash))
     }
 }
 

@@ -4,9 +4,9 @@
 use alloc::{format, string::ToString};
 use alloy_consensus::Header;
 use alloy_eips::{eip7840::BlobParams, BlockNumHash};
-use alloy_primitives::{address, Address, Bytes, Sealable, TxKind, B256, U256};
+use alloy_primitives::{address, Address, Bytes, Sealable, Sealed, TxKind, B256, U256};
 use maili_genesis::{RollupConfig, SystemConfig};
-use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
+use op_alloy_consensus::TxDeposit;
 
 use crate::{
     BlockInfoError, DecodeError, DepositSourceDomain, L1BlockInfoBedrock, L1BlockInfoEcotone,
@@ -100,7 +100,7 @@ impl L1BlockInfoTx {
         sequence_number: u64,
         l1_header: &Header,
         l2_block_time: u64,
-    ) -> Result<(Self, OpTxEnvelope), BlockInfoError> {
+    ) -> Result<(Self, Sealed<TxDeposit>), BlockInfoError> {
         let l1_info =
             Self::try_new(rollup_config, system_config, sequence_number, l1_header, l2_block_time)?;
 
@@ -127,7 +127,7 @@ impl L1BlockInfoTx {
             deposit_tx.gas_limit = REGOLITH_SYSTEM_TX_GAS;
         }
 
-        Ok((l1_info, OpTxEnvelope::Deposit(deposit_tx.seal_slow())))
+        Ok((l1_info, deposit_tx.seal_slow()))
     }
 
     /// Decodes the [L1BlockInfoEcotone] object from ethereum transaction calldata.

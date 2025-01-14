@@ -3,7 +3,6 @@
 use alloy_consensus::{Transaction, TxEnvelope, TxType};
 use alloy_primitives::{Address, PrimitiveSignature as Signature, U256};
 use alloy_rlp::{Bytes, Decodable, Encodable};
-use op_alloy_consensus::OpTxEnvelope;
 
 use crate::{
     SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData, SpanBatchError,
@@ -114,8 +113,8 @@ impl SpanBatchTransactionData {
         }
     }
 
-    /// Converts the [SpanBatchTransactionData] into a [OpTxEnvelope].
-    pub fn to_enveloped_tx(
+    /// Converts the [SpanBatchTransactionData] into a singed transaction as [`TxEnvelope`].
+    pub fn to_signed_tx(
         &self,
         nonce: u64,
         gas: u64,
@@ -123,13 +122,22 @@ impl SpanBatchTransactionData {
         chain_id: u64,
         signature: Signature,
         is_protected: bool,
-    ) -> Result<OpTxEnvelope, SpanBatchError> {
-        match self {
-            Self::Legacy(data) => {
-                data.to_enveloped_tx(nonce, gas, to, chain_id, signature, is_protected)
+    ) -> Result<TxEnvelope, SpanBatchError> {
+        Ok(match self {
+            Self::Legacy(data) => TxEnvelope::Legacy(data.to_signed_tx(
+                nonce,
+                gas,
+                to,
+                chain_id,
+                signature,
+                is_protected,
+            )?),
+            Self::Eip2930(data) => {
+                TxEnvelope::Eip2930(data.to_signed_tx(nonce, gas, to, chain_id, signature)?)
             }
-            Self::Eip2930(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),
-            Self::Eip1559(data) => data.to_enveloped_tx(nonce, gas, to, chain_id, signature),
-        }
+            Self::Eip1559(data) => {
+                TxEnvelope::Eip1559(data.to_signed_tx(nonce, gas, to, chain_id, signature)?)
+            }
+        })
     }
 }

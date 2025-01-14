@@ -55,10 +55,9 @@ fn main() {
 
 #[cfg(feature = "std")]
 fn example_transactions() -> Vec<alloy_primitives::Bytes> {
-    use alloy_consensus::{SignableTransaction, TxEip1559};
+    use alloy_consensus::{SignableTransaction, TxEip1559, TxEnvelope};
     use alloy_eips::eip2718::{Decodable2718, Encodable2718};
     use alloy_primitives::{Address, PrimitiveSignature, U256};
-    use op_alloy_consensus::OpTxEnvelope;
 
     let mut transactions = Vec::new();
 
@@ -76,12 +75,12 @@ fn example_transactions() -> Vec<alloy_primitives::Bytes> {
     };
     let sig = PrimitiveSignature::test_signature();
     let tx_signed = tx.into_signed(sig);
-    let envelope: OpTxEnvelope = tx_signed.into();
+    let envelope: TxEnvelope = tx_signed.into();
     let encoded = envelope.encoded_2718();
     transactions.push(encoded.clone().into());
     let mut slice = encoded.as_slice();
-    let decoded = OpTxEnvelope::decode_2718(&mut slice).unwrap();
-    assert!(matches!(decoded, OpTxEnvelope::Eip1559(_)));
+    let decoded = TxEnvelope::decode_2718(&mut slice).unwrap();
+    assert!(matches!(decoded, TxEnvelope::Eip1559(_)));
 
     // Second transaction in the batch.
     let tx = TxEip1559 {
@@ -97,12 +96,12 @@ fn example_transactions() -> Vec<alloy_primitives::Bytes> {
     };
     let sig = PrimitiveSignature::test_signature();
     let tx_signed = tx.into_signed(sig);
-    let envelope: OpTxEnvelope = tx_signed.into();
+    let envelope: TxEnvelope = tx_signed.into();
     let encoded = envelope.encoded_2718();
     transactions.push(encoded.clone().into());
     let mut slice = encoded.as_slice();
-    let decoded = OpTxEnvelope::decode_2718(&mut slice).unwrap();
-    assert!(matches!(decoded, OpTxEnvelope::Eip1559(_)));
+    let decoded = TxEnvelope::decode_2718(&mut slice).unwrap();
+    assert!(matches!(decoded, TxEnvelope::Eip1559(_)));
 
     transactions
 }

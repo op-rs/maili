@@ -20,6 +20,7 @@ pub enum SafetyLevel {
 }
 
 #[cfg(test)]
+#[cfg(feature = "serde")]
 mod tests {
     use super::*;
 

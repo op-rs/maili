@@ -1,4 +1,4 @@
-//! Transaction envelope with support for OP [`DepositTransaction`].
+//! Transaction envelope with support for OP [`TxDeposit`].
 
 use alloy_consensus::Sealed;
 

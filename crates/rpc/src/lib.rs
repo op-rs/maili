@@ -14,6 +14,7 @@ mod api;
 mod js_types;
 pub use js_types::{
     Connectedness, Direction, Genesis, GossipScores, L1BlockRef, L2BlockRef, OutputResponse,
-    PeerDump, PeerInfo, PeerScores, PeerStats, ReqRespScores, RollupConfig, SafeHeadResponse,
+    PeerDump, PeerInfo, PeerScores, PeerStats, ProtocolVersion, ProtocolVersionError,
+    ProtocolVersionFormatV0, ReqRespScores, RollupConfig, SafeHeadResponse, SuperchainSignal,
     SyncStatus, SystemConfig, TopicScores,
 };

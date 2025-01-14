@@ -18,8 +18,3 @@ pub use deposit::{
     DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, DepositTxEnvelope,
     L1InfoDepositSource, TxDeposit, UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };
-
-mod superchain;
-pub use superchain::{
-    ProtocolVersion, ProtocolVersionError, ProtocolVersionFormatV0, SuperchainSignal,
-};

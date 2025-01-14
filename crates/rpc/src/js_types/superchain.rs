@@ -18,9 +18,8 @@ use derive_more::derive::{Display, From};
 /// version. This may include halting the engine, with consent of the execution engine operator.
 ///
 /// See also: <https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1>
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SuperchainSignal {
     /// The recommended Supercain Protocol Version.
     pub recommended: ProtocolVersion,
@@ -171,7 +170,6 @@ impl ProtocolVersion {
     }
 }
 
-#[cfg(feature = "serde")]
 impl serde::Serialize for ProtocolVersion {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -181,7 +179,6 @@ impl serde::Serialize for ProtocolVersion {
     }
 }
 
-#[cfg(feature = "serde")]
 impl<'de> serde::Deserialize<'de> for ProtocolVersion {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where

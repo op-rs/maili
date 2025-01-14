@@ -16,8 +16,7 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-protocol = { workspace = true, optional = true, default-features = false, features = ["serde"] }
-maili-common = { workspace = true, optional = true, default-features = false, features = ["serde"] }
+maili-protocol = { workspace = true, optional = true, features = ["serde"] }
 
 # Alloy
 alloy-eips = { workspace = true, features = ["serde"] }
@@ -28,6 +27,9 @@ jsonrpsee = { workspace = true, optional = true }
 getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unknown
 serde.workspace = true
 
+# misc
+derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
+
 [dev-dependencies]
 serde_json.workspace = true
 
@@ -35,12 +37,10 @@ serde_json.workspace = true
 default = ["std", "jsonrpsee"]
 std = [
     "maili-protocol?/std",
-    "maili-common?/std",
     "alloy-eips/std",
     "alloy-primitives/std",
 ]
 jsonrpsee = [
-    "dep:maili-common",
     "dep:maili-protocol",
     "dep:jsonrpsee",
     "dep:getrandom",

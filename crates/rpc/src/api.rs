@@ -11,11 +11,11 @@ use alloy_primitives::{B256, U64};
 #[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
 use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
-use maili_common::{ProtocolVersion, SuperchainSignal};
 use maili_protocol::{ExecutingMessage, SafetyLevel};
 
 use crate::{
-    OutputResponse, PeerDump, PeerInfo, PeerStats, RollupConfig, SafeHeadResponse, SyncStatus,
+    OutputResponse, PeerDump, PeerInfo, PeerStats, ProtocolVersion, RollupConfig, SafeHeadResponse,
+    SuperchainSignal, SyncStatus,
 };
 
 /// Optimism specified rpc interface.

@@ -4,9 +4,8 @@ use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::FixedBytes;
 use maili_genesis::RollupConfig;
-use op_alloy_consensus::OpTxType;
+use op_alloy_consensus::{DepositTxEnvelope, OpTxType};
 use tracing::{info, warn};
-use op_alloy_consensus::DepositTxEnvelope;
 
 use crate::{
     BatchValidationProvider, BatchValidity, BlockInfo, L2BlockInfo, RawSpanBatch, SingleBatch,

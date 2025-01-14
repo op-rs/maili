@@ -10,9 +10,11 @@
 extern crate alloc;
 
 mod deposit;
+#[cfg(feature = "serde")]
+pub use deposit::serde_deposit_tx_rpc;
 pub use deposit::{
     DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, DepositTxEnvelope,
-    L1InfoDepositSource, UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
+    L1InfoDepositSource, TxDeposit, UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };
 
 mod superchain;

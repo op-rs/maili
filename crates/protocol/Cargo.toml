@@ -16,8 +16,8 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-genesis.workspace = true
 maili-common.workspace = true
+maili-genesis.workspace = true
 
 # OP-Alloy
 op-alloy-consensus.workspace = true

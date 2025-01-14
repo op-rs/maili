@@ -1,10 +1,11 @@
 //! Block Types for Optimism.
 
 use crate::{DecodeError, L1BlockInfoTx};
+use alloy_consensus::{Block, Transaction, Typed2718};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
+use maili_common::DepositTxEnvelope;
 use maili_genesis::ChainGenesis;
-use op_alloy_consensus::{OpBlock, OpTxEnvelope, OpTxType};
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -36,14 +37,14 @@ impl BlockInfo {
     }
 }
 
-impl From<OpBlock> for BlockInfo {
-    fn from(block: OpBlock) -> Self {
+impl<T> From<Block<T>> for BlockInfo {
+    fn from(block: Block<T>) -> Self {
         Self::from(&block)
     }
 }
 
-impl From<&OpBlock> for BlockInfo {
-    fn from(block: &OpBlock) -> Self {
+impl<T> From<&Block<T>> for BlockInfo {
+    fn from(block: &Block<T>) -> Self {
         Self {
             hash: block.header.hash_slow(),
             number: block.header.number,
@@ -88,7 +89,7 @@ impl arbitrary::Arbitrary<'_> for L2BlockInfo {
     }
 }
 
-/// An error that can occur when converting an [OpBlock] to an [L2BlockInfo].
+/// An error that can occur when converting an OP [Block] to [L2BlockInfo].
 #[derive(Debug, thiserror::Error)]
 pub enum FromBlockError {
     /// The genesis block hash does not match the expected value.
@@ -123,11 +124,14 @@ impl L2BlockInfo {
         Self { block_info, l1_origin, seq_num }
     }
 
-    /// Constructs an [L2BlockInfo] from a given [OpBlock] and [ChainGenesis].
-    pub fn from_block_and_genesis(
-        block: &OpBlock,
+    /// Constructs an [L2BlockInfo] from a given OP [Block] and [ChainGenesis].
+    pub fn from_block_and_genesis<T>(
+        block: &Block<T>,
         genesis: &ChainGenesis,
-    ) -> Result<Self, FromBlockError> {
+    ) -> Result<Self, FromBlockError>
+    where
+        T: DepositTxEnvelope + Typed2718,
+    {
         let block_info = BlockInfo::from(block);
 
         let (l1_origin, sequence_number) = if block_info.number == genesis.l2.number {
@@ -141,15 +145,12 @@ impl L2BlockInfo {
             }
 
             let tx = &block.body.transactions[0];
-            if tx.tx_type() != OpTxType::Deposit {
-                return Err(FromBlockError::UnexpectedTxType(tx.tx_type().into()));
-            }
 
-            let OpTxEnvelope::Deposit(tx) = tx else {
-                return Err(FromBlockError::FirstTxNonDeposit(tx.tx_type().into()));
+            let Some(tx) = tx.as_deposit() else {
+                return Err(FromBlockError::FirstTxNonDeposit(tx.ty()));
             };
 
-            let l1_info = L1BlockInfoTx::decode_calldata(tx.input.as_ref())
+            let l1_info = L1BlockInfoTx::decode_calldata(tx.input().as_ref())
                 .map_err(FromBlockError::BlockInfoDecodeError)?;
             (l1_info.id(), l1_info.sequence_number())
         };

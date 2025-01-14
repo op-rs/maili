@@ -1,8 +1,10 @@
 //! Test utilities for the protocol crate.
 
 use alloc::{boxed::Box, format, string::String, sync::Arc, vec::Vec};
+use alloy_consensus::{Block, Typed2718};
+use alloy_eips::eip2718::Encodable2718;
 use async_trait::async_trait;
-use op_alloy_consensus::OpBlock;
+use maili_common::DepositTxEnvelope;
 use spin::Mutex;
 use tracing::{Event, Level, Subscriber};
 use tracing_subscriber::{layer::Context, Layer};
@@ -21,26 +23,30 @@ pub enum TestBatchValidatorError {
 }
 
 /// An [TestBatchValidator] implementation for testing.
-#[derive(Debug, Default, Clone)]
-pub struct TestBatchValidator {
+#[derive(Debug, Clone)]
+pub struct TestBatchValidator<T> {
     /// Blocks
     pub blocks: Vec<L2BlockInfo>,
     /// Short circuit the block return to be the first block.
     pub short_circuit: bool,
     /// Blocks
-    pub op_blocks: Vec<OpBlock>,
+    pub op_blocks: Vec<Block<T>>,
 }
 
-impl TestBatchValidator {
+impl<T> TestBatchValidator<T> {
     /// Creates a new []TestBatchValidator with the given origin and batches.
-    pub const fn new(blocks: Vec<L2BlockInfo>, op_blocks: Vec<OpBlock>) -> Self {
+    pub const fn new(blocks: Vec<L2BlockInfo>, op_blocks: Vec<Block<T>>) -> Self {
         Self { blocks, short_circuit: false, op_blocks }
     }
 }
 
 #[async_trait]
-impl BatchValidationProvider for TestBatchValidator {
+impl<T> BatchValidationProvider for TestBatchValidator<T>
+where
+    T: DepositTxEnvelope + Encodable2718 + Typed2718 + Clone,
+{
     type Error = TestBatchValidatorError;
+    type Transaction = T;
 
     async fn l2_block_info_by_number(&mut self, number: u64) -> Result<L2BlockInfo, Self::Error> {
         if self.short_circuit {
@@ -57,12 +63,21 @@ impl BatchValidationProvider for TestBatchValidator {
             .ok_or_else(|| TestBatchValidatorError::BlockNotFound)
     }
 
-    async fn block_by_number(&mut self, number: u64) -> Result<OpBlock, Self::Error> {
+    async fn block_by_number(
+        &mut self,
+        number: u64,
+    ) -> Result<Block<Self::Transaction>, Self::Error> {
         self.op_blocks
             .iter()
             .find(|p| p.header.number == number)
             .cloned()
             .ok_or_else(|| TestBatchValidatorError::L2BlockNotFound)
+    }
+}
+
+impl<T> Default for TestBatchValidator<T> {
+    fn default() -> Self {
+        Self { blocks: Vec::new(), short_circuit: false, op_blocks: Vec::new() }
     }
 }
 

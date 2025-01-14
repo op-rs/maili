@@ -1,11 +1,11 @@
 //! Utility methods used by protocol types.
 
 use alloc::vec::Vec;
-use alloy_consensus::TxType;
+use alloy_consensus::{Block, Transaction, TxType, Typed2718};
 use alloy_primitives::B256;
 use alloy_rlp::{Buf, Header};
+use maili_common::DepositTxEnvelope;
 use maili_genesis::{RollupConfig, SystemConfig};
-use op_alloy_consensus::{OpBlock, OpTxEnvelope};
 
 use crate::{
     L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx, OpBlockConversionError, SpanBatchError,
@@ -20,11 +20,14 @@ where
     value.as_ref().first() == Some(&0x7E)
 }
 
-/// Converts the [OpBlock] to a partial [SystemConfig].
-pub fn to_system_config(
-    block: &OpBlock,
+/// Converts the OP [Block] to a partial [SystemConfig].
+pub fn to_system_config<T>(
+    block: &Block<T>,
     rollup_config: &RollupConfig,
-) -> Result<SystemConfig, OpBlockConversionError> {
+) -> Result<SystemConfig, OpBlockConversionError>
+where
+    T: DepositTxEnvelope + Typed2718,
+{
     if block.header.number == rollup_config.genesis.l2.number {
         if block.header.hash_slow() != rollup_config.genesis.l2.hash {
             return Err(OpBlockConversionError::InvalidGenesisHash(
@@ -41,13 +44,11 @@ pub fn to_system_config(
     if block.body.transactions.is_empty() {
         return Err(OpBlockConversionError::EmptyTransactions(block.header.hash_slow()));
     }
-    let OpTxEnvelope::Deposit(ref tx) = block.body.transactions[0] else {
-        return Err(OpBlockConversionError::InvalidTxType(
-            block.body.transactions[0].tx_type() as u8
-        ));
+    let Some(tx) = block.body.transactions[0].as_deposit() else {
+        return Err(OpBlockConversionError::InvalidTxType(block.body.transactions[0].ty()));
     };
 
-    let l1_info = L1BlockInfoTx::decode_calldata(tx.input.as_ref())?;
+    let l1_info = L1BlockInfoTx::decode_calldata(tx.input().as_ref())?;
     let l1_fee_scalar = match l1_info {
         L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { l1_fee_scalar, .. }) => l1_fee_scalar,
         L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {

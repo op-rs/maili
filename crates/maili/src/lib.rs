@@ -19,9 +19,9 @@ pub use maili_registry as registry;
 #[doc(inline)]
 pub use maili_rpc as rpc;
 
-#[cfg(feature = "common")]
+#[cfg(feature = "consensus")]
 #[doc(inline)]
-pub use maili_common as common;
+pub use maili_consensus as consensus;
 
 #[cfg(feature = "genesis")]
 #[doc(inline)]

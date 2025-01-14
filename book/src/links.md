@@ -7,7 +7,7 @@
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
 [maili-registry]: https://crates.io/crates/maili-registry
-[maili-common]: https://crates.io/crates/maili-common
+[maili-consensus]: https://crates.io/crates/maili-consensus
 [maili-genesis]: https://crates.io/crates/maili-genesis
 [maili-rpc]: https://crates.io/crates/maili-rpc
 

@@ -3,7 +3,7 @@
 use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::FixedBytes;
-use maili_common::{DepositTxEnvelope, DEPOSIT_TX_TYPE_ID};
+use maili_consensus::{DepositTxEnvelope, DEPOSIT_TX_TYPE_ID};
 use maili_genesis::RollupConfig;
 use tracing::{info, warn};
 
@@ -496,7 +496,7 @@ mod tests {
     use alloy_consensus::{constants::EIP1559_TX_TYPE_ID, Block, Header, Typed2718};
     use alloy_eips::{eip2718::Encodable2718, BlockNumHash};
     use alloy_primitives::{b256, Bytes};
-    use maili_common::TxDeposit;
+    use maili_consensus::TxDeposit;
     use maili_genesis::ChainGenesis;
     use tracing::Level;
     use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};

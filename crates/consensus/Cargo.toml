@@ -1,5 +1,5 @@
 [package]
-name = "maili-common"
+name = "maili-consensus"
 description = "Optimism common types"
 
 version.workspace = true

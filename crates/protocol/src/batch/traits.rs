@@ -5,7 +5,7 @@ use alloy_consensus::{Block, Typed2718};
 use alloy_eips::eip2718::Encodable2718;
 use async_trait::async_trait;
 use core::fmt::Display;
-use maili_common::DepositTxEnvelope;
+use maili_consensus::DepositTxEnvelope;
 
 use crate::L2BlockInfo;
 

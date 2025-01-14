@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.4](https://github.com/op-rs/maili
-/releases/tag/v0.1.4) - 2025-01-14
+## [0.1.5](https://github.com/op-rs/maili
+/releases/tag/v0.1.5) - 2025-01-14
 
 ### Bug Fixes
 
+- [protocol] Remove self import ([#69](https://github.com/op-rs/maili/issues/69))
 - Maili-protocol cyclical dep ([#43](https://github.com/op-rs/maili/issues/43))
 - [no-std] Fix broken test in `no_std` `maili-protocol` ([#38](https://github.com/op-rs/maili/issues/38))
 - Add Crates to no_std Checks ([#32](https://github.com/op-rs/maili/issues/32))
@@ -405,6 +406,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- Maili-consensus ([#67](https://github.com/op-rs/maili/issues/67))
+- Maili-genesis ([#68](https://github.com/op-rs/maili/issues/68))
 - Migrate `TxDeposit` from `op-alloy` ([#62](https://github.com/op-rs/maili/issues/62))
 - 0.1.4 ([#55](https://github.com/op-rs/maili/issues/55))
 - 0.1.3 ([#44](https://github.com/op-rs/maili/issues/44))

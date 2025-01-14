@@ -36,7 +36,7 @@ std = [
 ]
 
 full = [
-  "common",
+  "consensus",
   "protocol",
   "registry",
   "rpc",
@@ -59,7 +59,7 @@ jsonrpsee = ["maili-rpc?/jsonrpsee"]
 # `no_std` support
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
-common = ["dep:maili-consensus"]
+consensus = ["dep:maili-consensus"]
 genesis = ["dep:maili-genesis"]
 
 # std features

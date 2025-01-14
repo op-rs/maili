@@ -10,6 +10,8 @@
 extern crate alloc;
 
 mod deposit;
+#[cfg(feature = "serde-bincode-compat")]
+pub use deposit::serde_bincode_compat;
 #[cfg(feature = "serde")]
 pub use deposit::serde_deposit_tx_rpc;
 pub use deposit::{

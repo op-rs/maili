@@ -3,7 +3,7 @@
 use alloc::{string::String, vec::Vec};
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{b256, keccak256, Address, Bytes, Log, TxKind, B256, U256, U64};
-use op_alloy_consensus::TxDeposit;
+use maili_common::TxDeposit;
 
 /// Deposit log event abi signature.
 pub const DEPOSIT_EVENT_ABI: &str = "TransactionDeposited(address,address,uint256,bytes)";
@@ -18,7 +18,7 @@ pub const DEPOSIT_EVENT_ABI_HASH: B256 =
 /// The initial version of the deposit event log.
 pub const DEPOSIT_EVENT_VERSION_0: B256 = B256::ZERO;
 
-/// An [op_alloy_consensus::TxDeposit] validation error.
+/// An [`TxDeposit`] validation error.
 #[derive(Debug, thiserror::Error, PartialEq, Eq)]
 pub enum DepositError {
     /// Unexpected number of deposit event log topics.

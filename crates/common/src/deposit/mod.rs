@@ -405,7 +405,7 @@ pub fn serde_deposit_tx_rpc<T: serde::Serialize, S: serde::Serializer>(
 
 /// Bincode-compatible [`TxDeposit`] serde implementation.
 #[cfg(feature = "serde-bincode-compat")]
-pub(super) mod serde_bincode_compat {
+pub mod serde_bincode_compat {
     use alloc::borrow::Cow;
     use alloy_primitives::{Address, Bytes, TxKind, B256, U256};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -662,8 +662,8 @@ mod tests {
     #[cfg(feature = "serde-bincode-compat")]
     #[test]
     fn test_tx_deposit_bincode_roundtrip() {
-        #[serde_as]
-        #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
+        #[serde_with::serde_as]
+        #[derive(Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
         struct Data {
             #[serde_as(as = "serde_bincode_compat::TxDeposit")]
             transaction: TxDeposit,

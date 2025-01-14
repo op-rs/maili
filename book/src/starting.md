@@ -56,7 +56,7 @@ so `maili-protocol` types can be used from `maili` through `maili::protocol::Ins
 ## Crates
 
 - [`maili-protocol`][maili-protocol] (supports `no_std`)
-- [`maili-common`][maili-common] (supports `no_std`)
+- [`maili-consensus`][maili-consensus] (supports `no_std`)
 - [`maili-genesis`][maili-genesis] (supports `no_std`)
 - [`maili-rpc`][maili-rpc] (supports `no_std`)
 
@@ -65,7 +65,7 @@ so `maili-protocol` types can be used from `maili` through `maili::protocol::Ins
 As noted above, the following crates are `no_std` compatible.
 
 - [`maili-protocol`][maili-protocol]
-- [`maili-common`][maili-common]
+- [`maili-consensus`][maili-consensus]
 - [`maili-genesis`][maili-genesis]
 - [`maili-rpc`][maili-rpc] 
 

@@ -36,7 +36,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
-maili-common = { version = "0.1.4", path = "crates/common", default-features = false }
+maili-consensus = { version = "0.1.4", path = "crates/consensus", default-features = false }
 maili-genesis = { version = "0.1.4", path = "crates/genesis", default-features = false }
 maili-protocol = { version = "0.1.4", path = "crates/protocol", default-features = false }
 maili-registry = { version = "0.1.4", path = "crates/registry", default-features = false }

@@ -5,7 +5,7 @@ use alloc::{format, string::ToString};
 use alloy_consensus::Header;
 use alloy_eips::{eip7840::BlobParams, BlockNumHash};
 use alloy_primitives::{address, Address, Bytes, Sealable, Sealed, TxKind, B256, U256};
-use maili_common::TxDeposit;
+use maili_consensus::TxDeposit;
 use maili_genesis::{RollupConfig, SystemConfig};
 
 use crate::{

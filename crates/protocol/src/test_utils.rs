@@ -4,7 +4,7 @@ use alloc::{boxed::Box, format, string::String, sync::Arc, vec::Vec};
 use alloy_consensus::{Block, Typed2718};
 use alloy_eips::eip2718::Encodable2718;
 use async_trait::async_trait;
-use maili_common::DepositTxEnvelope;
+use maili_consensus::DepositTxEnvelope;
 use spin::Mutex;
 use tracing::{Event, Level, Subscriber};
 use tracing_subscriber::{layer::Context, Layer};

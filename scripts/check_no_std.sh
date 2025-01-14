@@ -3,7 +3,7 @@ set -eo pipefail
 
 no_std_packages=(
   maili
-  maili-common
+  maili-consensus
   maili-protocol
   maili-registry
 )

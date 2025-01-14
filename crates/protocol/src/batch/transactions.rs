@@ -270,7 +270,7 @@ impl SpanBatchTransactions {
             } else {
                 true
             };
-            let tx_envelope = tx.to_enveloped_tx(*nonce, *gas, to, chain_id, sig, is_protected)?;
+            let tx_envelope = tx.to_signed_tx(*nonce, *gas, to, chain_id, sig, is_protected)?;
             let mut buf = Vec::new();
             tx_envelope.encode_2718(&mut buf);
             txs.push(buf);

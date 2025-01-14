@@ -4,7 +4,6 @@ use crate::{SpanBatchError, SpanDecodingError};
 use alloy_consensus::{SignableTransaction, Signed, TxLegacy};
 use alloy_primitives::{Address, PrimitiveSignature as Signature, TxKind, U256};
 use alloy_rlp::{Bytes, RlpDecodable, RlpEncodable};
-use op_alloy_consensus::OpTxEnvelope;
 
 /// The transaction data for a legacy transaction within a span batch.
 #[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
@@ -18,8 +17,8 @@ pub struct SpanBatchLegacyTransactionData {
 }
 
 impl SpanBatchLegacyTransactionData {
-    /// Converts [SpanBatchLegacyTransactionData] into a [OpTxEnvelope].
-    pub fn to_enveloped_tx(
+    /// Converts [SpanBatchLegacyTransactionData] into a signed [`TxLegacy`].
+    pub fn to_signed_tx(
         &self,
         nonce: u64,
         gas: u64,
@@ -27,7 +26,7 @@ impl SpanBatchLegacyTransactionData {
         chain_id: u64,
         signature: Signature,
         is_protected: bool,
-    ) -> Result<OpTxEnvelope, SpanBatchError> {
+    ) -> Result<Signed<TxLegacy>, SpanBatchError> {
         let legacy_tx = TxLegacy {
             chain_id: is_protected.then_some(chain_id),
             nonce,
@@ -42,8 +41,7 @@ impl SpanBatchLegacyTransactionData {
             input: self.data.clone().into(),
         };
         let signature_hash = legacy_tx.signature_hash();
-        let signed_legacy_tx = Signed::new_unchecked(legacy_tx, signature, signature_hash);
-        Ok(OpTxEnvelope::Legacy(signed_legacy_tx))
+        Ok(Signed::new_unchecked(legacy_tx, signature, signature_hash))
     }
 }
 

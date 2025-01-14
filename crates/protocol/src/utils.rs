@@ -4,8 +4,8 @@ use alloc::vec::Vec;
 use alloy_consensus::{Block, Transaction, TxType, Typed2718};
 use alloy_primitives::B256;
 use alloy_rlp::{Buf, Header};
+use maili_common::DepositTxEnvelope;
 use maili_genesis::{RollupConfig, SystemConfig};
-use op_alloy_consensus::DepositTxEnvelope;
 
 use crate::{
     L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx, OpBlockConversionError, SpanBatchError,

@@ -2,7 +2,7 @@
 
 use crate::{Batch, ChannelCompressor, ChannelId, CompressorError, Frame};
 use alloc::{vec, vec::Vec};
-use op_alloy_genesis::RollupConfig;
+use maili_genesis::RollupConfig;
 use rand::{rngs::SmallRng, RngCore, SeedableRng};
 
 /// The frame overhead.

@@ -5,7 +5,7 @@ use alloc::vec::Vec;
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{BlockHash, Bytes};
 use alloy_rlp::{RlpDecodable, RlpEncodable};
-use op_alloy_genesis::RollupConfig;
+use maili_genesis::RollupConfig;
 
 /// Represents a single batch: a single encoded L2 block
 #[derive(Debug, Default, RlpDecodable, RlpEncodable, Clone, PartialEq, Eq)]

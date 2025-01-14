@@ -3,9 +3,9 @@
 use alloy_consensus::{SignableTransaction, TxEip1559};
 use alloy_eips::eip2718::{Decodable2718, Encodable2718};
 use alloy_primitives::{hex, Address, BlockHash, Bytes, PrimitiveSignature, U256};
+use maili_genesis::RollupConfig;
 use maili_protocol::{decompress_brotli, Batch, BlockInfo, Channel, Frame, SingleBatch};
 use op_alloy_consensus::OpTxEnvelope;
-use op_alloy_genesis::RollupConfig;
 
 fn main() {
     // Raw frame data taken from the `encode_channel` example.

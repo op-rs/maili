@@ -4,8 +4,8 @@ use crate::{DecodeError, L1BlockInfoTx};
 use alloy_consensus::{Block, Transaction, Typed2718};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
-use maili_common::DepositTxEnvelope;
-use op_alloy_genesis::ChainGenesis;
+use maili_genesis::ChainGenesis;
+use op_alloy_consensus::{DepositTxEnvelope, OpBlock, OpTxEnvelope, OpTxType};
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

@@ -116,7 +116,7 @@ mod test {
     use super::*;
     use crate::decompress_brotli;
     use alloy_primitives::hex;
-    use op_alloy_genesis::MAX_RLP_BYTES_PER_CHANNEL_FJORD;
+    use maili_genesis::MAX_RLP_BYTES_PER_CHANNEL_FJORD;
 
     #[test]
     fn test_compress_brotli() {

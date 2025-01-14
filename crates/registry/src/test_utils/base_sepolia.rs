@@ -2,7 +2,10 @@
 
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
-use op_alloy_genesis::{ChainGenesis, RollupConfig, SystemConfig, BASE_SEPOLIA_BASE_FEE_PARAMS};
+use maili_genesis::{
+    ChainGenesis, RollupConfig, SystemConfig, BASE_SEPOLIA_BASE_FEE_PARAMS,
+    BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON,
+};
 
 /// The [RollupConfig] for Base Sepolia.
 pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
@@ -34,8 +37,8 @@ pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
     granite_channel_timeout: 50,
     l1_chain_id: 11155111,
     l2_chain_id: 84532,
-    base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS.as_base_fee_params(),
-    canyon_base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS.as_canyon_base_fee_params(),
+    base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS,
+    canyon_base_fee_params: BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON,
     regolith_time: Some(0),
     canyon_time: Some(1699981200),
     delta_time: Some(1703203200),
@@ -44,6 +47,7 @@ pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
     granite_time: Some(1723478400),
     holocene_time: Some(1732633200),
     isthmus_time: None,
+    interop_time: None,
     batch_inbox_address: address!("ff00000000000000000000000000000000084532"),
     deposit_contract_address: address!("49f53e41452c74589e85ca1677426ba426459e85"),
     l1_system_config_address: address!("f272670eb55e895584501d564afeb048bed26194"),

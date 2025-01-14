@@ -26,3 +26,7 @@ pub use maili_rpc as rpc;
 #[cfg(feature = "common")]
 #[doc(inline)]
 pub use maili_common as common;
+
+#[cfg(feature = "genesis")]
+#[doc(inline)]
+pub use maili_genesis as genesis;

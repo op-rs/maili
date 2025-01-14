@@ -3,9 +3,8 @@
 use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::FixedBytes;
-use maili_common::DepositTxEnvelope;
-use op_alloy_consensus::OpTxType;
-use op_alloy_genesis::RollupConfig;
+use maili_genesis::RollupConfig;
+use op_alloy_consensus::{DepositTxEnvelope, OpTxType};
 use tracing::{info, warn};
 
 use crate::{
@@ -497,8 +496,8 @@ mod tests {
     use alloy_consensus::Header;
     use alloy_eips::BlockNumHash;
     use alloy_primitives::{b256, Bytes};
+    use maili_genesis::ChainGenesis;
     use op_alloy_consensus::{OpBlock, OpTxEnvelope, OpTxType};
-    use op_alloy_genesis::ChainGenesis;
     use tracing::Level;
     use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 

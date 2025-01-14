@@ -2,7 +2,10 @@
 
 use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
-use op_alloy_genesis::{ChainGenesis, RollupConfig, SystemConfig, OP_MAINNET_BASE_FEE_PARAMS};
+use maili_genesis::{
+    ChainGenesis, RollupConfig, SystemConfig, OP_MAINNET_BASE_FEE_PARAMS,
+    OP_MAINNET_BASE_FEE_PARAMS_CANYON,
+};
 
 /// The [RollupConfig] for OP Mainnet.
 pub const OP_MAINNET_CONFIG: RollupConfig = RollupConfig {
@@ -34,8 +37,8 @@ pub const OP_MAINNET_CONFIG: RollupConfig = RollupConfig {
     granite_channel_timeout: 50,
     l1_chain_id: 1_u64,
     l2_chain_id: 10_u64,
-    base_fee_params: OP_MAINNET_BASE_FEE_PARAMS.as_base_fee_params(),
-    canyon_base_fee_params: OP_MAINNET_BASE_FEE_PARAMS.as_canyon_base_fee_params(),
+    base_fee_params: OP_MAINNET_BASE_FEE_PARAMS,
+    canyon_base_fee_params: OP_MAINNET_BASE_FEE_PARAMS_CANYON,
     regolith_time: Some(0_u64),
     canyon_time: Some(1_704_992_401_u64),
     delta_time: Some(1_708_560_000_u64),
@@ -44,6 +47,7 @@ pub const OP_MAINNET_CONFIG: RollupConfig = RollupConfig {
     granite_time: Some(1_726_070_401_u64),
     holocene_time: Some(1736445601),
     isthmus_time: None,
+    interop_time: None,
     batch_inbox_address: address!("ff00000000000000000000000000000000000010"),
     deposit_contract_address: address!("beb5fc579115071764c7423a4f12edde41f106ed"),
     l1_system_config_address: address!("229047fed2591dbec1ef1118d64f7af3db9eb290"),

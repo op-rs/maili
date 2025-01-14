@@ -84,11 +84,11 @@ arbitrary = [
 std = [
   "maili-genesis/std",
   "op-alloy-consensus/std",
-  "brotli/std"
+  "brotli/std",
 ]
 serde = [
   "dep:serde",
   "dep:alloy-serde",
-  "op-alloy-consensus/serde",
   "maili-genesis/serde",
+  "op-alloy-consensus/serde",
 ]

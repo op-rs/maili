@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Bug Fixes
 
+- [protocol] Remove self import ([#69](https://github.com/op-rs/maili/issues/69))
 - Maili-protocol cyclical dep ([#43](https://github.com/op-rs/maili/issues/43))
 - [no-std] Fix broken test in `no_std` `maili-protocol` ([#38](https://github.com/op-rs/maili/issues/38))
 - Add Crates to no_std Checks ([#32](https://github.com/op-rs/maili/issues/32))

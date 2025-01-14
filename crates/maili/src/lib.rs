@@ -15,10 +15,6 @@ pub use maili_protocol as protocol;
 #[doc(inline)]
 pub use maili_registry as registry;
 
-#[cfg(feature = "provider")]
-#[doc(inline)]
-pub use maili_provider as provider;
-
 #[cfg(feature = "rpc")]
 #[doc(inline)]
 pub use maili_rpc as rpc;

@@ -21,7 +21,6 @@ workspace = true
 # Workspace
 maili-common = { workspace = true, optional = true }
 maili-protocol = { workspace = true, optional = true }
-maili-provider = { workspace = true, optional = true }
 maili-registry = { workspace = true, optional = true }
 maili-rpc = { workspace = true, optional = true }
 maili-genesis  = { workspace = true, optional = true }
@@ -39,7 +38,6 @@ std = [
 full = [
   "common",
   "protocol",
-  "provider",
   "registry",
   "rpc",
   "genesis",
@@ -65,5 +63,4 @@ common = ["dep:maili-common"]
 genesis = ["dep:maili-genesis"]
 
 # std features
-provider = ["dep:maili-provider"]
 rpc = ["dep:maili-rpc"]

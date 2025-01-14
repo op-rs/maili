@@ -18,7 +18,6 @@ The following crates are provided by `maili`.
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
-- ![maili-provider](https://img.shields.io/crates/v/maili-provider?label=maili-provider)
 - ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
 
 
@@ -56,7 +55,6 @@ The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
 - [`maili-protocol`][maili-protocol]
-- [`maili-provider`][maili-provider]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
 - [`maili-common`][maili-common]
 - [`maili-genesis`][maili-genesis]
@@ -92,6 +90,5 @@ shall be dual licensed as above, without any additional terms or conditions.
 [contributing]: https://op-rs.github.io/maili
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
-[maili-provider]: https://crates.io/crates/maili-provider
 [maili-registry]: https://crates.io/crates/maili-registry
 [maili-common]: https://crates.io/crates/maili-common

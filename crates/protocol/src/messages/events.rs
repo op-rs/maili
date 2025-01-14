@@ -138,6 +138,7 @@ impl From<ExecutingMessageAbi> for ExecutingMessage {
 }
 
 #[cfg(test)]
+#[cfg(feature = "serde")]
 mod tests {
     use super::*;
 

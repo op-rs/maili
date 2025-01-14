@@ -6,7 +6,6 @@
 [maili-ff]: https://docs.rs/crate/maili/latest/features
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
-[maili-provider]: https://crates.io/crates/maili-provider
 [maili-registry]: https://crates.io/crates/maili-registry
 [maili-common]: https://crates.io/crates/maili-common
 [maili-genesis]: https://crates.io/crates/maili-genesis

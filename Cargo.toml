@@ -39,7 +39,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 maili-common = { version = "0.1.4", path = "crates/common", default-features = false }
 maili-genesis = { version = "0.1.4", path = "crates/genesis", default-features = false }
 maili-protocol = { version = "0.1.4", path = "crates/protocol", default-features = false }
-maili-provider = { version = "0.1.4", path = "crates/provider", default-features = false }
 maili-registry = { version = "0.1.4", path = "crates/registry", default-features = false }
 maili-rpc = { version = "0.1.4", path = "crates/rpc", default-features = false }
 

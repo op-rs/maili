@@ -314,7 +314,7 @@ mod tests {
 
     #[test]
     fn test_protocol_version_encode_decode() {
-        let test_cases = vec![
+        let test_cases = [
             (
                 ProtocolVersion::V0(ProtocolVersionFormatV0 {
                     build: B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
@@ -392,7 +392,8 @@ mod tests {
                 "v1.0.0+beta.123",
                 b256!("0000000000000000626574612e31323300000001000000000000000000000000"),
             ),
-        ];
+        ]
+        .to_vec();
 
         for (decoded_exp, formatted_exp, encoded_exp) in test_cases {
             encode_decode_v0(encoded_exp, formatted_exp, decoded_exp);

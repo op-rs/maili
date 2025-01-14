@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1.4](https://github.com/op-rs/maili
-/releases/tag/v0.1.4) - 2025-01-13
+/releases/tag/v0.1.4) - 2025-01-14
 
 ### Bug Fixes
 
@@ -86,6 +86,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- [deps] Replace `OpTxEnvelope` with `TxEnvelope` ([#61](https://github.com/op-rs/maili/issues/61))
+- [deps] Bump `op-alloy` to 0.9.3 ([#60](https://github.com/op-rs/maili/issues/60))
 - [deps] Bump op-alloy to 0.9.2 ([#25](https://github.com/op-rs/maili/issues/25))
 - Bump op-alloy to 0.9.2
 - Quick Version Bumps ([#362](https://github.com/op-rs/maili/issues/362))
@@ -253,6 +255,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [consensus] Rename `maili-common`->`maili-consensus` ([#66](https://github.com/op-rs/maili/issues/66))
+- [rpc] Move `superchain` module from `maili-common`->`maili-rpc` ([#65](https://github.com/op-rs/maili/issues/65))
+- [rpc] Remove duplicate of `maili_rpc::EngineApiExt` ([#63](https://github.com/op-rs/maili/issues/63))
+- [docs] Add missing links in book ([#64](https://github.com/op-rs/maili/issues/64))
+- [protocol] Replace use of `OpBlock` with alloy type generic over transaction ([#47](https://github.com/op-rs/maili/issues/47))
+- [protocol] Replace use of `OpTxType` in `maili-protocol` ([#59](https://github.com/op-rs/maili/issues/59))
+- [genesis] Migrate genesis types from `op-alloy` ([#41](https://github.com/op-rs/maili/issues/41))
+- [docs] Update docs to include rpc ([#57](https://github.com/op-rs/maili/issues/57))
+- [provider] Export `EngineExtApi` from crate root ([#56](https://github.com/op-rs/maili/issues/56))
+- Issue Tracking ([#52](https://github.com/op-rs/maili/issues/52))
 - [common] Migrate `DepositTransaction` trait from `op-alloy` ([#46](https://github.com/op-rs/maili/issues/46))
 - Readme Badge ([#51](https://github.com/op-rs/maili/issues/51))
 - Submodule Sync ([#50](https://github.com/op-rs/maili/issues/50))
@@ -393,6 +405,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- Migrate `TxDeposit` from `op-alloy` ([#62](https://github.com/op-rs/maili/issues/62))
+- 0.1.4 ([#55](https://github.com/op-rs/maili/issues/55))
 - 0.1.3 ([#44](https://github.com/op-rs/maili/issues/44))
 - 0.1.2 ([#31](https://github.com/op-rs/maili/issues/31))
 - 0.1.1 ([#29](https://github.com/op-rs/maili/issues/29))

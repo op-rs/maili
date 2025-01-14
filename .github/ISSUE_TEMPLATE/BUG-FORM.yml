@@ -15,8 +15,11 @@ body:
       description: What component is the bug in?
       multiple: true
       options:
+        - consensus
+        - genesis
         - protocol
-        - provider
+        - registry
+        - rpc
         - other
     validations:
       required: true

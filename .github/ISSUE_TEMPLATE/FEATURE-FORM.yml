@@ -13,9 +13,9 @@ body:
       description: What crate is the feature for?
       multiple: true
       options:
+        - consensus
         - genesis
         - protocol
-        - provider
         - registry
         - rpc
         - other

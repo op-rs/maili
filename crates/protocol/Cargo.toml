@@ -67,6 +67,11 @@ op-alloy-consensus.version = "0.9.3"
 
 [features]
 default = ["serde", "std"]
+std = [
+  "maili-genesis/std",
+  "maili-common/std",
+  "brotli/std",
+]
 test-utils = [
   "dep:spin",
   "dep:tracing-subscriber",
@@ -75,17 +80,15 @@ arbitrary = [
   "std",
   "dep:arbitrary",
   "maili-genesis/arbitrary",
+  "maili-common/arbitrary",
   "alloy-consensus/arbitrary",
   "alloy-eips/arbitrary",
   "alloy-primitives/rand",
   "alloy-primitives/arbitrary",
 ]
-std = [
-  "maili-genesis/std",
-  "brotli/std",
-]
 serde = [
   "dep:serde",
   "dep:alloy-serde",
   "maili-genesis/serde",
+  "maili-common/serde",
 ]

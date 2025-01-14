@@ -55,6 +55,7 @@ serde-bincode-compat = [
   "dep:serde_with"
 ]
 arbitrary = [
+  "std",
   "dep:arbitrary",
   "alloy-consensus/arbitrary",
   "alloy-primitives/arbitrary",

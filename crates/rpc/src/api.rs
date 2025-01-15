@@ -154,13 +154,14 @@ pub trait MinerApiExt {
 }
 
 /// Supervisor API for interop.
-#[rpc(client, namespace = "supervisor")]
+#[cfg_attr(not(feature = "client"), rpc(server, namespace = "supervisor"))]
+#[cfg_attr(feature = "client", rpc(server, client, namespace = "supervisor"))]
 pub trait SupervisorApi {
     /// Checks if the given messages meet the given minimum safety level.
     #[method(name = "checkMessages")]
     async fn check_messages(
         &self,
-        messages: &[ExecutingMessage],
+        messages: Vec<ExecutingMessage>,
         min_safety: SafetyLevel,
     ) -> RpcResult<()>;
 }

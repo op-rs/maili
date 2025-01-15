@@ -18,7 +18,6 @@ The following crates are provided by `maili`.
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
-- ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
 
 
 ## Development Status

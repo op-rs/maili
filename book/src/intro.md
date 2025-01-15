@@ -1,4 +1,4 @@
-# maili
+# Maili
 
 <a href="https://github.com/op-rs/maili"><img src="https://img.shields.io/github/stars/op-rs/maili"></a>
 

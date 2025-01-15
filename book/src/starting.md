@@ -13,7 +13,7 @@ cargo add maili --features full
 Alternatively, you can add the following to your `Cargo.toml` file.
 
 ```txt
-maili = { version = "0.5", features = ["full"] }
+maili = { version = "0.1", features = ["full"] }
 ```
 
 For more fine-grained control over the features you wish to include, you can add the individual
@@ -34,14 +34,10 @@ The [`maili`][maili-crate] defines many [feature flags][maili-ff] including the 
 
 Default
 - `std`
-- `k256`
 - `serde`
 
 Full enables the most commonly used crates.
 - `full`
-
-The `k256` feature flag enables the `k256` feature on the `maili-consensus` crate.
-- `k256`
 
 Arbitrary enables arbitrary features on crates, deriving the `Arbitrary` trait on types.
 - `arbitrary`
@@ -55,19 +51,14 @@ so `maili-protocol` types can be used from `maili` through `maili::protocol::Ins
 
 ## Crates
 
-- [`maili-protocol`][maili-protocol] (supports `no_std`)
-- [`maili-consensus`][maili-consensus] (supports `no_std`)
-- [`maili-genesis`][maili-genesis] (supports `no_std`)
-- [`maili-rpc`][maili-rpc] (supports `no_std`)
+The following crates support `no_std`.
 
-## `no_std`
-
-As noted above, the following crates are `no_std` compatible.
-
-- [`maili-protocol`][maili-protocol]
-- [`maili-consensus`][maili-consensus]
-- [`maili-genesis`][maili-genesis]
-- [`maili-rpc`][maili-rpc] 
+- ![maili](https://img.shields.io/crates/v/maili?label=maili)
+- ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
+- ![maili-consensus](https://img.shields.io/crates/v/maili-consensus?label=maili-consensus)
+- ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
+- ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
+- ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
 
 To add `no_std` support to a crate, ensure the [check_no_std][check-no-std]
 script is updated to include this crate once `no_std` compatible.

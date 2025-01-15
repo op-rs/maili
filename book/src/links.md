@@ -58,7 +58,7 @@
 
 [revm]: https://github.com/bluealloy/revm
 [2718]: https://eips.ethereum.org/EIPS/eip-2718
-[cannon-rs]: https://github.com/anton-rs/cannon-rs
+[cannon-rs]: https://github.com/op-rs/cannon-rs
 [asterisc]: https://github.com/ethereum-optimism/asterisc
 [op-stack]: https://github.com/ethereum-optimism/optimism
 [op-succinct]: https://github.com/succinctlabs/op-succinct
@@ -74,11 +74,11 @@
 
 <!-- Kona links -->
 
-[kona]: https://github.com/anton-rs/kona
-[book]: https://anton-rs.github.io/kona/
-[issues]: https://github.com/anton-rs/kona/issues
-[new-issue]: https://github.com/anton-rs/kona/issues/new
-[contributing]: https://github.com/anton-rs/kona/tree/main/CONTRIBUTING.md
+[kona]: https://github.com/op-rs/kona
+[book]: https://op-rs.github.io/kona/
+[issues]: https://github.com/op-rs/kona/issues
+[new-issue]: https://github.com/op-rs/kona/issues/new
+[contributing]: https://github.com/op-rs/kona/tree/main/CONTRIBUTING.md
 
 <!-- People -->
 

@@ -265,7 +265,7 @@ with the <code>full</code> feature flag from the command-line using Cargo.</p>
 <pre><code class="language-txt">cargo add maili --features full
 </code></pre>
 <p>Alternatively, you can add the following to your <code>Cargo.toml</code> file.</p>
-<pre><code class="language-txt">maili = { version = "0.5", features = ["full"] }
+<pre><code class="language-txt">maili = { version = "0.1", features = ["full"] }
 </code></pre>
 <p>For more fine-grained control over the features you wish to include, you can add the individual
 crates to your <code>Cargo.toml</code> file, or use the <code>maili</code> crate with the features you need.</p>
@@ -282,16 +282,11 @@ crates to your <code>Cargo.toml</code> file, or use the <code>maili</code> crate
 <p>Default</p>
 <ul>
 <li><code>std</code></li>
-<li><code>k256</code></li>
 <li><code>serde</code></li>
 </ul>
 <p>Full enables the most commonly used crates.</p>
 <ul>
 <li><code>full</code></li>
-</ul>
-<p>The <code>k256</code> feature flag enables the <code>k256</code> feature on the <code>maili-consensus</code> crate.</p>
-<ul>
-<li><code>k256</code></li>
 </ul>
 <p>Arbitrary enables arbitrary features on crates, deriving the <code>Arbitrary</code> trait on types.</p>
 <ul>
@@ -305,19 +300,14 @@ crates to your <code>Cargo.toml</code> file, or use the <code>maili</code> crate
 For example, the <code>protocol</code> feature flag provides the <code>maili-protocol</code> re-export
 so <code>maili-protocol</code> types can be used from <code>maili</code> through <code>maili::protocol::InsertTypeHere</code>.</p>
 <h2 id="crates"><a class="header" href="#crates">Crates</a></h2>
+<p>The following crates support <code>no_std</code>.</p>
 <ul>
-<li><a href="https://crates.io/crates/maili-protocol"><code>maili-protocol</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/maili-consensus"><code>maili-consensus</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/maili-genesis"><code>maili-genesis</code></a> (supports <code>no_std</code>)</li>
-<li><a href="https://crates.io/crates/maili-rpc"><code>maili-rpc</code></a> (supports <code>no_std</code>)</li>
-</ul>
-<h2 id="no_std"><a class="header" href="#no_std"><code>no_std</code></a></h2>
-<p>As noted above, the following crates are <code>no_std</code> compatible.</p>
-<ul>
-<li><a href="https://crates.io/crates/maili-protocol"><code>maili-protocol</code></a></li>
-<li><a href="https://crates.io/crates/maili-consensus"><code>maili-consensus</code></a></li>
-<li><a href="https://crates.io/crates/maili-genesis"><code>maili-genesis</code></a></li>
-<li><a href="https://crates.io/crates/maili-rpc"><code>maili-rpc</code></a></li>
+<li><img src="https://img.shields.io/crates/v/maili?label=maili" alt="maili" /></li>
+<li><img src="https://img.shields.io/crates/v/maili-rpc?label=maili-rpc" alt="maili-rpc" /></li>
+<li><img src="https://img.shields.io/crates/v/maili-consensus?label=maili-consensus" alt="maili-consensus" /></li>
+<li><img src="https://img.shields.io/crates/v/maili-genesis?label=maili-genesis" alt="maili-genesis" /></li>
+<li><img src="https://img.shields.io/crates/v/maili-protocol?label=maili-protocol" alt="maili-protocol" /></li>
+<li><img src="https://img.shields.io/crates/v/maili-registry?label=maili-registry" alt="maili-registry" /></li>
 </ul>
 <p>To add <code>no_std</code> support to a crate, ensure the <a href="https://github.com/op-rs/maili/blob/main/scripts/check_no_std.sh">check_no_std</a>
 script is updated to include this crate once <code>no_std</code> compatible.</p>

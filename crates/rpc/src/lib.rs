@@ -10,6 +10,15 @@
 extern crate alloc;
 
 mod api;
+#[cfg(feature = "client")]
+pub use api::{
+    EngineApiExtClient, MinerApiExtClient, OpAdminApiClient, OpP2PApiClient, RollupNodeClient,
+    SupervisorApiClient,
+};
+pub use api::{
+    EngineApiExtServer, MinerApiExtServer, OpAdminApiServer, OpP2PApiServer, RollupNodeServer,
+    SupervisorApiServer,
+};
 
 mod js_types;
 pub use js_types::{

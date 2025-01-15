@@ -10,11 +10,12 @@
 extern crate alloc;
 
 mod api;
-#[cfg(feature = "client")]
+#[cfg(all(feature = "jsonrpsee", feature = "client"))]
 pub use api::{
     EngineApiExtClient, MinerApiExtClient, OpAdminApiClient, OpP2PApiClient, RollupNodeClient,
     SupervisorApiClient,
 };
+#[cfg(feature = "jsonrpsee")]
 pub use api::{
     EngineApiExtServer, MinerApiExtServer, OpAdminApiServer, OpP2PApiServer, RollupNodeServer,
     SupervisorApiServer,

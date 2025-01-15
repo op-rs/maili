@@ -84,10 +84,12 @@ shall be dual licensed as above, without any additional terms or conditions.
 
 [check-no-std]: ./scripts/check_no_std.sh
 
-[kona]: https://github.com/anton-rs/kona
+[kona]: https://github.com/op-rs/kona
 [op-alloy]: https://github.com/alloy-rs/op-alloy
 [contributing]: https://op-rs.github.io/maili
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
 [maili-registry]: https://crates.io/crates/maili-registry
 [maili-consensus]: https://crates.io/crates/maili-consensus
+[maili-genesis]: https://crates.io/crates/maili-genesis
+[maili-rpc]: https://crates.io/crates/maili-rpc

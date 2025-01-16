@@ -2,9 +2,11 @@
 //!
 //! <https://specs.optimism.io/interop/messaging.html#messaging>
 //! <https://github.com/ethereum-optimism/optimism/blob/34d5f66ade24bd1f3ce4ce7c0a6cfc1a6540eca1/packages/contracts-bedrock/src/L2/CrossL2Inbox.sol>
+use crate::CROSS_L2_INBOX_ADDRESS;
 use alloc::vec;
+use alloy_consensus::TxReceipt;
 use alloy_primitives::{keccak256, Address, Bytes, Log, B256, U256};
-use alloy_sol_types::{sol, SolEvent, SolType};
+use alloy_sol_types::{sol, SolEvent, SolValue};
 use derive_more::{AsRef, From};
 
 sol! {
@@ -39,8 +41,8 @@ sol! {
 #[derive(Debug, Clone, From, AsRef, PartialEq, Eq)]
 pub struct MessagePayload(Bytes);
 
-impl From<Log> for MessagePayload {
-    fn from(log: Log) -> Self {
+impl From<&Log> for MessagePayload {
+    fn from(log: &Log) -> Self {
         let mut data = vec![0u8; log.topics().len() * 32 + log.data.data.len()];
         for (i, topic) in log.topics().iter().enumerate() {
             data[i * 32..(i + 1) * 32].copy_from_slice(topic.as_ref());
@@ -73,7 +75,12 @@ pub struct MessageIdentifier {
 impl MessageIdentifier {
     /// Decode a [`MessageIdentifier`] from ABI-encoded data.
     pub fn abi_decode(data: &[u8], validate: bool) -> Result<Self, alloy_sol_types::Error> {
-        MessageIdentifierAbi::abi_decode(data, validate).map(|abi| abi.into())
+        <MessageIdentifierAbi as SolValue>::abi_decode(data, validate).map(|abi| abi.into())
+    }
+
+    /// Encodes a [`MessageIdentifier`] into ABI-encoded data.
+    pub fn abi_encode(&self) -> Vec<u8> {
+        MessageIdentifierAbi::from(self).abi_encode()
     }
 }
 
@@ -89,8 +96,8 @@ impl From<MessageIdentifierAbi> for MessageIdentifier {
     }
 }
 
-impl From<MessageIdentifier> for MessageIdentifierAbi {
-    fn from(id: MessageIdentifier) -> Self {
+impl From<&MessageIdentifier> for MessageIdentifierAbi {
+    fn from(id: &MessageIdentifier) -> Self {
         Self {
             origin: id.origin,
             blockNumber: U256::from(id.block_number),
@@ -119,6 +126,9 @@ pub struct ExecutingMessage {
 }
 
 impl ExecutingMessage {
+    /// The signature hash of the `ExecutingMessage` event.
+    pub const SIGNATURE_HASH: B256 = ExecutingMessageAbi::SIGNATURE_HASH;
+
     /// Decodes an `ExecutingMessage` from ABI-encoded data.
     pub fn abi_decode(data: &[u8], validate: bool) -> Result<Self, alloy_sol_types::Error> {
         ExecutingMessageAbi::abi_decode_data(data, validate).map(|abi| abi.into())
@@ -135,6 +145,37 @@ impl From<ExecutingMessageAbi> for ExecutingMessage {
     fn from(event: ExecutingMessageAbi) -> Self {
         Self { id: event.id.into(), msg_hash: event.msgHash }
     }
+}
+
+/// A wrapper type for [ExecutingMessage] containing the chain ID of the chain that the message was
+/// executed on.
+#[derive(Debug)]
+pub struct EnrichedExecutingMessage {
+    /// The inner [ExecutingMessage].
+    pub inner: ExecutingMessage,
+    /// The chain ID of the chain that the message was executed on.
+    pub executing_chain_id: u64,
+}
+
+impl EnrichedExecutingMessage {
+    /// Create a new [EnrichedExecutingMessage] from an [ExecutingMessage] and a chain ID.
+    pub const fn new(inner: ExecutingMessage, executing_chain_id: u64) -> Self {
+        Self { inner, executing_chain_id }
+    }
+}
+
+/// Extracts all [ExecutingMessage] logs from a list of receipts.
+pub fn extract_executing_messages(receipts: &[impl TxReceipt<Log = Log>]) -> Vec<ExecutingMessage> {
+    receipts.iter().fold(Vec::new(), |mut acc, envelope| {
+        let executing_messages = envelope.logs().iter().filter_map(|log| {
+            (log.address == CROSS_L2_INBOX_ADDRESS && log.topics().len() == 2)
+                .then(|| ExecutingMessage::abi_decode(&log.data.data[..], true).ok())
+                .flatten()
+        });
+
+        acc.extend(executing_messages);
+        acc
+    })
 }
 
 #[cfg(test)]

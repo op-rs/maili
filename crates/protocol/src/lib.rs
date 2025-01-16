@@ -9,8 +9,14 @@
 
 extern crate alloc;
 
-mod messages;
-pub use messages::{ExecutingMessage, MessageIdentifier, MessagePayload, SafetyLevel};
+mod interop;
+pub use interop::{
+    extract_executing_messages, EnrichedExecutingMessage, ExecutingMessage, InteropProvider,
+    InteropProviderError, InteropProviderResult, MessageGraph, MessageGraphError,
+    MessageGraphResult, MessageIdentifier, MessagePayload, OutputRootWithChain, SafetyLevel,
+    SuperRoot, SuperRootError, SuperRootResult, CROSS_L2_INBOX_ADDRESS, MESSAGE_EXPIRY_WINDOW,
+    SUPER_ROOT_VERSION,
+};
 
 mod batch;
 pub use batch::{
@@ -80,3 +86,8 @@ pub use fee::{
 
 #[cfg(any(test, feature = "test-utils"))]
 pub mod test_utils;
+
+#[cfg(any(test, feature = "test-utils"))]
+pub use interop::test_utils as interop_utils;
+#[cfg(any(test, feature = "test-utils"))]
+pub use interop::test_utils::*;

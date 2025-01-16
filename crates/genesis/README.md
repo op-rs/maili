@@ -28,4 +28,4 @@ maili-genesis = { version = "x.y.z", default-features = false, features = ["serd
 <!-- Links -->
 
 [alloy-genesis]: https://github.com/alloy-rs
-[kona]: https://github.com/anton-rs/kona/blob/main/Cargo.toml#L137
+[kona]: https://github.com/op-rs/kona/blob/main/Cargo.toml#L137

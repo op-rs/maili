@@ -3,7 +3,7 @@
 //! <https://specs.optimism.io/interop/messaging.html#messaging>
 //! <https://github.com/ethereum-optimism/optimism/blob/34d5f66ade24bd1f3ce4ce7c0a6cfc1a6540eca1/packages/contracts-bedrock/src/L2/CrossL2Inbox.sol>
 use crate::CROSS_L2_INBOX_ADDRESS;
-use alloc::vec;
+use alloc::{vec, vec::Vec};
 use alloy_consensus::TxReceipt;
 use alloy_primitives::{keccak256, Address, Bytes, Log, B256, U256};
 use alloy_sol_types::{sol, SolEvent, SolValue};

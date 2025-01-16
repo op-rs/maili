@@ -4,7 +4,7 @@ use crate::{
     ExecutingMessage, InteropProvider, InteropProviderResult, MessageIdentifier,
     CROSS_L2_INBOX_ADDRESS,
 };
-use alloc::{vec, vec::Vec};
+use alloc::{boxed::Box, vec, vec::Vec};
 use alloy_consensus::{Header, Receipt, ReceiptEnvelope, ReceiptWithBloom, Sealed, TxReceipt};
 use alloy_primitives::{map::HashMap, Address, Bytes, Log, LogData, B256};
 use async_trait::async_trait;

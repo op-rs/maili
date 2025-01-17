@@ -61,15 +61,15 @@ pub use channel::{
 
 mod deposits;
 pub use deposits::{
-    decode_deposit, DepositError, DepositSourceDomain, DepositSourceDomainIdentifier,
-    L1InfoDepositSource, UpgradeDepositSource, UserDepositSource, DEPOSIT_EVENT_ABI,
-    DEPOSIT_EVENT_ABI_HASH, DEPOSIT_EVENT_VERSION_0,
+    decode_deposit, DepositContextDepositSource, DepositError, DepositSourceDomain,
+    DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource, UserDepositSource,
+    DEPOSIT_EVENT_ABI, DEPOSIT_EVENT_ABI_HASH, DEPOSIT_EVENT_VERSION_0,
 };
 
 mod info;
 pub use info::{
-    BlockInfoError, DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop,
-    L1BlockInfoTx,
+    closing_deposit_context_tx, BlockInfoError, DecodeError, L1BlockInfoBedrock,
+    L1BlockInfoEcotone, L1BlockInfoInterop, L1BlockInfoTx,
 };
 
 mod fee;

@@ -12,5 +12,8 @@ pub use ecotone::L1BlockInfoEcotone;
 mod interop;
 pub use interop::L1BlockInfoInterop;
 
+mod deposit_context;
+pub use deposit_context::closing_deposit_context_tx;
+
 mod errors;
 pub use errors::{BlockInfoError, DecodeError};

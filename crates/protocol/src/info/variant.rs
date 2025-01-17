@@ -19,10 +19,11 @@ use super::L1BlockInfoInterop;
 const REGOLITH_SYSTEM_TX_GAS: u64 = 1_000_000;
 
 /// The address of the L1 Block contract
-const L1_BLOCK_ADDRESS: Address = address!("4200000000000000000000000000000000000015");
+pub(crate) const L1_BLOCK_ADDRESS: Address = address!("4200000000000000000000000000000000000015");
 
 /// The depositor address of the L1 info transaction
-const L1_INFO_DEPOSITOR_ADDRESS: Address = address!("deaddeaddeaddeaddeaddeaddeaddeaddead0001");
+pub(crate) const L1_INFO_DEPOSITOR_ADDRESS: Address =
+    address!("deaddeaddeaddeaddeaddeaddeaddeaddead0001");
 
 /// The [L1BlockInfoTx] enum contains variants for the different versions of the L1 block info
 /// transaction on OP Stack chains.

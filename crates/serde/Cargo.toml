@@ -1,0 +1,26 @@
+[package]
+name = "maili-serde"
+description = "Serde related helpers for Maili"
+
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+exclude.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json = { workspace = true, features = ["alloc"] }
+
+[dev-dependencies]
+toml = { workspace = true, features = ["parse"] }
+
+[features]
+default = ["std"]
+std = ["serde/std", "serde_json/std"]

@@ -15,6 +15,7 @@ pub use deposit::serde_bincode_compat;
 #[cfg(feature = "serde")]
 pub use deposit::serde_deposit_tx_rpc;
 pub use deposit::{
-    DepositSourceDomain, DepositSourceDomainIdentifier, DepositTransaction, DepositTxEnvelope,
-    L1InfoDepositSource, TxDeposit, UpgradeDepositSource, UserDepositSource, DEPOSIT_TX_TYPE_ID,
+    DepositContextDepositSource, DepositSourceDomain, DepositSourceDomainIdentifier,
+    DepositTransaction, DepositTxEnvelope, L1InfoDepositSource, TxDeposit, UpgradeDepositSource,
+    UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };

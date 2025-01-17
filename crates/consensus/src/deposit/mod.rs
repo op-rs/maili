@@ -5,8 +5,8 @@ pub use envelope::DepositTxEnvelope;
 
 mod source;
 pub use source::{
-    DepositSourceDomain, DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource,
-    UserDepositSource,
+    DepositContextDepositSource, DepositSourceDomain, DepositSourceDomainIdentifier,
+    L1InfoDepositSource, UpgradeDepositSource, UserDepositSource,
 };
 
 use alloc::vec::Vec;

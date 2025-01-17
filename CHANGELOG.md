@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.5](https://github.com/op-rs/maili
-/releases/tag/v0.1.5) - 2025-01-17
+## [0.1.6](https://github.com/op-rs/maili
+/releases/tag/v0.1.6) - 2025-01-17
 
 ### Bug Fixes
 
@@ -130,6 +130,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [workspace] Deduplicate deposit source types ([#92](https://github.com/op-rs/maili/issues/92))
+- [protocol] Deposit context closing tx formation ([#89](https://github.com/op-rs/maili/issues/89))
+- [protocol] `L1BlockInfoInterop` ([#88](https://github.com/op-rs/maili/issues/88))
 - Maili-flz crate ([#87](https://github.com/op-rs/maili/issues/87))
 - [protocol] Ecotone Marker that Scalars are Empty ([#45](https://github.com/op-rs/maili/issues/45))
 - [protocol] L1BlockInfo Accessors ([#39](https://github.com/op-rs/maili/issues/39))
@@ -262,6 +265,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Release 0.1.6
+- Release 0.1.6
+- Release 0.1.6
+- [protocol] Flatten L1BlockInfoTx::try_new Method ([#93](https://github.com/op-rs/maili/issues/93))
 - [meta] Removes PR template ([#80](https://github.com/op-rs/maili/issues/80))
 - [rpc] Export RPC APIs from crate root ([#75](https://github.com/op-rs/maili/issues/75))
 - [consensus] Rename `maili-common`->`maili-consensus` ([#66](https://github.com/op-rs/maili/issues/66))

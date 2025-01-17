@@ -9,5 +9,8 @@ pub use bedrock::L1BlockInfoBedrock;
 mod ecotone;
 pub use ecotone::L1BlockInfoEcotone;
 
+mod interop;
+pub use interop::L1BlockInfoInterop;
+
 mod errors;
 pub use errors::{BlockInfoError, DecodeError};

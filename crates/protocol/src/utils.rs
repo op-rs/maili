@@ -8,8 +8,8 @@ use maili_consensus::DepositTxEnvelope;
 use maili_genesis::{RollupConfig, SystemConfig};
 
 use crate::{
-    L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx, OpBlockConversionError, SpanBatchError,
-    SpanDecodingError,
+    info::L1BlockInfoInterop, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx,
+    OpBlockConversionError, SpanBatchError, SpanDecodingError,
 };
 
 /// Returns if the given `value` is a deposit transaction.
@@ -52,6 +52,11 @@ where
     let l1_fee_scalar = match l1_info {
         L1BlockInfoTx::Bedrock(L1BlockInfoBedrock { l1_fee_scalar, .. }) => l1_fee_scalar,
         L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            base_fee_scalar,
+            blob_base_fee_scalar,
+            ..
+        })
+        | L1BlockInfoTx::Interop(L1BlockInfoInterop {
             base_fee_scalar,
             blob_base_fee_scalar,
             ..

@@ -1,12 +1,12 @@
-//! Contains ecotone-specific L1 block info types.
+//! Contains interop-specific L1 block info types.
 
 use crate::DecodeError;
 use alloc::{format, string::ToString, vec::Vec};
 use alloy_primitives::{Address, Bytes, B256, U256};
 
-/// Represents the fields within an Ecotone L1 block info transaction.
+/// Represents the fields within an Interop L1 block info transaction.
 ///
-/// Ecotone Binary Format
+/// Interop Binary Format
 /// +---------+--------------------------+
 /// | Bytes   | Field                    |
 /// +---------+--------------------------+
@@ -23,7 +23,7 @@ use alloy_primitives::{Address, Bytes, B256, U256};
 /// +---------+--------------------------+
 #[derive(Debug, Clone, Hash, Eq, PartialEq, Default, Copy)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct L1BlockInfoEcotone {
+pub struct L1BlockInfoInterop {
     /// The current L1 origin block number
     pub number: u64,
     /// The current L1 origin block's timestamp
@@ -42,28 +42,19 @@ pub struct L1BlockInfoEcotone {
     pub blob_base_fee_scalar: u32,
     /// The fee scalar for L1 data
     pub base_fee_scalar: u32,
-    /// Indicates that the scalars are empty.
-    /// This is an edge case where the first block in ecotone has no scalars,
-    /// so the bedrock tx l1 cost function needs to be used.
-    pub empty_scalars: bool,
-    /// The l1 fee overhead used along with the `empty_scalars` field for the
-    /// bedrock tx l1 cost function.
-    ///
-    /// This field is deprecated in the Ecotone Hardfork.
-    pub l1_fee_overhead: U256,
 }
 
-impl L1BlockInfoEcotone {
-    /// The type byte identifier for the L1 scalar format in Ecotone.
+impl L1BlockInfoInterop {
+    /// The type byte identifier for the L1 scalar format in Interop.
     pub const L1_SCALAR: u8 = 1;
 
-    /// The length of an L1 info transaction in Ecotone.
+    /// The length of an L1 info transaction in Interop.
     pub const L1_INFO_TX_LEN: usize = 4 + 32 * 5;
 
-    /// The 4 byte selector of "setL1BlockValuesEcotone()"
-    pub const L1_INFO_TX_SELECTOR: [u8; 4] = [0x44, 0x0a, 0x5e, 0x20];
+    /// The 4 byte selector of "setL1BlockValuesInterop()"
+    pub const L1_INFO_TX_SELECTOR: [u8; 4] = [0x76, 0x0e, 0xe0, 0x4d];
 
-    /// Encodes the [L1BlockInfoEcotone] object into Ethereum transaction calldata.
+    /// Encodes the [L1BlockInfoInterop] object into Ethereum transaction calldata.
     pub fn encode_calldata(&self) -> Bytes {
         let mut buf = Vec::with_capacity(Self::L1_INFO_TX_LEN);
         buf.extend_from_slice(Self::L1_INFO_TX_SELECTOR.as_ref());
@@ -76,16 +67,14 @@ impl L1BlockInfoEcotone {
         buf.extend_from_slice(U256::from(self.blob_base_fee).to_be_bytes::<32>().as_ref());
         buf.extend_from_slice(self.block_hash.as_ref());
         buf.extend_from_slice(self.batcher_address.into_word().as_ref());
-        // Notice: do not include the `empty_scalars` field in the calldata.
-        // Notice: do not include the `l1_fee_overhead` field in the calldata.
         buf.into()
     }
 
-    /// Decodes the [L1BlockInfoEcotone] object from ethereum transaction calldata.
+    /// Decodes the [L1BlockInfoInterop] object from ethereum transaction calldata.
     pub fn decode_calldata(r: &[u8]) -> Result<Self, DecodeError> {
         if r.len() != Self::L1_INFO_TX_LEN {
             return Err(DecodeError::InvalidLength(format!(
-                "Invalid calldata length for Ecotone L1 info transaction, expected {}, got {}",
+                "Invalid calldata length for Interop L1 info transaction, expected {}, got {}",
                 Self::L1_INFO_TX_LEN,
                 r.len()
             )));
@@ -126,12 +115,6 @@ impl L1BlockInfoEcotone {
             blob_base_fee,
             blob_base_fee_scalar,
             base_fee_scalar,
-            // Notice: the `empty_scalars` field is not included in the calldata.
-            // This is used by the evm to indicate that the bedrock tx l1 cost function
-            // needs to be used.
-            empty_scalars: false,
-            // Notice: the `l1_fee_overhead` field is not included in the calldata.
-            l1_fee_overhead: U256::ZERO,
         })
     }
 }

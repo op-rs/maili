@@ -52,55 +52,12 @@ impl L1BlockInfoTx {
         // In the first block of Ecotone, the L1Block contract has not been upgraded yet due to the
         // upgrade transactions being placed after the L1 info transaction. Because of this,
         // for the first block of Ecotone, we send a Bedrock style L1 block info transaction
-        if rollup_config.is_ecotone_active(l2_block_time)
-            && rollup_config.ecotone_time.unwrap_or_default() != l2_block_time
-        {
-            let scalar = system_config.scalar.to_be_bytes::<32>();
-            let blob_base_fee_scalar = (scalar[0] == L1BlockInfoEcotone::L1_SCALAR)
-                .then(|| {
-                    Ok::<u32, BlockInfoError>(u32::from_be_bytes(
-                        scalar[24..28]
-                            .try_into()
-                            .map_err(|_| BlockInfoError::L1BlobBaseFeeScalar)?,
-                    ))
-                })
-                .transpose()?
-                .unwrap_or_default();
-            let base_fee_scalar = u32::from_be_bytes(
-                scalar[28..32].try_into().map_err(|_| BlockInfoError::BaseFeeScalar)?,
-            );
+        let is_first_ecotone_block =
+            rollup_config.ecotone_time.unwrap_or_default() == l2_block_time;
 
-            if rollup_config.is_interop_active(l2_block_time)
-                && rollup_config.interop_time.unwrap_or_default() != l2_block_time
-            {
-                Ok(Self::Interop(L1BlockInfoInterop {
-                    number: l1_header.number,
-                    time: l1_header.timestamp,
-                    base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
-                    block_hash: l1_header.hash_slow(),
-                    sequence_number,
-                    batcher_address: system_config.batcher_address,
-                    blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
-                    blob_base_fee_scalar,
-                    base_fee_scalar,
-                }))
-            } else {
-                Ok(Self::Ecotone(L1BlockInfoEcotone {
-                    number: l1_header.number,
-                    time: l1_header.timestamp,
-                    base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
-                    block_hash: l1_header.hash_slow(),
-                    sequence_number,
-                    batcher_address: system_config.batcher_address,
-                    blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
-                    blob_base_fee_scalar,
-                    base_fee_scalar,
-                    empty_scalars: false,
-                    l1_fee_overhead: U256::ZERO,
-                }))
-            }
-        } else {
-            Ok(Self::Bedrock(L1BlockInfoBedrock {
+        // If ecotone is *not* active or this is the first block of ecotone, use Bedrock block info.
+        if !rollup_config.is_ecotone_active(l2_block_time) || is_first_ecotone_block {
+            return Ok(Self::Bedrock(L1BlockInfoBedrock {
                 number: l1_header.number,
                 time: l1_header.timestamp,
                 base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
@@ -109,6 +66,51 @@ impl L1BlockInfoTx {
                 batcher_address: system_config.batcher_address,
                 l1_fee_overhead: system_config.overhead,
                 l1_fee_scalar: system_config.scalar,
+            }));
+        }
+
+        // --- Post-Ecotone Operations ---
+
+        let scalar = system_config.scalar.to_be_bytes::<32>();
+        let blob_base_fee_scalar = (scalar[0] == L1BlockInfoEcotone::L1_SCALAR)
+            .then(|| {
+                Ok::<u32, BlockInfoError>(u32::from_be_bytes(
+                    scalar[24..28].try_into().map_err(|_| BlockInfoError::L1BlobBaseFeeScalar)?,
+                ))
+            })
+            .transpose()?
+            .unwrap_or_default();
+        let base_fee_scalar = u32::from_be_bytes(
+            scalar[28..32].try_into().map_err(|_| BlockInfoError::BaseFeeScalar)?,
+        );
+
+        if rollup_config.is_interop_active(l2_block_time)
+            && rollup_config.interop_time.unwrap_or_default() != l2_block_time
+        {
+            Ok(Self::Interop(L1BlockInfoInterop {
+                number: l1_header.number,
+                time: l1_header.timestamp,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
+                block_hash: l1_header.hash_slow(),
+                sequence_number,
+                batcher_address: system_config.batcher_address,
+                blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
+                blob_base_fee_scalar,
+                base_fee_scalar,
+            }))
+        } else {
+            Ok(Self::Ecotone(L1BlockInfoEcotone {
+                number: l1_header.number,
+                time: l1_header.timestamp,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
+                block_hash: l1_header.hash_slow(),
+                sequence_number,
+                batcher_address: system_config.batcher_address,
+                blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
+                blob_base_fee_scalar,
+                base_fee_scalar,
+                empty_scalars: false,
+                l1_fee_overhead: U256::ZERO,
             }))
         }
     }

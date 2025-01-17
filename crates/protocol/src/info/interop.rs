@@ -67,8 +67,6 @@ impl L1BlockInfoInterop {
         buf.extend_from_slice(U256::from(self.blob_base_fee).to_be_bytes::<32>().as_ref());
         buf.extend_from_slice(self.block_hash.as_ref());
         buf.extend_from_slice(self.batcher_address.into_word().as_ref());
-        // Notice: do not include the `empty_scalars` field in the calldata.
-        // Notice: do not include the `l1_fee_overhead` field in the calldata.
         buf.into()
     }
 

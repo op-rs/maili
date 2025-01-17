@@ -18,6 +18,7 @@ workspace = true
 # Workspace
 maili-consensus.workspace = true
 maili-genesis.workspace = true
+maili-flz.workspace = true
 
 # Alloy
 alloy-primitives = { workspace = true, features = ["map"] }

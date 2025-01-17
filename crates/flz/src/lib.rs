@@ -1,12 +1,11 @@
+#![doc = include_str!("../README.md")]
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/op-rs/maili/main/assets/square.png",
     html_favicon_url = "https://raw.githubusercontent.com/op-rs/maili/main/assets/favicon.ico"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
-#![cfg_attr(not(any(test, feature = "std")), no_std)]
-
-extern crate alloc;
+#![no_std]
 
 /// Returns the length of the data after compression through FastLZ.
 ///
@@ -113,6 +112,8 @@ fn u24(input: &[u8], idx: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    extern crate alloc;
+    use alloc::vec::Vec;
     use alloy_sol_types::{sol, SolCall};
     use revm::{
         db::BenchmarkDB,
@@ -120,7 +121,6 @@ mod tests {
         Evm,
     };
     use rstest::rstest;
-    use alloc::vec::Vec;
 
     #[rstest]
     #[case::empty(&[], 0)]
@@ -182,5 +182,4 @@ mod tests {
 
         assert_eq!(U256::from(native_val), evm_val);
     }
-
 }

@@ -1,8 +1,8 @@
 //! This module contains the L1 block fee calculation function.
-use alloy_primitives::U256;
 
-use crate::utils::flz_compress_len;
+use alloy_primitives::U256;
 use core::ops::Mul;
+use maili_flz::flz_compress_len;
 
 /// Cost per byte in calldata
 const ZERO_BYTE_COST: u64 = 4;

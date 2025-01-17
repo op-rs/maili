@@ -40,6 +40,7 @@ maili-consensus = { version = "0.1.6", path = "crates/consensus", default-featur
 maili-genesis = { version = "0.1.6", path = "crates/genesis", default-features = false }
 maili-protocol = { version = "0.1.6", path = "crates/protocol", default-features = false }
 maili-registry = { version = "0.1.6", path = "crates/registry", default-features = false }
+maili-superchain = { version = "0.1.6", path = "crates/registry/superchain", default-features = false }
 maili-rpc = { version = "0.1.6", path = "crates/rpc", default-features = false }
 maili-flz = { version = "0.1.6", path = "crates/flz", default-features = false }
 
@@ -75,6 +76,7 @@ serde_with = "3.12.0"
 serde_json = { version = "1.0.135", default-features = false, features = ["alloc"] }
 
 # Encoding
+toml = { version = "0.8.19", default-features = false }
 snap = "1.1.1"
 bincode = "1.3.3"
 ethereum_ssz = "0.8.2"

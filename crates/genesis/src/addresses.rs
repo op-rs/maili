@@ -26,14 +26,8 @@ pub struct AddressList {
     pub optimism_portal_proxy: Address,
     /// System Config Proxy address
     pub system_config_proxy: Address,
-    /// The system config owner
-    pub system_config_owner: Address,
     /// Proxy Admin address
     pub proxy_admin: Address,
-    /// The owner of the Proxy Admin
-    pub proxy_admin_owner: Address,
-    /// The guardian address
-    pub guardian: Address,
 
     // Fault Proof Contract Addresses
     /// Anchor State Registry Proxy address
@@ -52,8 +46,6 @@ pub struct AddressList {
     pub permissioned_dispute_game: Option<Address>,
     /// Preimage Oracle Proxy address
     pub preimage_oracle: Option<Address>,
-    /// The challenger's address
-    pub challenger: Option<Address>,
 }
 
 impl AddressList {
@@ -80,9 +72,6 @@ impl AddressList {
         if self.preimage_oracle == Some(Address::ZERO) {
             self.preimage_oracle = None;
         }
-        if self.challenger == Some(Address::ZERO) {
-            self.challenger = None;
-        }
     }
 }
 
@@ -100,7 +89,6 @@ mod tests {
             mips: Some(Address::ZERO),
             permissioned_dispute_game: Some(Address::ZERO),
             preimage_oracle: Some(Address::ZERO),
-            challenger: Some(Address::ZERO),
             ..Default::default()
         };
 
@@ -113,6 +101,5 @@ mod tests {
         assert_eq!(addresses.mips, None);
         assert_eq!(addresses.permissioned_dispute_game, None);
         assert_eq!(addresses.preimage_oracle, None);
-        assert_eq!(addresses.challenger, None);
     }
 }

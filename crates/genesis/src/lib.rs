@@ -24,6 +24,9 @@ pub use params::{
     OP_SEPOLIA_EIP1559_DEFAULT_ELASTICITY_MULTIPLIER,
 };
 
+mod roles;
+pub use roles::Roles;
+
 mod addresses;
 pub use addresses::AddressList;
 

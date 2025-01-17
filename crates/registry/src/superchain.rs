@@ -1,62 +1,10 @@
 //! Contains the full superchain data.
 
 use super::Chain;
-use alloc::{string::String, vec::Vec};
-use alloy_primitives::{
-    map::{DefaultHashBuilder, HashMap},
-    Address,
-};
-use maili_genesis::{ChainConfig, HardForkConfiguration, RollupConfig};
-
-/// A superchain configuration.
-#[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-pub struct Superchain {
-    /// Superchain identifier, without capitalization or display changes.
-    pub name: String,
-    /// Superchain configuration file contents.
-    pub config: SuperchainConfig,
-    /// Chain IDs of chains that are part of this superchain.
-    pub chains: Vec<ChainConfig>,
-}
-
-/// A superchain configuration file format
-#[derive(Debug, Clone, Default, Hash, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "PascalCase")]
-pub struct SuperchainConfig {
-    /// Superchain name (e.g. "Mainnet")
-    pub name: String,
-    /// Superchain L1 anchor information
-    pub l1: SuperchainL1Info,
-    /// Optional addresses for the superchain-wide default protocol versions contract.
-    pub protocol_versions_addr: Option<Address>,
-    /// Optional address for the superchain-wide default superchain config contract.
-    pub superchain_config_addr: Option<Address>,
-    /// Hardfork Configuration. These values may be overridden by individual chains.
-    #[serde(flatten)]
-    pub hardfork_defaults: HardForkConfiguration,
-}
-
-/// Superchain L1 anchor information
-#[derive(Debug, Clone, Default, Hash, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "PascalCase")]
-pub struct SuperchainL1Info {
-    /// L1 chain ID
-    #[serde(rename = "ChainID")]
-    pub chain_id: u64,
-    /// L1 chain public RPC endpoint
-    #[serde(rename = "PublicRPC")]
-    pub public_rpc: String,
-    /// L1 chain explorer RPC endpoint
-    pub explorer: String,
-}
-
-/// A list of Hydrated Superchain Configs.
-#[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Superchains {
-    /// A list of superchain configs.
-    pub superchains: Vec<Superchain>,
-}
+use alloc::vec::Vec;
+use alloy_primitives::map::{DefaultHashBuilder, HashMap};
+use maili_genesis::{ChainConfig, RollupConfig};
+use maili_superchain::Superchains;
 
 /// The registry containing all the superchain configurations.
 #[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
@@ -115,7 +63,7 @@ impl Registry {
 mod tests {
     use super::*;
     use alloy_primitives::address;
-    use maili_genesis::{AddressList, SuperchainLevel, OP_MAINNET_BASE_FEE_CONFIG};
+    use maili_genesis::{AddressList, Roles, SuperchainLevel, OP_MAINNET_BASE_FEE_CONFIG};
 
     #[test]
     fn test_read_chain_configs() {
@@ -129,10 +77,9 @@ mod tests {
             sequencer_rpc: String::from("https://mainnet-sequencer.base.org"),
             explorer: String::from("https://explorer.base.org"),
             superchain_level: SuperchainLevel::Frontier,
-            standard_chain_candidate: true,
+            governed_by_optimism: false,
             superchain_time: Some(0),
             batch_inbox_addr: address!("ff00000000000000000000000000000000008453"),
-            superchain: String::from("mainnet"),
             chain: String::new(),
             hardfork_configuration: crate::test_utils::BASE_MAINNET_CONFIG.hardfork_config(),
             block_time: 2,
@@ -142,6 +89,21 @@ mod tests {
             optimism: Some(OP_MAINNET_BASE_FEE_CONFIG),
             alt_da: None,
             genesis: crate::test_utils::BASE_MAINNET_CONFIG.genesis,
+            roles: Some(Roles {
+                system_config_owner: Some(
+                    "14536667Cd30e52C0b458BaACcB9faDA7046E056".parse().unwrap(),
+                ),
+                proxy_admin_owner: Some(
+                    "7bB41C3008B3f03FE483B28b8DB90e19Cf07595c".parse().unwrap(),
+                ),
+                guardian: Some("09f7150d8c019bef34450d6920f6b3608cefdaf2".parse().unwrap()),
+                challenger: Some("6F8C5bA3F59ea3E76300E3BEcDC231D656017824".parse().unwrap()),
+                proposer: Some("642229f238fb9dE03374Be34B0eD8D9De80752c5".parse().unwrap()),
+                unsafe_block_signer: Some(
+                    "Af6E19BE0F9cE7f8afd49a1824851023A8249e8a".parse().unwrap(),
+                ),
+                batch_submitter: Some("5050F69a9786F081509234F1a7F4684b5E5b76C9".parse().unwrap()),
+            }),
             addresses: Some(AddressList {
                 address_manager: address!("8EfB6B5c4767B09Dc9AA6Af4eAA89F749522BaE2"),
                 l1_cross_domain_messenger_proxy: address!(
@@ -155,11 +117,7 @@ mod tests {
                 ),
                 optimism_portal_proxy: address!("49048044D57e1C92A77f79988d21Fa8fAF74E97e"),
                 system_config_proxy: address!("73a79Fab69143498Ed3712e519A88a918e1f4072"),
-                system_config_owner: address!("14536667Cd30e52C0b458BaACcB9faDA7046E056"),
                 proxy_admin: address!("0475cBCAebd9CE8AfA5025828d5b98DFb67E059E"),
-                proxy_admin_owner: address!("7bB41C3008B3f03FE483B28b8DB90e19Cf07595c"),
-                challenger: Some(address!("6F8C5bA3F59ea3E76300E3BEcDC231D656017824")),
-                guardian: address!("09f7150d8c019bef34450d6920f6b3608cefdaf2"),
                 anchor_state_registry_proxy: Some(address!(
                     "db9091e48b1c42992a1213e6916184f9ebdbfedf"
                 )),

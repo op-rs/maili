@@ -6,4 +6,4 @@ default:
 
 # Generate file bindings
 bind:
-  ./etc/bind.sh
+  cargo build

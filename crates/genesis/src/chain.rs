@@ -5,9 +5,17 @@ use alloy_eips::eip1559::BaseFeeParams;
 use alloy_primitives::Address;
 
 use crate::{
-    base_fee_params, base_fee_params_canyon, AddressList, BaseFeeConfig, ChainGenesis,
+    base_fee_params, base_fee_params_canyon, AddressList, BaseFeeConfig, ChainGenesis, Roles,
     RollupConfig, GRANITE_CHANNEL_TIMEOUT,
 };
+
+const fn default_governed_by_optimism() -> bool {
+    false
+}
+
+const fn default_batch_inbox_addr() -> Address {
+    Address::ZERO
+}
 
 /// OP Mainnet chain ID.
 pub const OP_MAINNET_CHAIN_ID: u64 = 10;
@@ -110,30 +118,31 @@ pub struct ChainConfig {
     /// Level of integration with the superchain.
     #[cfg_attr(feature = "serde", serde(rename = "SuperchainLevel", alias = "superchain_level"))]
     pub superchain_level: SuperchainLevel,
-    /// Toggles standard chain validation checks on for this chain, even if it is a frontier chain.
+    /// Whether the chain is governed by optimism.
     #[cfg_attr(
         feature = "serde",
-        serde(rename = "StandardChainCandidate", alias = "standard_chain_candidate")
+        serde(rename = "GovernedByOptimism", alias = "governed_by_optimism")
     )]
-    pub standard_chain_candidate: bool,
+    #[cfg_attr(feature = "serde", serde(default = "default_governed_by_optimism"))]
+    pub governed_by_optimism: bool,
     /// Time of when a given chain is opted in to the Superchain.
     /// If set, hardforks times after the superchain time
     /// will be inherited from the superchain-wide config.
     #[cfg_attr(feature = "serde", serde(rename = "SuperchainTime", alias = "superchain_time"))]
     pub superchain_time: Option<u64>,
     /// Chain-specific batch inbox address
-    #[cfg_attr(feature = "serde", serde(rename = "batch_inbox_address"))]
+    #[cfg_attr(
+        feature = "serde",
+        serde(rename = "batch_inbox_address", alias = "batch_inbox_addr")
+    )]
+    #[cfg_attr(feature = "serde", serde(default = "default_batch_inbox_addr"))]
     pub batch_inbox_addr: Address,
-    /// Superchain is a simple string to identify the superchain.
-    /// This is implied by directory structure, and not encoded in the config file itself.
-    #[cfg_attr(feature = "serde", serde(rename = "Superchain"))]
-    pub superchain: String,
     /// Chain is a simple string to identify the chain, within its superchain context.
     /// This matches the resource filename, it is not encoded in the config file itself.
     #[cfg_attr(feature = "serde", serde(skip))]
     pub chain: String,
     /// Hardfork Configuration. These values may override the superchain-wide defaults.
-    #[cfg_attr(feature = "serde", serde(flatten))]
+    #[cfg_attr(feature = "serde", serde(alias = "hardforks"))]
     pub hardfork_configuration: HardForkConfiguration,
     /// The block time in seconds.
     #[cfg_attr(feature = "serde", serde(rename = "block_time"))]
@@ -163,6 +172,9 @@ pub struct ChainConfig {
     /// Addresses
     #[cfg_attr(feature = "serde", serde(rename = "Addresses", alias = "addresses"))]
     pub addresses: Option<AddressList>,
+    /// Roles
+    #[cfg_attr(feature = "serde", serde(rename = "Roles", alias = "roles"))]
+    pub roles: Option<Roles>,
     /// Gas paying token metadata. Not consumed by downstream OPStack components.
     #[cfg_attr(feature = "serde", serde(rename = "GasPayingToken", alias = "gas_paying_token"))]
     pub gas_paying_token: Option<Address>,

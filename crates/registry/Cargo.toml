@@ -16,6 +16,7 @@ workspace = true
 
 [dependencies]
 # Workspace
+maili-superchain.workspace = true
 maili-genesis = { workspace = true, features = ["serde"] }
 
 # Alloy
@@ -27,6 +28,12 @@ serde_json = { workspace = true, features = ["raw_value"] }
 
 # misc
 lazy_static = { workspace = true, features = ["spin_no_std"] }
+
+[build-dependencies]
+toml = { workspace = true, features = ["parse"] }
+maili-superchain.workspace = true
+serde_json = { workspace = true, features = ["raw_value"] }
+maili-genesis = { workspace = true, features = ["serde"] }
 
 [dev-dependencies]
 alloy-eips.workspace = true

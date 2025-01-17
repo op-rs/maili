@@ -267,6 +267,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release 0.1.6
 - Release 0.1.6
+- Release 0.1.6
 - [protocol] Flatten L1BlockInfoTx::try_new Method ([#93](https://github.com/op-rs/maili/issues/93))
 - [meta] Removes PR template ([#80](https://github.com/op-rs/maili/issues/80))
 - [rpc] Export RPC APIs from crate root ([#75](https://github.com/op-rs/maili/issues/75))

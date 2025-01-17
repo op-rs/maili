@@ -129,7 +129,7 @@ where
                     target: "message-graph",
                     "Invalid ExecutingMessage found - relayed on chain {} with message hash {}.",
                     message.executing_chain_id,
-                    hex::encode(message.inner.msg_hash)
+                    hex::encode(message.inner.msgHash)
                 );
                 warn!("Invalid message error: {}", e);
                 invalid_messages.push(message);
@@ -160,23 +160,29 @@ where
         // Timestamp invariant: The timestamp at the time of inclusion of the initiating message
         // MUST be less than or equal to the timestamp of the executing message as well as greater
         // than or equal to the Interop Start Timestamp.
-        if message.inner.id.timestamp > self.horizon_timestamp {
+        if message.inner.id.timestamp.saturating_to::<u64>() > self.horizon_timestamp {
             // TODO(interop): Also need to check for the interop start timestamp. Requires
             // `RollupConfig`s for each chain.
             return Err(MessageGraphError::MessageInFuture(
                 self.horizon_timestamp,
-                message.inner.id.timestamp,
+                message.inner.id.timestamp.saturating_to(),
             ));
         }
 
         // Fetch the header & receipts for the message's claimed origin block on the remote chain.
         let remote_header = self
             .provider
-            .header_by_number(message.inner.id.chain_id, message.inner.id.block_number)
+            .header_by_number(
+                message.inner.id.chainId.saturating_to(),
+                message.inner.id.blockNumber.saturating_to(),
+            )
             .await?;
         let remote_receipts = self
             .provider
-            .receipts_by_number(message.inner.id.chain_id, message.inner.id.block_number)
+            .receipts_by_number(
+                message.inner.id.chainId.saturating_to(),
+                message.inner.id.blockNumber.saturating_to(),
+            )
             .await?;
 
         // Find the log that matches the message's claimed log index. Note that the
@@ -185,10 +191,10 @@ where
         let remote_log = remote_receipts
             .iter()
             .flat_map(|receipt| receipt.logs())
-            .nth(message.inner.id.log_index as usize)
+            .nth(message.inner.id.logIndex.saturating_to())
             .ok_or(MessageGraphError::RemoteMessageNotFound(
-                message.inner.id.chain_id,
-                message.inner.msg_hash,
+                message.inner.id.chainId.to(),
+                message.inner.msgHash,
             ))?;
 
         // Validate the message's origin is correct.
@@ -202,17 +208,17 @@ where
         // Validate that the message hash is correct.
         let remote_message = MessagePayload::from(remote_log);
         let remote_message_hash = keccak256(remote_message.as_ref());
-        if remote_message_hash != message.inner.msg_hash {
+        if remote_message_hash != message.inner.msgHash {
             return Err(MessageGraphError::InvalidMessageHash(
-                message.inner.msg_hash,
+                message.inner.msgHash,
                 remote_message_hash,
             ));
         }
 
         // Validate that the timestamp of the block header containing the log is correct.
-        if remote_header.timestamp != message.inner.id.timestamp {
+        if remote_header.timestamp != message.inner.id.timestamp.saturating_to::<u64>() {
             return Err(MessageGraphError::InvalidMessageTimestamp(
-                message.inner.id.timestamp,
+                message.inner.id.timestamp.saturating_to::<u64>(),
                 remote_header.timestamp,
             ));
         }

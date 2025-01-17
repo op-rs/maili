@@ -6,7 +6,8 @@ use crate::{
 };
 use alloc::{boxed::Box, vec, vec::Vec};
 use alloy_consensus::{Header, Receipt, ReceiptEnvelope, ReceiptWithBloom, Sealed, TxReceipt};
-use alloy_primitives::{map::HashMap, Address, Bytes, Log, LogData, B256};
+use alloy_primitives::{map::HashMap, Address, Bytes, Log, LogData, B256, U256};
+use alloy_sol_types::{SolEvent, SolValue};
 use async_trait::async_trait;
 
 /// A mock interop provider.
@@ -200,10 +201,10 @@ impl ChainBuilder<ReceiptEnvelope> {
                         vec![ExecutingMessage::SIGNATURE_HASH, message_hash],
                         MessageIdentifier {
                             origin: origin_address,
-                            block_number: 0,
-                            log_index: origin_log_index,
-                            timestamp: origin_timestamp,
-                            chain_id: origin_chain_id,
+                            blockNumber: U256::ZERO,
+                            logIndex: U256::from(origin_log_index),
+                            timestamp: U256::from(origin_timestamp),
+                            chainId: U256::from(origin_chain_id),
                         }
                         .abi_encode()
                         .into(),

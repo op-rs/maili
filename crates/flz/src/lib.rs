@@ -7,6 +7,12 @@
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 #![no_std]
 
+#[cfg(feature = "compress")]
+pub use fastlz::compress;
+
+#[cfg(feature = "decompress")]
+pub use fastlz::decompress;
+
 /// Returns the length of the data after compression through FastLZ.
 ///
 /// The u32s match op-geth's Go port.

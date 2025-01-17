@@ -61,9 +61,8 @@ pub use channel::{
 
 mod deposits;
 pub use deposits::{
-    decode_deposit, DepositContextDepositSource, DepositError, DepositSourceDomain,
-    DepositSourceDomainIdentifier, L1InfoDepositSource, UpgradeDepositSource, UserDepositSource,
-    DEPOSIT_EVENT_ABI, DEPOSIT_EVENT_ABI_HASH, DEPOSIT_EVENT_VERSION_0,
+    decode_deposit, DepositError, DEPOSIT_EVENT_ABI, DEPOSIT_EVENT_ABI_HASH,
+    DEPOSIT_EVENT_VERSION_0,
 };
 
 mod info;

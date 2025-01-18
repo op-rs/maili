@@ -4,7 +4,6 @@ A [Batch][batch] contains a list of transactions to be included in a specific
 L2 block. Since the [Delta hardfork][delta], there are two Batch types or
 variants: [`SingleBatch`][single-batch] and [`SpanBatch`][span-batch].
 
-
 ## Where Batches fit in the OP Stack
 
 The [Batch][batch] is the highest-level data type in the OP Stack
@@ -20,7 +19,6 @@ type contains a list of L2 transactions and is compressed into the
 into frames which are posted to the data availability layer through batcher
 transactions.
 
-
 ## Contents of a `Batch`
 
 A [`Batch`][batch] is either a [`SingleBatch`][single-batch] or a
@@ -30,6 +28,7 @@ these types are broken down in their respective sections.
 ### `SingleBatch` Type
 
 The [`SingleBatch`][single-batch] type contains the following.
+
 - A [`BlockHash`][block-hash] parent hash that represents the parent L2 block.
 - A `u64` epoch number that identifies the [epoch][epoch] for this batch.
 - A [`BlockHash`][block-hash] epoch hash.
@@ -45,6 +44,7 @@ providing the rollup config, l1 blocks, l2 safe head, and inclusion block.
 The [`SpanBatch`][span-batch] type (available since the [Delta hardfork][delta])
 comprises the data needed to build a "span" of multiple L2 blocks. It contains
 the following data.
+
 - The parent check (the first 20 bytes of the block's parent hash).
 - The l1 origin check (the first 20 bytes of the last block's l1 origin hash).
 - The genesis timestamp.
@@ -65,7 +65,6 @@ simplified to be forwards-invalidating instead of backwards-invalidating, so a n
 [`SpanBatch::check_batch_prefix`][check-batch-prefix] method provides a way to validate
 each batch as it is loaded, in an iterative fashion.
 
-
 ## Batch Encoding
 
 The first byte of the decompressed channel data is the
@@ -77,17 +76,16 @@ in the case of the [`SpanBatch`][span-batch].
 The `Batch` encoding format for the [`SingleBatch`][single-batch] is
 broken down [in the specs][specs].
 
-
 ## The `Batch` Type
 
 The [`Batch`][batch] type itself only provides two useful methods.
+
 - [`timestamp`][timestamp] returns the timestamp of the [`Batch`][batch]
-- [`deocde`][decode], constructs a new [`Batch`][batch] from the provided
+- [`decode`][decode], constructs a new [`Batch`][batch] from the provided
   raw, decompressed batch data and rollup config.
 
 Within each [`Batch`][batch] variant, the individual types contain
 more functionality.
-
 
 <!-- Links -->
 
@@ -96,22 +94,16 @@ more functionality.
 [check-batch-span]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html#method.check_batch
 [span-batch-element]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatchElement.html
 [check-batch-single]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html#method.check_batch
-
 [bytes]: https://docs.rs/alloy-primitives/latest/alloy_primitives/struct.Bytes.html
-
 [block-hash]: https://docs.rs/alloy-primitives/latest/alloy_primitives/aliases/type.BlockHash.html
 [epoch]: https://specs.optimism.io/glossary.html?highlight=Epoch#sequencing-epoch
-
 [decode]: https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html#method.decode
 [timestamp]: https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html#method.timestamp
-
 [specs]: https://specs.optimism.io/protocol/derivation.html#batch-format
-
 [derived]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.RawSpanBatch.html#method.derive
 [batch-type]: https://docs.rs/maili-protocol/latest/maili_protocol/enum.BatchType.html
 [channel]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.Channel.html
 [batch]: https://docs.rs/maili-protocol/latest/maili_protocol/enum.Batch.html
 [span-batch]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SpanBatch.html
 [single-batch]: https://docs.rs/maili-protocol/latest/maili_protocol/struct.SingleBatch.html
-
 [delta]: https://specs.optimism.io/protocol/delta/overview.html

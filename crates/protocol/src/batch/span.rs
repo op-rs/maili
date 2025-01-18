@@ -112,8 +112,10 @@ impl SpanBatch {
         let single_batches: Result<Vec<_>, _> =
             self.batches.iter().try_fold(Vec::new(), |mut singles, batch| {
                 if batch.timestamp <= l2_safe_head.block_info.timestamp {
+                    // Skip batches that are not after the L2 safe head.
                     Ok(singles)
                 } else {
+                    // Find the L1 origin for the batch.
                     let origin_epoch_hash = l1_origins[origin_index..l1_origins.len()]
                         .iter()
                         .enumerate()
@@ -130,6 +132,7 @@ impl SpanBatch {
                         transactions: batch.transactions.clone(),
                         ..Default::default()
                     };
+                    // Append the new single batch.
                     singles.push(single_batch);
                     Ok(singles)
                 }
@@ -743,6 +746,39 @@ mod tests {
         let logs = trace_store.get_by_level(Level::WARN);
         assert_eq!(logs.len(), 1);
         assert!(logs[0].contains("span batch has no new blocks after safe head"));
+    }
+
+    #[tokio::test]
+    async fn test_check_batch_block_timestamp_lt_l1_origin() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig { delta_time: Some(0), block_time: 10, ..Default::default() };
+        let l1_block = BlockInfo { number: 10, timestamp: 20, ..Default::default() };
+        let l1_blocks = vec![l1_block];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 10, ..Default::default() },
+            l1_origin: BlockNumHash { number: 10, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let first = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
+        let second = SpanBatchElement { epoch_num: 10, timestamp: 19, ..Default::default() };
+        let third = SpanBatchElement { epoch_num: 10, timestamp: 30, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second, third], ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        let str = alloc::format!(
+            "block timestamp is less than L1 origin timestamp, l2_timestamp: 19, l1_timestamp: 20, origin: {:?}",
+            l1_block.id(),
+        );
+        assert!(logs[0].contains(&str));
     }
 
     #[tokio::test]

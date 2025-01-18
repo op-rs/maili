@@ -175,6 +175,8 @@ impl L1BlockInfoTx {
     }
 
     /// Returns whether the scalars are empty.
+    ///
+    /// The first block of ecotone always has empty scalars.
     pub const fn empty_scalars(&self) -> bool {
         match self {
             Self::Bedrock(_) | Self::Interop(_) => false,

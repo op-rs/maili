@@ -42,8 +42,10 @@ pub struct L1BlockInfoEcotone {
     pub blob_base_fee_scalar: u32,
     /// The fee scalar for L1 data
     pub base_fee_scalar: u32,
-    /// The l1 fee overhead used along with the `empty_scalars` field for the
-    /// bedrock tx l1 cost function.
+    /// The l1 fee overhead only used for bedrock fallback cost function.
+    ///
+    /// This is an edge case where the first block in ecotone has no scalars,
+    /// so the bedrock tx l1 cost function needs to be used.
     ///
     /// This field is deprecated in the Ecotone Hardfork.
     pub l1_fee_overhead: U256,

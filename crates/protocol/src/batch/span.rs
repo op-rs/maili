@@ -773,8 +773,10 @@ mod tests {
         tracing_subscriber::Registry::default().with(layer).init();
 
         let cfg = RollupConfig { delta_time: Some(0), block_time: 10, ..Default::default() };
-        let l1_block = BlockInfo { number: 10, timestamp: 20, ..Default::default() };
-        let l1_blocks = vec![l1_block];
+        let l1_blocks = vec![
+            BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+            BlockInfo { number: 11, timestamp: 30, ..Default::default() },
+        ];
         let l2_safe_head = L2BlockInfo {
             block_info: BlockInfo { timestamp: 10, ..Default::default() },
             l1_origin: BlockNumHash { number: 10, ..Default::default() },
@@ -785,12 +787,15 @@ mod tests {
         let first = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 30, ..Default::default() };
         let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        //let _ =
+        //    batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await;
         assert_eq!(
             batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
             BatchValidity::Drop
         );
         let logs = trace_store.get_by_level(Level::WARN);
         assert_eq!(logs.len(), 1);
+        println!("{:?}", logs[0]);
         assert!(logs[0].contains("overlapped block's L1 origin number does not match 10, 11"));
     }
 
@@ -887,16 +892,14 @@ mod tests {
         };
         let inclusion_block = BlockInfo::default();
         let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
-            op_blocks: vec![
-                TestOpBlock {
-                    header: Header { number: 9, ..Default::default() },
-                    body: alloy_consensus::BlockBody {
-                        transactions: vec![NoopTx],
-                        ommers: Vec::new(),
-                        withdrawals: None,
-                    },
+            op_blocks: vec![TestOpBlock {
+                header: Header { number: 9, ..Default::default() },
+                body: alloy_consensus::BlockBody {
+                    transactions: vec![NoopTx],
+                    ommers: Vec::new(),
+                    withdrawals: None,
                 },
-            ],
+            }],
             blocks: vec![
                 L2BlockInfo {
                     block_info: BlockInfo { number: 8, timestamp: 0, ..Default::default() },

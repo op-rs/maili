@@ -795,6 +795,75 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_check_batch_overlapping_blocks_tx_count_mismatch() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig {
+            delta_time: Some(0),
+            block_time: 10,
+            max_sequencer_drift: 1000,
+            ..Default::default()
+        };
+        let l1_blocks = vec![
+            BlockInfo { number: 9, timestamp: 0, ..Default::default() },
+            BlockInfo { number: 10, timestamp: 10, ..Default::default() },
+            BlockInfo { number: 11, timestamp: 20, ..Default::default() },
+        ];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+            l1_origin: BlockNumHash { number: 11, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
+            op_blocks: vec![TestOpBlock {
+                header: Header { number: 9, ..Default::default() },
+                body: alloy_consensus::BlockBody {
+                    transactions: Vec::new(),
+                    ommers: Vec::new(),
+                    withdrawals: None,
+                },
+            }],
+            blocks: vec![
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 8, timestamp: 0, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 9, ..Default::default() },
+                    ..Default::default()
+                },
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 9, timestamp: 10, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 10, ..Default::default() },
+                    ..Default::default()
+                },
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 11, ..Default::default() },
+                    ..Default::default()
+                },
+            ],
+            ..Default::default()
+        };
+        let first = SpanBatchElement {
+            epoch_num: 10,
+            timestamp: 10,
+            transactions: vec![Bytes(vec![EIP1559_TX_TYPE_ID].into())],
+        };
+        let second = SpanBatchElement { epoch_num: 10, timestamp: 60, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        assert!(logs[0].contains(
+            "overlapped block's tx count does not match, safe_block_txs: 0, batch_txs: 1"
+        ));
+    }
+
+    #[tokio::test]
     async fn test_check_batch_block_timestamp_lt_l1_origin() {
         let trace_store: TraceStorage = Default::default();
         let layer = CollectingLayer::new(trace_store.clone());

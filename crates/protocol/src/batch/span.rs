@@ -640,6 +640,24 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_singular_batches_missing_l1_origin() {
+        let l1_block = BlockInfo { number: 10, timestamp: 20, ..Default::default() };
+        let l1_blocks = vec![l1_block];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 10, ..Default::default() },
+            l1_origin: BlockNumHash { number: 10, ..Default::default() },
+            ..Default::default()
+        };
+        let first = SpanBatchElement { epoch_num: 9, timestamp: 20, ..Default::default() };
+        let second = SpanBatchElement { epoch_num: 11, timestamp: 30, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        assert_eq!(
+            batch.get_singular_batches(&l1_blocks, l2_safe_head),
+            Err(SpanBatchError::MissingL1Origin),
+        );
+    }
+
+    #[tokio::test]
     async fn test_eager_block_missing_origins() {
         let trace_store: TraceStorage = Default::default();
         let layer = CollectingLayer::new(trace_store.clone());

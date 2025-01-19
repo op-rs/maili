@@ -767,6 +767,34 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_check_batch_overlapping_blocks_l1_origin_mismatch() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig { delta_time: Some(0), block_time: 10, ..Default::default() };
+        let l1_block = BlockInfo { number: 10, timestamp: 20, ..Default::default() };
+        let l1_blocks = vec![l1_block];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 10, ..Default::default() },
+            l1_origin: BlockNumHash { number: 10, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let first = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
+        let second = SpanBatchElement { epoch_num: 11, timestamp: 30, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        assert!(logs[0].contains("overlapped block's L1 origin number does not match 10, 11"));
+    }
+
+    #[tokio::test]
     async fn test_check_batch_block_timestamp_lt_l1_origin() {
         let trace_store: TraceStorage = Default::default();
         let layer = CollectingLayer::new(trace_store.clone());

@@ -20,7 +20,7 @@ pub const CONFIG_UPDATE_EVENT_VERSION_0: B256 = B256::ZERO;
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct SystemConfig {
     /// Batcher address
-    #[cfg_attr(feature = "serde", serde(rename = "batcherAddr"))]
+    #[cfg_attr(feature = "serde", serde(rename = "batcherAddress", alias = "batcherAddr"))]
     pub batcher_address: Address,
     /// Fee overhead value
     pub overhead: U256,
@@ -495,6 +495,27 @@ mod test {
     use alloy_primitives::{b256, hex, LogData, B256};
     use arbitrary::Arbitrary;
     use rand::Rng;
+
+    #[test]
+    fn test_system_config_alias() {
+        let sc_str: &'static str = r#"{
+          "batcherAddress": "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985",
+          "overhead": "0x00000000000000000000000000000000000000000000000000000000000000bc",
+          "scalar": "0x00000000000000000000000000000000000000000000000000000000000a6fe0",
+          "gasLimit": 30000000
+        }"#;
+        let system_config: SystemConfig = serde_json::from_str(sc_str).unwrap();
+        assert_eq!(
+            system_config,
+            SystemConfig {
+                batcher_address: address!("6887246668a3b87F54DeB3b94Ba47a6f63F32985"),
+                overhead: U256::from(0xbc),
+                scalar: U256::from(0xa6fe0),
+                gas_limit: 30000000,
+                ..Default::default()
+            }
+        );
+    }
 
     #[test]
     fn test_arbitrary_system_config() {

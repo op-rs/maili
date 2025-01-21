@@ -9,6 +9,9 @@
 
 extern crate alloc;
 
+mod hardforks;
+pub use hardforks::{Ecotone, Fjord, Hardfork, Hardforks};
+
 mod eip1559;
 pub use eip1559::{
     decode_eip_1559_params, decode_holocene_extra_data, encode_holocene_extra_data,

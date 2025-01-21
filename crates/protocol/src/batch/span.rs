@@ -3,7 +3,7 @@
 use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::FixedBytes;
-use maili_consensus::{DepositTxEnvelope, DEPOSIT_TX_TYPE_ID};
+use maili_consensus::{OpTransaction, DEPOSIT_TX_TYPE_ID};
 use maili_genesis::RollupConfig;
 use tracing::{info, warn};
 
@@ -504,7 +504,7 @@ mod tests {
     #[derive(Clone, Debug)]
     struct NoopTx;
 
-    impl DepositTxEnvelope for NoopTx {
+    impl OpTransaction for NoopTx {
         fn is_deposit(&self) -> bool {
             false
         }

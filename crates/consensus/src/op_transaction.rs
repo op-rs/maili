@@ -1,11 +1,10 @@
-//! Transaction envelope with support for OP [`TxDeposit`].
-
-use alloy_consensus::Sealed;
+//! Contains traits useful for abstracting over optimism transactions.
 
 use crate::TxDeposit;
+use alloy_consensus::Sealed;
 
-/// Transaction envelope that encompasses a [`TxDeposit`].
-pub trait DepositTxEnvelope {
+/// This abstracts over a transaction that may be a deposit transaction type.
+pub trait OpTransaction {
     /// Returns `true` if the transaction is a deposit transaction.
     fn is_deposit(&self) -> bool;
 

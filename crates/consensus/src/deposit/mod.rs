@@ -1,8 +1,5 @@
 //! Deposit Transaction type.
 
-mod envelope;
-pub use envelope::DepositTxEnvelope;
-
 mod source;
 pub use source::{
     DepositContextDepositSource, DepositSourceDomain, DepositSourceDomainIdentifier,

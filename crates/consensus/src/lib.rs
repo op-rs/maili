@@ -10,12 +10,18 @@
 extern crate alloc;
 
 mod deposit;
+
+mod op_transaction;
+pub use op_transaction::OpTransaction;
+
 #[cfg(feature = "serde-bincode-compat")]
 pub use deposit::serde_bincode_compat;
+
 #[cfg(feature = "serde")]
 pub use deposit::serde_deposit_tx_rpc;
+
 pub use deposit::{
     DepositContextDepositSource, DepositSourceDomain, DepositSourceDomainIdentifier,
-    DepositTransaction, DepositTxEnvelope, L1InfoDepositSource, TxDeposit, UpgradeDepositSource,
-    UserDepositSource, DEPOSIT_TX_TYPE_ID,
+    DepositTransaction, L1InfoDepositSource, TxDeposit, UpgradeDepositSource, UserDepositSource,
+    DEPOSIT_TX_TYPE_ID,
 };

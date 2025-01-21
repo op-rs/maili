@@ -4,7 +4,7 @@ use crate::{DecodeError, L1BlockInfoTx};
 use alloy_consensus::{Block, Transaction, Typed2718};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
-use maili_consensus::DepositTxEnvelope;
+use maili_consensus::OpTransaction;
 use maili_genesis::ChainGenesis;
 
 /// Block Header Info
@@ -130,7 +130,7 @@ impl L2BlockInfo {
         genesis: &ChainGenesis,
     ) -> Result<Self, FromBlockError>
     where
-        T: DepositTxEnvelope + Typed2718,
+        T: OpTransaction + Typed2718,
     {
         let block_info = BlockInfo::from(block);
 

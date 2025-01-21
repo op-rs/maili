@@ -6,10 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1.6](https://github.com/op-rs/maili
-/releases/tag/v0.1.6) - 2025-01-17
+/releases/tag/v0.1.6) - 2025-01-21
 
 ### Bug Fixes
 
+- [protocol] Make tx size estimation public ([#109](https://github.com/op-rs/maili/issues/109))
 - [book] Missing Book Pages ([#83](https://github.com/op-rs/maili/issues/83))
 - [docs] Fix readme links ([#82](https://github.com/op-rs/maili/issues/82))
 - [book] Cleans up Maili Book ([#77](https://github.com/op-rs/maili/issues/77))
@@ -130,6 +131,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [serde] Genericize Serialization Type ([#103](https://github.com/op-rs/maili/issues/103))
+- [serde] Maili-serde crate ([#100](https://github.com/op-rs/maili/issues/100))
+- [workspace] Release 0.1.6 ([#96](https://github.com/op-rs/maili/issues/96))
 - [workspace] Deduplicate deposit source types ([#92](https://github.com/op-rs/maili/issues/92))
 - [protocol] Deposit context closing tx formation ([#89](https://github.com/op-rs/maili/issues/89))
 - [protocol] `L1BlockInfoInterop` ([#88](https://github.com/op-rs/maili/issues/88))
@@ -265,9 +269,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
-- Release 0.1.6
-- Release 0.1.6
-- Release 0.1.6
+- [protocol] Superchain Registry V2.0 ([#99](https://github.com/op-rs/maili/issues/99))
+- [flz] Compression Re-exports ([#95](https://github.com/op-rs/maili/issues/95))
+- [flz] Touchup FLZ docs ([#91](https://github.com/op-rs/maili/issues/91))
 - [protocol] Flatten L1BlockInfoTx::try_new Method ([#93](https://github.com/op-rs/maili/issues/93))
 - [meta] Removes PR template ([#80](https://github.com/op-rs/maili/issues/80))
 - [rpc] Export RPC APIs from crate root ([#75](https://github.com/op-rs/maili/issues/75))
@@ -421,6 +425,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- Add more Span Batch unit tests ([#102](https://github.com/op-rs/maili/issues/102))
+- [BOT] Update Submodules ([#107](https://github.com/op-rs/maili/issues/107))
 - [BOT] Update Submodules ([#81](https://github.com/op-rs/maili/issues/81))
 - [BOT] Update Submodules ([#72](https://github.com/op-rs/maili/issues/72))
 - 0.1.5 ([#70](https://github.com/op-rs/maili/issues/70))

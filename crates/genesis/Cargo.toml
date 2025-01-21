@@ -30,7 +30,7 @@ arbitrary = { workspace = true, features = ["derive"], optional = true }
 # `serde` feature
 serde = { workspace = true, optional = true }
 serde_repr = { workspace = true, optional = true }
-serde_json = { workspace = true, optional = true }
+maili-serde = { workspace = true, optional = true }
 
 [dev-dependencies]
 rand.workspace = true
@@ -57,7 +57,7 @@ arbitrary = [
 serde = [
     "dep:serde",
     "dep:serde_repr",
-    "dep:serde_json",
+    "dep:maili-serde",
     "alloy-primitives/serde",
     "alloy-eips/serde",
     "alloy-consensus/serde",

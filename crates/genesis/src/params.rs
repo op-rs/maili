@@ -113,22 +113,6 @@ pub const OP_MAINNET_BASE_FEE_CONFIG: BaseFeeConfig = BaseFeeConfig {
     eip1559_denominator_canyon: OP_MAINNET_EIP1559_BASE_FEE_MAX_CHANGE_DENOMINATOR_CANYON,
 };
 
-#[cfg(feature = "serde")]
-pub(crate) mod deserialize_u128 {
-    use serde::{self, de, Deserialize, Deserializer};
-    use serde_json::Value;
-
-    pub(crate) fn deserialize<'de, D: Deserializer<'de>>(
-        deserializer: D,
-    ) -> Result<u128, D::Error> {
-        Ok(match Value::deserialize(deserializer)? {
-            Value::String(s) => s.parse().map_err(de::Error::custom)?,
-            Value::Number(num) => num.as_u128().ok_or(de::Error::custom("Invalid number"))?,
-            _ => return Err(de::Error::custom("wrong type")),
-        })
-    }
-}
-
 /// Optimism Base Fee Configuration
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
@@ -139,21 +123,21 @@ pub struct BaseFeeConfig {
         feature = "serde",
         serde(rename = "eip1559Elasticity", alias = "eip1559_elasticity")
     )]
-    #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_u128::deserialize"))]
+    #[cfg_attr(feature = "serde", serde(with = "maili_serde::quantity"))]
     pub eip1559_elasticity: u128,
     /// EIP 1559 Denominator
     #[cfg_attr(
         feature = "serde",
         serde(rename = "eip1559Denominator", alias = "eip1559_denominator")
     )]
-    #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_u128::deserialize"))]
+    #[cfg_attr(feature = "serde", serde(with = "maili_serde::quantity"))]
     pub eip1559_denominator: u128,
     /// EIP 1559 Denominator for the Canyon hardfork
     #[cfg_attr(
         feature = "serde",
         serde(rename = "eip1559DenominatorCanyon", alias = "eip1559_denominator_canyon")
     )]
-    #[cfg_attr(feature = "serde", serde(deserialize_with = "deserialize_u128::deserialize"))]
+    #[cfg_attr(feature = "serde", serde(with = "maili_serde::quantity"))]
     pub eip1559_denominator_canyon: u128,
 }
 
@@ -172,5 +156,42 @@ impl BaseFeeConfig {
             max_change_denominator: self.eip1559_denominator_canyon,
             elasticity_multiplier: self.eip1559_elasticity,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_base_fee_config_ser() {
+        let config = OP_MAINNET_BASE_FEE_CONFIG;
+        let raw_str = serde_json::to_string(&config).unwrap();
+        assert_eq!(
+            raw_str,
+            r#"{"eip1559Elasticity":"0x6","eip1559Denominator":"0x32","eip1559DenominatorCanyon":"0xfa"}"#
+        );
+    }
+
+    #[test]
+    fn test_base_fee_config_serde_strs() {
+        let raw_str: &'static str = r#"{"eip1559Elasticity":"6","eip1559Denominator":"50","eip1559DenominatorCanyon":"250"}"#;
+        let config: BaseFeeConfig = serde_json::from_str(raw_str).unwrap();
+        assert_eq!(config, OP_MAINNET_BASE_FEE_CONFIG);
+    }
+
+    #[test]
+    fn test_base_fee_config_serde_raw_number() {
+        let raw_str: &'static str =
+            r#"{"eip1559Elasticity":6,"eip1559Denominator":50,"eip1559DenominatorCanyon":250}"#;
+        let config: BaseFeeConfig = serde_json::from_str(raw_str).unwrap();
+        assert_eq!(config, OP_MAINNET_BASE_FEE_CONFIG);
+    }
+
+    #[test]
+    fn test_base_fee_config_serde_hex() {
+        let raw_str: &'static str = r#"{"eip1559Elasticity":"0x6","eip1559Denominator":"0x32","eip1559DenominatorCanyon":"0xfa"}"#;
+        let config: BaseFeeConfig = serde_json::from_str(raw_str).unwrap();
+        assert_eq!(config, OP_MAINNET_BASE_FEE_CONFIG);
     }
 }

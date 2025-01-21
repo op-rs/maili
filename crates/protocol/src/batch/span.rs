@@ -13,7 +13,7 @@ use crate::{
     SpanBatchTransactions,
 };
 
-/// Continer of the inputs required to build a span of L2 blocks in derived form.
+/// Container of the inputs required to build a span of L2 blocks in derived form.
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct SpanBatch {
     /// First 20 bytes of the first block's parent hash
@@ -108,36 +108,31 @@ impl SpanBatch {
         l1_origins: &[BlockInfo],
         l2_safe_head: L2BlockInfo,
     ) -> Result<Vec<SingleBatch>, SpanBatchError> {
+        let mut single_batches = Vec::new();
         let mut origin_index = 0;
-        let single_batches: Result<Vec<_>, _> =
-            self.batches.iter().try_fold(Vec::new(), |mut singles, batch| {
-                if batch.timestamp <= l2_safe_head.block_info.timestamp {
-                    // Skip batches that are not after the L2 safe head.
-                    Ok(singles)
-                } else {
-                    // Find the L1 origin for the batch.
-                    let origin_epoch_hash = l1_origins[origin_index..l1_origins.len()]
-                        .iter()
-                        .enumerate()
-                        .find(|(_, origin)| origin.number == batch.epoch_num)
-                        .map(|(i, origin)| {
-                            origin_index = i;
-                            origin.hash
-                        })
-                        .ok_or(SpanBatchError::MissingL1Origin)?;
-                    let single_batch = SingleBatch {
-                        epoch_num: batch.epoch_num,
-                        epoch_hash: origin_epoch_hash,
-                        timestamp: batch.timestamp,
-                        transactions: batch.transactions.clone(),
-                        ..Default::default()
-                    };
-                    // Append the new single batch.
-                    singles.push(single_batch);
-                    Ok(singles)
-                }
-            });
-        single_batches
+        for batch in &self.batches {
+            if batch.timestamp <= l2_safe_head.block_info.timestamp {
+                continue;
+            }
+            let origin_epoch_hash = l1_origins[origin_index..l1_origins.len()]
+                .iter()
+                .enumerate()
+                .find(|(_, origin)| origin.number == batch.epoch_num)
+                .map(|(i, origin)| {
+                    origin_index = i;
+                    origin.hash
+                })
+                .ok_or(SpanBatchError::MissingL1Origin)?;
+            let single_batch = SingleBatch {
+                epoch_num: batch.epoch_num,
+                epoch_hash: origin_epoch_hash,
+                timestamp: batch.timestamp,
+                transactions: batch.transactions.clone(),
+                ..Default::default()
+            };
+            single_batches.push(single_batch);
+        }
+        Ok(single_batches)
     }
 
     /// Append a [SingleBatch] to the [SpanBatch]. Updates the L1 origin check if need be.

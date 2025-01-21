@@ -8,16 +8,29 @@
 
 Serde related helpers for Maili.
 
-### Graceful u128 Serialization
+### Graceful Serialization
 
-The primary functionality this crate exposes is a helper for
-gracefully working with the `u128` type during deserialization.
+This crate extends the serialization and deserialization
+functionality provided by [`alloy-serde`][alloy-serde] to
+deserialize raw number quantity values.
 
-By itself, `u128` toml deserialization does not work.
-[This rust playground][invalid] demonstrates how toml fails to deserialize a native `u128` internal value.
+This issue arose in `u128` toml deserialization where
+deserialization of a raw number fails.
+[This rust playground][invalid] demonstrates how toml fails to
+deserialize a native `u128` internal value.
 
 With `maili-serde`, tagging the inner `u128` field with `#[serde(with = "maili_serde::quantity")]`,
-allows the `u128` to be deserialized by toml properly. Below demonstrates this.
+allows the `u128` or any other type within the following constraints to be deserialized by toml properly.
+
+These are the supported native types:
+- `bool`
+- `u8`
+- `u16`
+- `u32`
+- `u64`
+- `u128`
+
+Below demonstrates the use of the `#[serde(with = "maili_serde::quantity")]` attribute.
 
 ```rust
 use serde::{Serialize, Deserialize};

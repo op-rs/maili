@@ -158,3 +158,40 @@ impl BaseFeeConfig {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_base_fee_config_ser() {
+        let config = OP_MAINNET_BASE_FEE_CONFIG;
+        let raw_str = serde_json::to_string(&config).unwrap();
+        assert_eq!(
+            raw_str,
+            r#"{"eip1559Elasticity":"0x6","eip1559Denominator":"0x32","eip1559DenominatorCanyon":"0xfa"}"#
+        );
+    }
+
+    #[test]
+    fn test_base_fee_config_serde_strs() {
+        let raw_str: &'static str = r#"{"eip1559Elasticity":"6","eip1559Denominator":"50","eip1559DenominatorCanyon":"250"}"#;
+        let config: BaseFeeConfig = serde_json::from_str(raw_str).unwrap();
+        assert_eq!(config, OP_MAINNET_BASE_FEE_CONFIG);
+    }
+
+    #[test]
+    fn test_base_fee_config_serde_raw_number() {
+        let raw_str: &'static str =
+            r#"{"eip1559Elasticity":6,"eip1559Denominator":50,"eip1559DenominatorCanyon":250}"#;
+        let config: BaseFeeConfig = serde_json::from_str(raw_str).unwrap();
+        assert_eq!(config, OP_MAINNET_BASE_FEE_CONFIG);
+    }
+
+    #[test]
+    fn test_base_fee_config_serde_hex() {
+        let raw_str: &'static str = r#"{"eip1559Elasticity":"0x6","eip1559Denominator":"0x32","eip1559DenominatorCanyon":"0xfa"}"#;
+        let config: BaseFeeConfig = serde_json::from_str(raw_str).unwrap();
+        assert_eq!(config, OP_MAINNET_BASE_FEE_CONFIG);
+    }
+}

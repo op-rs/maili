@@ -5,17 +5,25 @@
 )]
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
-#![cfg_attr(not(any(test, feature = "std")), no_std)]
+#![cfg_attr(not(feature = "std"), no_std)]
 
 extern crate alloc;
 
+mod eip1559;
+pub use eip1559::{
+    decode_eip_1559_params, decode_holocene_extra_data, encode_holocene_extra_data,
+    EIP1559ParamError,
+};
+
 mod deposit;
-#[cfg(feature = "serde-bincode-compat")]
-pub use deposit::serde_bincode_compat;
-#[cfg(feature = "serde")]
-pub use deposit::serde_deposit_tx_rpc;
 pub use deposit::{
     DepositContextDepositSource, DepositSourceDomain, DepositSourceDomainIdentifier,
     DepositTransaction, DepositTxEnvelope, L1InfoDepositSource, TxDeposit, UpgradeDepositSource,
     UserDepositSource, DEPOSIT_TX_TYPE_ID,
 };
+
+#[cfg(feature = "serde-bincode-compat")]
+pub use deposit::serde_bincode_compat;
+
+#[cfg(feature = "serde")]
+pub use deposit::serde_deposit_tx_rpc;

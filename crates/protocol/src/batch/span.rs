@@ -13,7 +13,7 @@ use crate::{
     SpanBatchTransactions,
 };
 
-/// The span batch contains the input to build a span of L2 blocks in derived form.
+/// Container of the inputs required to build a span of L2 blocks in derived form.
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct SpanBatch {
     /// First 20 bytes of the first block's parent hash
@@ -635,6 +635,24 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_singular_batches_missing_l1_origin() {
+        let l1_block = BlockInfo { number: 10, timestamp: 20, ..Default::default() };
+        let l1_blocks = vec![l1_block];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 10, ..Default::default() },
+            l1_origin: BlockNumHash { number: 10, ..Default::default() },
+            ..Default::default()
+        };
+        let first = SpanBatchElement { epoch_num: 9, timestamp: 20, ..Default::default() };
+        let second = SpanBatchElement { epoch_num: 11, timestamp: 30, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        assert_eq!(
+            batch.get_singular_batches(&l1_blocks, l2_safe_head),
+            Err(SpanBatchError::MissingL1Origin),
+        );
+    }
+
+    #[tokio::test]
     async fn test_eager_block_missing_origins() {
         let trace_store: TraceStorage = Default::default();
         let layer = CollectingLayer::new(trace_store.clone());
@@ -741,6 +759,175 @@ mod tests {
         let logs = trace_store.get_by_level(Level::WARN);
         assert_eq!(logs.len(), 1);
         assert!(logs[0].contains("span batch has no new blocks after safe head"));
+    }
+
+    #[tokio::test]
+    async fn test_check_batch_overlapping_blocks_tx_count_mismatch() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig {
+            delta_time: Some(0),
+            block_time: 10,
+            max_sequencer_drift: 1000,
+            ..Default::default()
+        };
+        let l1_blocks = vec![
+            BlockInfo { number: 9, timestamp: 0, ..Default::default() },
+            BlockInfo { number: 10, timestamp: 10, ..Default::default() },
+            BlockInfo { number: 11, timestamp: 20, ..Default::default() },
+        ];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+            l1_origin: BlockNumHash { number: 11, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
+            op_blocks: vec![TestOpBlock {
+                header: Header { number: 9, ..Default::default() },
+                body: alloy_consensus::BlockBody {
+                    transactions: Vec::new(),
+                    ommers: Vec::new(),
+                    withdrawals: None,
+                },
+            }],
+            blocks: vec![
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 8, timestamp: 0, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 9, ..Default::default() },
+                    ..Default::default()
+                },
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 9, timestamp: 10, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 10, ..Default::default() },
+                    ..Default::default()
+                },
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 11, ..Default::default() },
+                    ..Default::default()
+                },
+            ],
+            ..Default::default()
+        };
+        let first = SpanBatchElement {
+            epoch_num: 10,
+            timestamp: 10,
+            transactions: vec![Bytes(vec![EIP1559_TX_TYPE_ID].into())],
+        };
+        let second = SpanBatchElement { epoch_num: 10, timestamp: 60, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        assert!(logs[0].contains(
+            "overlapped block's tx count does not match, safe_block_txs: 0, batch_txs: 1"
+        ));
+    }
+
+    #[tokio::test]
+    async fn test_check_batch_overlapping_blocks_tx_mismatch() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig {
+            delta_time: Some(0),
+            block_time: 10,
+            max_sequencer_drift: 1000,
+            ..Default::default()
+        };
+        let l1_blocks = vec![
+            BlockInfo { number: 9, timestamp: 0, ..Default::default() },
+            BlockInfo { number: 10, timestamp: 10, ..Default::default() },
+            BlockInfo { number: 11, timestamp: 20, ..Default::default() },
+        ];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+            l1_origin: BlockNumHash { number: 11, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
+            op_blocks: vec![TestOpBlock {
+                header: Header { number: 9, ..Default::default() },
+                body: alloy_consensus::BlockBody {
+                    transactions: vec![NoopTx],
+                    ommers: Vec::new(),
+                    withdrawals: None,
+                },
+            }],
+            blocks: vec![
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 8, timestamp: 0, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 9, ..Default::default() },
+                    ..Default::default()
+                },
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 9, timestamp: 10, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 10, ..Default::default() },
+                    ..Default::default()
+                },
+                L2BlockInfo {
+                    block_info: BlockInfo { number: 10, timestamp: 20, ..Default::default() },
+                    l1_origin: BlockNumHash { number: 11, ..Default::default() },
+                    ..Default::default()
+                },
+            ],
+            ..Default::default()
+        };
+        let first = SpanBatchElement {
+            epoch_num: 10,
+            timestamp: 10,
+            transactions: vec![Bytes(vec![EIP1559_TX_TYPE_ID].into())],
+        };
+        let second = SpanBatchElement { epoch_num: 10, timestamp: 60, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        assert!(logs[0].contains("overlapped block's transaction does not match"));
+    }
+
+    #[tokio::test]
+    async fn test_check_batch_block_timestamp_lt_l1_origin() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig { delta_time: Some(0), block_time: 10, ..Default::default() };
+        let l1_block = BlockInfo { number: 10, timestamp: 20, ..Default::default() };
+        let l1_blocks = vec![l1_block];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 10, ..Default::default() },
+            l1_origin: BlockNumHash { number: 10, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let first = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
+        let second = SpanBatchElement { epoch_num: 10, timestamp: 19, ..Default::default() };
+        let third = SpanBatchElement { epoch_num: 10, timestamp: 30, ..Default::default() };
+        let batch = SpanBatch { batches: vec![first, second, third], ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        let str = alloc::format!(
+            "block timestamp is less than L1 origin timestamp, l2_timestamp: 19, l1_timestamp: 20, origin: {:?}",
+            l1_block.id(),
+        );
+        assert!(logs[0].contains(&str));
     }
 
     #[tokio::test]

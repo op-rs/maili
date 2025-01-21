@@ -38,10 +38,10 @@ pub fn data_gas_fjord(input: &[u8]) -> U256 {
         .wrapping_div(U256::from(1_000_000))
 }
 
-// Calculate the estimated compressed transaction size in bytes, scaled by 1e6.
-// This value is computed based on the following formula:
-// max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
-fn tx_estimated_size_fjord(input: &[u8]) -> U256 {
+/// Calculate the estimated compressed transaction size in bytes, scaled by 1e6.
+/// This value is computed based on the following formula:
+/// max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
+pub fn tx_estimated_size_fjord(input: &[u8]) -> U256 {
     let fastlz_size = U256::from(flz_compress_len(input));
 
     fastlz_size

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Bug Fixes
 
+- Maili-serde release ([#112](https://github.com/op-rs/maili/issues/112))
 - Release maili 0.1.6 ([#111](https://github.com/op-rs/maili/issues/111))
 - [protocol] Make tx size estimation public ([#109](https://github.com/op-rs/maili/issues/109))
 - [book] Missing Book Pages ([#83](https://github.com/op-rs/maili/issues/83))

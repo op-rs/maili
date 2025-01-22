@@ -1,10 +1,8 @@
 #![cfg(feature = "jsonrpsee")]
-#![allow(missing_docs)]
+//! The Optimism RPC API.
 
-//! Rollup Node
-
-use alloc::{boxed::Box, string::String, vec::Vec};
 use core::net::IpAddr;
+use alloc::{boxed::Box, string::String, vec::Vec};
 
 use alloy_eips::BlockNumberOrTag;
 use alloy_primitives::{B256, U64};
@@ -12,9 +10,10 @@ use alloy_primitives::{B256, U64};
 use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_protocol::{ExecutingMessage, SafetyLevel};
+use maili_genesis::RollupConfig;
 
 use crate::{
-    OutputResponse, PeerDump, PeerInfo, PeerStats, ProtocolVersion, RollupConfig, SafeHeadResponse,
+    OutputResponse, PeerDump, PeerInfo, PeerStats, ProtocolVersion, SafeHeadResponse,
     SuperchainSignal, SyncStatus,
 };
 

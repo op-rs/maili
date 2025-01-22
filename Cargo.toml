@@ -46,6 +46,7 @@ maili-serde = { version = "0.1.7", path = "crates/serde", default-features = fal
 
 # op-alloy
 op-alloy-flz = { version = "0.9.6", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.9.6", default-features = false }
 
 # Alloy
 alloy-eips = { version = "0.9.2", default-features = false }

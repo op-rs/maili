@@ -9,6 +9,29 @@
 
 extern crate alloc;
 
+mod net;
+pub use net::{
+    Connectedness, Direction, GossipScores, PeerDump, PeerInfo, PeerScores, PeerStats,
+    ReqRespScores, TopicScores,
+};
+
+mod response;
+pub use response::SafeHeadResponse;
+
+mod superchain;
+pub use superchain::{
+    ProtocolVersion, ProtocolVersionError, ProtocolVersionFormatV0, SuperchainSignal,
+};
+
+mod output;
+pub use output::OutputResponse;
+
+mod attributes;
+pub use attributes::OpAttributesWithParent;
+
+mod sync;
+pub use sync::{L2BlockRef, SyncStatus};
+
 mod api;
 #[cfg(all(feature = "jsonrpsee", feature = "client"))]
 pub use api::{
@@ -19,12 +42,4 @@ pub use api::{
 pub use api::{
     EngineApiExtServer, MinerApiExtServer, OpAdminApiServer, OpP2PApiServer, RollupNodeServer,
     SupervisorApiServer,
-};
-
-mod js_types;
-pub use js_types::{
-    Connectedness, Direction, Genesis, GossipScores, L1BlockRef, L2BlockRef, OutputResponse,
-    PeerDump, PeerInfo, PeerScores, PeerStats, ProtocolVersion, ProtocolVersionError,
-    ProtocolVersionFormatV0, ReqRespScores, RollupConfig, SafeHeadResponse, SuperchainSignal,
-    SyncStatus, SystemConfig, TopicScores,
 };

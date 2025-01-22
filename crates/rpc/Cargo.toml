@@ -1,6 +1,6 @@
 [package]
 name = "maili-rpc"
-description = "Optimism RPC API"
+description = "Optimism RPC Types and API"
 
 version.workspace = true
 edition.workspace = true
@@ -16,19 +16,25 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-protocol = { workspace = true, optional = true, features = ["serde"] }
+maili-genesis.workspace = true
+maili-protocol.workspace = true
+
+# OP Alloy
+op-alloy-rpc-types-engine.workspace = true
 
 # Alloy
-alloy-eips = { workspace = true, features = ["serde"] }
-alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
+alloy-eips.workspace = true
+alloy-primitives = { workspace = true, features = ["map", "rlp"] }
 
-# rpc
+# Misc
+derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
+
+# `serde`
+serde = { workspace = true, optional = true }
+
+# `jsonrpsee`
 jsonrpsee = { workspace = true, optional = true }
 getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unknown
-serde.workspace = true
-
-# misc
-derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
 
 [dev-dependencies]
 serde_json.workspace = true
@@ -36,12 +42,20 @@ serde_json.workspace = true
 [features]
 default = ["std", "jsonrpsee"]
 std = [
-    "maili-protocol?/std",
+    "maili-protocol/std",
     "alloy-eips/std",
     "alloy-primitives/std",
+    "op-alloy-rpc-types-engine/std",
+]
+serde = [
+    "dep:serde",
+    "maili-protocol/serde",
+    "alloy-eips/serde",
+    "alloy-primitives/serde",
+    "op-alloy-rpc-types-engine/serde",
 ]
 jsonrpsee = [
-    "dep:maili-protocol",
+    "serde",
     "dep:jsonrpsee",
     "dep:getrandom",
 ]

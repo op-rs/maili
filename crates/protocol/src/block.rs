@@ -4,8 +4,8 @@ use crate::{DecodeError, L1BlockInfoTx};
 use alloy_consensus::{Block, Transaction, Typed2718};
 use alloy_eips::{eip2718::Eip2718Error, BlockNumHash};
 use alloy_primitives::B256;
-use maili_consensus::DepositTxEnvelope;
 use maili_genesis::ChainGenesis;
+use op_alloy_consensus::OpBlock;
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -125,13 +125,10 @@ impl L2BlockInfo {
     }
 
     /// Constructs an [L2BlockInfo] from a given OP [Block] and [ChainGenesis].
-    pub fn from_block_and_genesis<T>(
-        block: &Block<T>,
+    pub fn from_block_and_genesis(
+        block: &OpBlock,
         genesis: &ChainGenesis,
-    ) -> Result<Self, FromBlockError>
-    where
-        T: DepositTxEnvelope + Typed2718,
-    {
+    ) -> Result<Self, FromBlockError> {
         let block_info = BlockInfo::from(block);
 
         let (l1_origin, sequence_number) = if block_info.number == genesis.l2.number {

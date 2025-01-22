@@ -3,7 +3,7 @@
 use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::{b256, Address, Bytes, Log, TxKind, B256, U256, U64};
-use maili_consensus::{TxDeposit, UserDepositSource};
+use op_alloy_consensus::{TxDeposit, UserDepositSource};
 
 /// Deposit log event abi signature.
 pub const DEPOSIT_EVENT_ABI: &str = "TransactionDeposited(address,address,uint256,bytes)";

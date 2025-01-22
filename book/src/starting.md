@@ -55,7 +55,6 @@ The following crates support `no_std`.
 
 - ![maili](https://img.shields.io/crates/v/maili?label=maili)
 - ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
-- ![maili-consensus](https://img.shields.io/crates/v/maili-consensus?label=maili-consensus)
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)

@@ -19,7 +19,6 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-consensus = { workspace = true, optional = true }
 maili-protocol = { workspace = true, optional = true }
 maili-registry = { workspace = true, optional = true }
 maili-rpc = { workspace = true, optional = true }
@@ -31,12 +30,10 @@ default = ["std", "serde"]
 std = [
   "maili-protocol?/std",
   "maili-registry?/std",
-  "maili-consensus?/std",
   "maili-genesis?/std",
 ]
 
 full = [
-  "consensus",
   "protocol",
   "registry",
   "rpc",
@@ -50,7 +47,6 @@ arbitrary = [
 
 serde = [
   "maili-protocol?/serde",
-  "maili-consensus?/serde",
   "maili-genesis?/serde",
 ]
 
@@ -59,7 +55,6 @@ jsonrpsee = ["maili-rpc?/jsonrpsee"]
 # `no_std` support
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
-consensus = ["dep:maili-consensus"]
 genesis = ["dep:maili-genesis"]
 
 # std features

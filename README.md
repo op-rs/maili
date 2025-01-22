@@ -13,7 +13,6 @@ OP Stack unique types and interfaces.
 The following crates are provided by `maili`.
 
 - ![maili](https://img.shields.io/crates/v/maili?label=maili)
-- ![maili-consensus](https://img.shields.io/crates/v/maili-consensus?label=maili-consensus)
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
@@ -53,7 +52,6 @@ maili is intended to be `no_std` compatible, initially for use in [kona][kona].
 The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
-- [`maili-consensus`][maili-consensus]
 - [`maili-genesis`][maili-genesis]
 - [`maili-protocol`][maili-protocol]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
@@ -90,6 +88,5 @@ shall be dual licensed as above, without any additional terms or conditions.
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
 [maili-registry]: https://crates.io/crates/maili-registry
-[maili-consensus]: https://crates.io/crates/maili-consensus
 [maili-genesis]: https://crates.io/crates/maili-genesis
 [maili-rpc]: https://crates.io/crates/maili-rpc

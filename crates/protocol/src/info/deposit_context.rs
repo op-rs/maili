@@ -4,7 +4,7 @@ use super::L1BlockInfoTx;
 use crate::info::variant::{L1_BLOCK_ADDRESS, L1_INFO_DEPOSITOR_ADDRESS};
 use alloy_consensus::Sealed;
 use alloy_primitives::{Sealable, TxKind, U256};
-use maili_consensus::{DepositContextDepositSource, DepositSourceDomain, TxDeposit};
+use op_alloy_consensus::{DepositContextDepositSource, DepositSourceDomain, TxDeposit};
 
 /// `keccak256("depositsComplete()")[4:]`
 const DEPOSIT_CONTEXT_SELECTOR: [u8; 4] = [0xe3, 0x2d, 0x20, 0xbb];

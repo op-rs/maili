@@ -5,7 +5,6 @@ Some of the primary crates and their types are listed below.
 
 - [`maili-genesis`][maili-genesis] provides the
   [`RollupConfig`][rollup-config] and [`SystemConfig`][system-config] types.
-- [`maili-consensus`][maili-consensus] provides deposit transaction types.
 - [`maili-rpc`][maili-rpc] provides JSON-RPC server and client implementations
 - [`maili-protocol`][maili-protocol] provides [`Frame`][frame],
   [`Channel`][channel], [`Batch`][batch] types and more.
@@ -22,4 +21,3 @@ Some of the primary crates and their types are listed below.
 [maili-rpc]: https://crates.io/crates/maili-rpc
 [maili-genesis]: https://crates.io/crates/maili-genesis
 [maili-protocol]: https://crates.io/crates/maili-protocol
-[maili-consensus]: https://crates.io/crates/maili-consensus

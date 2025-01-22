@@ -32,7 +32,7 @@ pub fn data_gas_regolith(input: &[u8]) -> U256 {
 ///
 /// In fjord, Calldata costs 16 gas per byte after compression.
 pub fn data_gas_fjord(input: &[u8]) -> U256 {
-    let estimated_size = tx_estimated_size_fjord(input);
+    let estimated_size = U256::from(tx_estimated_size_fjord(input));
     estimated_size
         .saturating_mul(U256::from(NON_ZERO_BYTE_COST))
         .wrapping_div(U256::from(1_000_000))
@@ -41,13 +41,10 @@ pub fn data_gas_fjord(input: &[u8]) -> U256 {
 /// Calculate the estimated compressed transaction size in bytes, scaled by 1e6.
 /// This value is computed based on the following formula:
 /// max(minTransactionSize, intercept + fastlzCoef*fastlzSize)
-pub fn tx_estimated_size_fjord(input: &[u8]) -> U256 {
-    let fastlz_size = U256::from(flz_compress_len(input));
+pub fn tx_estimated_size_fjord(input: &[u8]) -> u64 {
+    let fastlz_size = flz_compress_len(input) as u64;
 
-    fastlz_size
-        .saturating_mul(U256::from(836_500))
-        .saturating_sub(U256::from(42_585_600))
-        .max(U256::from(100_000_000))
+    fastlz_size.saturating_mul(836_500).saturating_sub(42_585_600).max(100_000_000)
 }
 
 /// Calculates the bedrock tx cost given the rollup data gas cost and the following parameters.
@@ -174,7 +171,7 @@ pub fn calculate_tx_l1_cost_fjord(
         blob_base_fee,
         blob_base_fee_scalar,
     );
-    let estimated_size = tx_estimated_size_fjord(input);
+    let estimated_size = U256::from(tx_estimated_size_fjord(input));
 
     estimated_size.saturating_mul(l1_fee_scaled).wrapping_div(U256::from(1_000_000_000_000u64))
 }

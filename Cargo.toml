@@ -45,7 +45,7 @@ maili-flz = { version = "0.1.7", path = "crates/flz", default-features = false }
 maili-serde = { version = "0.1.7", path = "crates/serde", default-features = false }
 
 # OP Alloy
-op-alloy-consensus = { git = "https://github.com/alloy-rs/op-alloy", branch = "main", default-features = false }
+op-alloy-consensus = { version = "0.9.6", default-features = false }
 
 # Alloy
 alloy-eips = { version = "0.9.2", default-features = false }

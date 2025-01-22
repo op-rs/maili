@@ -3,8 +3,8 @@
 use alloc::vec::Vec;
 use alloy_eips::eip2718::Encodable2718;
 use alloy_primitives::FixedBytes;
-use maili_consensus::{DepositTxEnvelope, DEPOSIT_TX_TYPE_ID};
 use maili_genesis::RollupConfig;
+use op_alloy_consensus::DEPOSIT_TX_TYPE_ID;
 use tracing::{info, warn};
 
 use crate::{
@@ -493,46 +493,13 @@ mod tests {
     use super::*;
     use crate::test_utils::{CollectingLayer, TestBatchValidator, TraceStorage};
     use alloc::vec;
-    use alloy_consensus::{constants::EIP1559_TX_TYPE_ID, Block, Header, Typed2718};
-    use alloy_eips::{eip2718::Encodable2718, BlockNumHash};
+    use alloy_consensus::{constants::EIP1559_TX_TYPE_ID, Header};
+    use alloy_eips::BlockNumHash;
     use alloy_primitives::{b256, Bytes};
-    use maili_consensus::TxDeposit;
     use maili_genesis::ChainGenesis;
+    use op_alloy_consensus::OpBlock;
     use tracing::Level;
     use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
-
-    #[derive(Clone, Debug)]
-    struct NoopTx;
-
-    impl DepositTxEnvelope for NoopTx {
-        fn is_deposit(&self) -> bool {
-            false
-        }
-
-        fn as_deposit(&self) -> Option<&alloy_consensus::Sealed<TxDeposit>> {
-            None
-        }
-    }
-
-    impl Typed2718 for NoopTx {
-        fn ty(&self) -> u8 {
-            u8::MAX
-        }
-    }
-
-    impl Encodable2718 for NoopTx {
-        fn type_flag(&self) -> Option<u8> {
-            Some(u8::MAX)
-        }
-
-        fn encode_2718(&self, _out: &mut dyn alloy_rlp::BufMut) {}
-
-        fn encode_2718_len(&self) -> usize {
-            0
-        }
-    }
-
-    type TestOpBlock = Block<NoopTx>;
 
     #[test]
     fn test_timestamp() {
@@ -602,7 +569,7 @@ mod tests {
         let l1_blocks = vec![];
         let l2_safe_head = L2BlockInfo::default();
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let batch = SpanBatch::default();
         assert_eq!(
             batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
@@ -623,7 +590,7 @@ mod tests {
         let l1_blocks = vec![BlockInfo::default()];
         let l2_safe_head = L2BlockInfo::default();
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let batch = SpanBatch::default();
         assert_eq!(
             batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
@@ -663,7 +630,7 @@ mod tests {
         let l1_blocks = vec![block];
         let l2_safe_head = L2BlockInfo::default();
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, ..Default::default() };
         let batch = SpanBatch { batches: vec![first], ..Default::default() };
         assert_eq!(
@@ -690,7 +657,7 @@ mod tests {
         let l1_blocks = vec![block];
         let l2_safe_head = L2BlockInfo::default();
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let batch = SpanBatch { batches: vec![first], ..Default::default() };
         assert_eq!(
@@ -721,7 +688,7 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 21, ..Default::default() };
         let batch = SpanBatch { batches: vec![first], ..Default::default() };
         assert_eq!(
@@ -749,7 +716,7 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let batch = SpanBatch { batches: vec![first], ..Default::default() };
         assert_eq!(
@@ -784,8 +751,8 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
-            op_blocks: vec![TestOpBlock {
+        let mut fetcher: TestBatchValidator = TestBatchValidator {
+            op_blocks: vec![OpBlock {
                 header: Header { number: 9, ..Default::default() },
                 body: alloy_consensus::BlockBody {
                     transactions: Vec::new(),
@@ -853,11 +820,13 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
-            op_blocks: vec![TestOpBlock {
+        let mut fetcher: TestBatchValidator = TestBatchValidator {
+            op_blocks: vec![OpBlock {
                 header: Header { number: 9, ..Default::default() },
                 body: alloy_consensus::BlockBody {
-                    transactions: vec![NoopTx],
+                    transactions: vec![op_alloy_consensus::OpTxEnvelope::Eip1559(
+                        alloy_consensus::TxEip1559::default().into(),
+                    )],
                     ommers: Vec::new(),
                     withdrawals: None,
                 },
@@ -912,7 +881,7 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 10, timestamp: 19, ..Default::default() };
         let third = SpanBatchElement { epoch_num: 10, timestamp: 30, ..Default::default() };
@@ -944,7 +913,7 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 11, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 21, ..Default::default() };
         let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
@@ -971,7 +940,7 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 8, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
         let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
@@ -998,7 +967,7 @@ mod tests {
             ..Default::default()
         };
         let inclusion_block = BlockInfo::default();
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator::default();
+        let mut fetcher: TestBatchValidator = TestBatchValidator::default();
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
         let batch = SpanBatch { batches: vec![first, second], ..Default::default() };
@@ -1031,7 +1000,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         fetcher.short_circuit = true;
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
@@ -1077,7 +1046,7 @@ mod tests {
             },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
@@ -1127,7 +1096,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 8, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
@@ -1186,7 +1155,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
@@ -1242,7 +1211,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
@@ -1295,7 +1264,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 14, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
@@ -1354,7 +1323,7 @@ mod tests {
             block_info: BlockInfo { number: 40, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 10, timestamp: 20, ..Default::default() };
@@ -1410,7 +1379,7 @@ mod tests {
             block_info: BlockInfo { number: 40, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 20, transactions: vec![] };
         let second = SpanBatchElement { epoch_num: 10, timestamp: 20, transactions: vec![] };
@@ -1469,7 +1438,7 @@ mod tests {
             block_info: BlockInfo { number: 40, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement {
             epoch_num: 10,
@@ -1538,7 +1507,7 @@ mod tests {
             block_info: BlockInfo { number: 40, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement {
             epoch_num: 10,
@@ -1603,7 +1572,7 @@ mod tests {
             block_info: BlockInfo { number: 40, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let filler_bytes = Bytes::copy_from_slice(&[EIP1559_TX_TYPE_ID]);
         let first = SpanBatchElement {
@@ -1668,7 +1637,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let mut fetcher: TestBatchValidator<NoopTx> =
+        let mut fetcher: TestBatchValidator =
             TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
         let first = SpanBatchElement { epoch_num: 10, timestamp: 10, ..Default::default() };
         let second = SpanBatchElement { epoch_num: 11, timestamp: 20, ..Default::default() };
@@ -1721,7 +1690,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let block = TestOpBlock {
+        let block = OpBlock {
             header: Header { number: 41, ..Default::default() },
             body: alloy_consensus::BlockBody {
                 transactions: Vec::new(),
@@ -1729,7 +1698,7 @@ mod tests {
                 withdrawals: None,
             },
         };
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
+        let mut fetcher: TestBatchValidator = TestBatchValidator {
             blocks: vec![l2_block],
             op_blocks: vec![block],
             ..Default::default()
@@ -1795,7 +1764,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let block = TestOpBlock {
+        let block = OpBlock {
             header: Header { number: 41, ..Default::default() },
             body: alloy_consensus::BlockBody {
                 transactions: Vec::new(),
@@ -1803,7 +1772,7 @@ mod tests {
                 withdrawals: None,
             },
         };
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
+        let mut fetcher: TestBatchValidator = TestBatchValidator {
             blocks: vec![l2_block],
             op_blocks: vec![block],
             ..Default::default()
@@ -1871,7 +1840,7 @@ mod tests {
             l1_origin: BlockNumHash { number: 9, ..Default::default() },
             ..Default::default()
         };
-        let block = TestOpBlock {
+        let block = OpBlock {
             header: Header { number: 41, ..Default::default() },
             body: alloy_consensus::BlockBody {
                 transactions: Vec::new(),
@@ -1879,7 +1848,7 @@ mod tests {
                 withdrawals: None,
             },
         };
-        let mut fetcher: TestBatchValidator<NoopTx> = TestBatchValidator {
+        let mut fetcher: TestBatchValidator = TestBatchValidator {
             blocks: vec![l2_block],
             op_blocks: vec![block],
             ..Default::default()

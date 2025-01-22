@@ -1,21 +1,26 @@
-#![cfg(feature = "jsonrpsee")]
 //! The Optimism RPC API.
 
 use alloc::{boxed::Box, string::String, vec::Vec};
 use core::net::IpAddr;
 
 use alloy_eips::BlockNumberOrTag;
-use alloy_primitives::{B256, U64};
-#[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
-use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_genesis::RollupConfig;
 use maili_protocol::{ExecutingMessage, SafetyLevel};
+
+#[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
+use getrandom as _; // required for compiling wasm32-unknown-unknown
 
 use crate::{
     OutputResponse, PeerDump, PeerInfo, PeerStats, ProtocolVersion, SafeHeadResponse,
     SuperchainSignal, SyncStatus,
 };
+
+// Re-export apis defined in upstream `op-alloy-rpc-jsonrpsee`
+pub use op_alloy_rpc_jsonrpsee::traits::{MinerApiExtServer, OpAdminApiServer};
+
+#[cfg(feature = "client")]
+pub use op_alloy_rpc_jsonrpsee::traits::{MinerApiExtClient, OpAdminApiClient};
 
 /// Optimism specified rpc interface.
 ///
@@ -121,29 +126,6 @@ pub trait OpP2PApi {
     async fn opp2p_disconnect_peer(&self, peer: String) -> RpcResult<()>;
 }
 
-/// The admin namespace endpoints
-///
-/// <https://github.com/ethereum-optimism/optimism/blob/c7ad0ebae5dca3bf8aa6f219367a95c15a15ae41/op-node/node/api.go#L28-L36>
-#[cfg_attr(not(feature = "client"), rpc(server, namespace = "admin"))]
-#[cfg_attr(feature = "client", rpc(server, client, namespace = "admin"))]
-pub trait OpAdminApi {
-    /// Resets the derivation pipeline.
-    #[method(name = "resetDerivationPipeline")]
-    async fn admin_reset_derivation_pipeline(&self) -> RpcResult<()>;
-
-    /// Starts the sequencer.
-    #[method(name = "startSequencer")]
-    async fn admin_start_sequencer(&self, block_hash: B256) -> RpcResult<()>;
-
-    /// Stops the sequencer.
-    #[method(name = "stopSequencer")]
-    async fn admin_stop_sequencer(&self) -> RpcResult<B256>;
-
-    /// Returns the sequencer status.
-    #[method(name = "sequencerActive")]
-    async fn admin_sequencer_active(&self) -> RpcResult<bool>;
-}
-
 /// Engine API extension for Optimism superchain signaling
 #[cfg_attr(not(feature = "client"), rpc(server, namespace = "engine"))]
 #[cfg_attr(feature = "client", rpc(server, client, namespace = "engine"))]
@@ -160,16 +142,6 @@ pub trait EngineApiExt {
     /// See: <https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1>
     #[method(name = "signalSuperchainV1")]
     async fn signal_superchain_v1(&self, signal: SuperchainSignal) -> RpcResult<ProtocolVersion>;
-}
-
-/// Op API extension for controlling the miner.
-#[cfg_attr(not(feature = "client"), rpc(server, namespace = "miner"))]
-#[cfg_attr(feature = "client", rpc(server, client, namespace = "miner"))]
-pub trait MinerApiExt {
-    /// Sets the maximum data availability size of any tx allowed in a block, and the total max l1
-    /// data size of the block. 0 means no maximum.
-    #[method(name = "setMaxDASize")]
-    async fn set_max_da_size(&self, max_tx_size: U64, max_block_size: U64) -> RpcResult<bool>;
 }
 
 /// Supervisor API for interop.

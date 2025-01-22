@@ -32,6 +32,7 @@ pub use attributes::OpAttributesWithParent;
 mod sync;
 pub use sync::{L2BlockRef, SyncStatus};
 
+#[cfg(feature = "jsonrpsee")]
 mod api;
 #[cfg(all(feature = "jsonrpsee", feature = "client"))]
 pub use api::{

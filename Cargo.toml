@@ -44,8 +44,9 @@ maili-rpc = { version = "0.1.7", path = "crates/rpc", default-features = false }
 maili-serde = { version = "0.1.7", path = "crates/serde", default-features = false }
 
 # OP Alloy
-op-alloy-consensus = { version = "0.9.6", default-features = false }
 op-alloy-flz = { version = "0.9.6", default-features = false }
+op-alloy-consensus = { version = "0.9.6", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.9.6", default-features = false }
 op-alloy-rpc-types-engine = { version = "0.9.6", default-features = false }
 
 # Alloy

@@ -32,9 +32,10 @@ derive_more = { workspace = true, default-features = false, features = ["display
 serde = { workspace = true, optional = true }
 
 # `jsonrpsee`
-maili-genesis = { workspace = true, optional = true }
 jsonrpsee = { workspace = true, optional = true }
 getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unknown
+maili-genesis = { workspace = true, optional = true }
+op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }
 
 [dev-dependencies]
 serde_json.workspace = true
@@ -61,9 +62,11 @@ jsonrpsee = [
     "dep:maili-genesis",
     "dep:jsonrpsee",
     "dep:getrandom",
+    "dep:op-alloy-rpc-jsonrpsee",
 ]
 client = [
     "jsonrpsee",
     "jsonrpsee/client",
     "jsonrpsee/async-client",
+    "op-alloy-rpc-jsonrpsee/client",
 ]

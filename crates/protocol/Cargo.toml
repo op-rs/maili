@@ -20,8 +20,6 @@ maili-genesis.workspace = true
 
 # OP Alloy
 op-alloy-flz.workspace = true
-
-# OP Alloy
 op-alloy-consensus.workspace = true
 
 # Alloy

@@ -2,7 +2,9 @@
 
 use alloy_primitives::U256;
 use core::ops::Mul;
-use op_alloy_flz::flz_compress_len;
+
+/// Re-export the fastlz compression length calculation function.
+pub use op_alloy_flz::flz_compress_len;
 
 /// Cost per byte in calldata
 const ZERO_BYTE_COST: u64 = 4;

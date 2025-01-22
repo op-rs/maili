@@ -250,7 +250,8 @@ impl ProtocolVersionFormatV0 {
                 return true;
             }
 
-            // following semver.org advertised regex, alphanumeric with '-' and '.', except leading '.'.
+            // following semver.org advertised regex, alphanumeric with '-' and '.', except leading
+            // '.'.
             if !(c.is_ascii_alphanumeric() || c == b'-' || (c == b'.' && i > 0)) {
                 return false;
             }

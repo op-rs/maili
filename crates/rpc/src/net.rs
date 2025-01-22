@@ -265,10 +265,12 @@ impl core::fmt::Display for Direction {
 }
 
 #[cfg(test)]
+#[cfg(feature = "serde")]
 mod tests {
     use super::*;
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_direction_serialization() {
         assert_eq!(
             serde_json::to_string(&Direction::Unknown).unwrap(),
@@ -288,6 +290,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_direction_deserialization() {
         let unknown: Direction = serde_json::from_str("0").unwrap();
         let inbound: Direction = serde_json::from_str("1").unwrap();
@@ -301,7 +304,9 @@ mod tests {
             "Deserialization mismatch for Direction::Outbound"
         );
     }
+
     #[test]
+    #[cfg(feature = "serde")]
     fn test_peer_info_connectedness_serialization() {
         let peer_info = PeerInfo {
             peer_id: String::from("peer123"),

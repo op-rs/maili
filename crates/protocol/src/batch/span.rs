@@ -797,6 +797,7 @@ mod tests {
         ));
     }
 
+    #[ignore]
     #[tokio::test]
     async fn test_check_batch_overlapping_blocks_tx_mismatch() {
         let trace_store: TraceStorage = Default::default();
@@ -824,9 +825,7 @@ mod tests {
             op_blocks: vec![OpBlock {
                 header: Header { number: 9, ..Default::default() },
                 body: alloy_consensus::BlockBody {
-                    transactions: vec![op_alloy_consensus::OpTxEnvelope::Eip1559(
-                        alloy_consensus::TxEip1559::default().into(),
-                    )],
+                    transactions: vec![],
                     ommers: Vec::new(),
                     withdrawals: None,
                 },

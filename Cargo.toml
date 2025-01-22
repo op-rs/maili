@@ -36,12 +36,13 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
+maili-rpc = { version = "0.1.7", path = "crates/rpc", default-features = false }
+maili-serde = { version = "0.1.7", path = "crates/serde", default-features = false }
+maili-interop = { version = "0.1.7", path = "crates/interop", default-features = false }
 maili-genesis = { version = "0.1.7", path = "crates/genesis", default-features = false }
 maili-protocol = { version = "0.1.7", path = "crates/protocol", default-features = false }
 maili-registry = { version = "0.1.7", path = "crates/registry", default-features = false }
 maili-superchain = { version = "0.1.7", path = "crates/registry/superchain", default-features = false }
-maili-rpc = { version = "0.1.7", path = "crates/rpc", default-features = false }
-maili-serde = { version = "0.1.7", path = "crates/serde", default-features = false }
 
 # OP Alloy
 op-alloy-consensus = { version = "0.9.6", default-features = false }

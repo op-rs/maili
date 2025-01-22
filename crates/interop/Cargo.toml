@@ -1,0 +1,38 @@
+[package]
+name = "maili-interop"
+description = "Interop types for Optimism"
+
+exclude.workspace = true
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+# Alloy
+alloy-sol-types.workspace = true
+alloy-consensus.workspace = true
+alloy-primitives = { workspace = true, features = ["map"] }
+
+# Misc
+derive_more = { workspace = true, default-features = false, features = ["from", "as_ref"] }
+
+# `serde` feature
+serde = { workspace = true, optional = true }
+
+[dev-dependencies]
+serde_json.workspace = true
+
+[features]
+default = ["serde", "std"]
+std = []
+serde = [
+  "dep:serde",
+  "alloy-primitives/serde",
+]

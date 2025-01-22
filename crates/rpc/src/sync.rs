@@ -14,7 +14,7 @@ pub struct L2BlockRef {
     #[cfg_attr(feature = "serde", serde(flatten))]
     pub l1_block_info: BlockInfo,
     /// The origin on L1.
-    #[serde(rename = "l1origin")]
+    #[cfg_attr(feature = "serde", serde(rename = "l1origin"))]
     pub l1_origin: BlockNumHash,
     /// The sequence number.
     pub sequence_number: u64,

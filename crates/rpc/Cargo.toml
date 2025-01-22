@@ -16,7 +16,6 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-genesis.workspace = true
 maili-protocol.workspace = true
 
 # OP Alloy
@@ -33,6 +32,7 @@ derive_more = { workspace = true, default-features = false, features = ["display
 serde = { workspace = true, optional = true }
 
 # `jsonrpsee`
+maili-genesis = { workspace = true, optional = true }
 jsonrpsee = { workspace = true, optional = true }
 getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unknown
 
@@ -43,6 +43,7 @@ serde_json.workspace = true
 default = ["std", "jsonrpsee"]
 std = [
     "maili-protocol/std",
+    "maili-genesis?/std",
     "alloy-eips/std",
     "alloy-primitives/std",
     "op-alloy-rpc-types-engine/std",
@@ -50,12 +51,14 @@ std = [
 serde = [
     "dep:serde",
     "maili-protocol/serde",
+    "maili-genesis?/serde",
     "alloy-eips/serde",
     "alloy-primitives/serde",
     "op-alloy-rpc-types-engine/serde",
 ]
 jsonrpsee = [
     "serde",
+    "dep:maili-genesis",
     "dep:jsonrpsee",
     "dep:getrandom",
 ]

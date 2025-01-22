@@ -17,7 +17,7 @@ workspace = true
 [dependencies]
 # Workspace
 maili-interop = { workspace = true, features = ["serde"] }
-maili-protocol = { workspace = true, optional = true, features = ["serde"] }
+maili-protocol = { workspace = true, features = ["serde"] }
 
 # Alloy
 alloy-eips = { workspace = true, features = ["serde"] }
@@ -39,12 +39,11 @@ serde_json.workspace = true
 [features]
 default = ["std", "jsonrpsee"]
 std = [
-    "maili-protocol?/std",
+    "maili-protocol/std",
     "alloy-eips/std",
     "alloy-primitives/std",
 ]
 jsonrpsee = [
-    "dep:maili-protocol",
     "dep:jsonrpsee",
     "dep:getrandom",
 ]

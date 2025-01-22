@@ -1,6 +1,6 @@
 //! Defines the supervisor API and Client.
 
-use alloc::boxed::Box;
+use alloc::{boxed::Box, vec::Vec};
 use alloy_eips::eip1898::BlockNumHash;
 use alloy_primitives::B256;
 use alloy_rpc_client::ReqwestClient;

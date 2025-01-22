@@ -41,6 +41,7 @@ default = ["serde", "std"]
 std = []
 serde = [
   "dep:serde",
+  "alloy-eips/serde",
   "alloy-primitives/serde",
 ]
 arbitrary = [

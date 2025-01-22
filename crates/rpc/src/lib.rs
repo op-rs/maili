@@ -10,7 +10,7 @@
 extern crate alloc;
 
 mod supervisor;
-pub use supervisor::{SupervisorError, SupervisorClient, Supervisor};
+pub use supervisor::{Supervisor, SupervisorClient, SupervisorError};
 
 mod api;
 #[cfg(all(feature = "jsonrpsee", feature = "client"))]

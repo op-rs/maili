@@ -16,11 +16,11 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-consensus.workspace = true
 maili-genesis.workspace = true
 
 # OP Alloy
 op-alloy-flz.workspace = true
+op-alloy-consensus.workspace = true
 
 # Alloy
 alloy-primitives = { workspace = true, features = ["map"] }
@@ -71,7 +71,7 @@ alloy-primitives = { workspace = true, features = ["arbitrary"] }
 default = ["serde", "std"]
 std = [
   "maili-genesis/std",
-  "maili-consensus/std",
+  "op-alloy-consensus/std",
   "brotli/std",
 ]
 test-utils = [
@@ -82,7 +82,7 @@ arbitrary = [
   "std",
   "dep:arbitrary",
   "maili-genesis/arbitrary",
-  "maili-consensus/arbitrary",
+  "op-alloy-consensus/arbitrary",
   "alloy-consensus/arbitrary",
   "alloy-eips/arbitrary",
   "alloy-primitives/rand",
@@ -92,5 +92,5 @@ serde = [
   "dep:serde",
   "dep:alloy-serde",
   "maili-genesis/serde",
-  "maili-consensus/serde",
+  "op-alloy-consensus/serde",
 ]

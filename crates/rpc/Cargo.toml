@@ -22,11 +22,13 @@ maili-protocol.workspace = true
 op-alloy-rpc-types-engine.workspace = true
 
 # Alloy
-alloy-eips.workspace = true
-alloy-primitives = { workspace = true, features = ["map", "rlp"] }
+alloy-eips = { workspace = true, features = ["serde"] }
+alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
+alloy-consensus = { workspace = true }
 
 # Misc
 derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
+thiserror = { workspace = true }
 
 # `serde`
 serde = { workspace = true, optional = true }
@@ -46,7 +48,7 @@ alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
 serde_json.workspace = true
 
 [features]
-default = ["std", "jsonrpsee"]
+default = ["std", "jsonrpsee", "client"] # TODO: rm client from default
 std = [
 	"maili-protocol/std",
 	"maili-genesis?/std",

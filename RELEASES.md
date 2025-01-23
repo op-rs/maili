@@ -4,7 +4,6 @@ This is a concise guide for cutting a release for `maili`.
 
 This also applies to `op-alloy`, but _NOT_ to kona since kona uses [release-plz][release-plz].
 
-
 ### cargo-release
 
 Ensure [cargo-release][cargo-release] is installed using cargo's `install` command.
@@ -12,7 +11,6 @@ Ensure [cargo-release][cargo-release] is installed using cargo's `install` comma
 ```
 $ cargo install cargo-release
 ```
-
 
 ### Dry Run
 
@@ -32,7 +30,6 @@ To update minor and major versions, just specify `minor` or `major` in place of 
 
 If this command executes without any errors, proceed to executing the release.
 
-
 ### Cutting the Release
 
 > [!IMPORTANT]
@@ -48,7 +45,6 @@ $ cargo release --no-push patch --execute
 
 Crates will be published iteratively.
 Once this is done be sure to push the artifacts in the next step!
-
 
 ### Upstreaming Artifacts
 

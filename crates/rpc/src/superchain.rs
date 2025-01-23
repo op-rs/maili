@@ -1,4 +1,4 @@
-//! Common engine types
+//! Superchain types
 
 use alloc::{
     format,
@@ -18,8 +18,9 @@ use derive_more::derive::{Display, From};
 /// version. This may include halting the engine, with consent of the execution engine operator.
 ///
 /// See also: <https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1>
-#[derive(Copy, Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct SuperchainSignal {
     /// The recommended Supercain Protocol Version.
     pub recommended: ProtocolVersion,
@@ -170,6 +171,7 @@ impl ProtocolVersion {
     }
 }
 
+#[cfg(feature = "serde")]
 impl serde::Serialize for ProtocolVersion {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -179,6 +181,7 @@ impl serde::Serialize for ProtocolVersion {
     }
 }
 
+#[cfg(feature = "serde")]
 impl<'de> serde::Deserialize<'de> for ProtocolVersion {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -218,7 +221,7 @@ pub struct ProtocolVersionFormatV0 {
 impl core::fmt::Display for ProtocolVersionFormatV0 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let build_tag = if self.build.0.iter().any(|&byte| byte != 0) {
-            if is_human_readable_build_tag(self.build) {
+            if self.is_readable_build_tag() {
                 let full = format!("+{}", String::from_utf8_lossy(&self.build.0));
                 full.trim_end_matches('\0').to_string()
             } else {
@@ -236,6 +239,26 @@ impl core::fmt::Display for ProtocolVersionFormatV0 {
 }
 
 impl ProtocolVersionFormatV0 {
+    /// Returns true if the build tag is human-readable, false otherwise.
+    pub fn is_readable_build_tag(&self) -> bool {
+        for (i, &c) in self.build.iter().enumerate() {
+            if c == 0 {
+                // Trailing zeros are allowed
+                if self.build[i..].iter().any(|&d| d != 0) {
+                    return false;
+                }
+                return true;
+            }
+
+            // following semver.org advertised regex, alphanumeric with '-' and '.', except leading
+            // '.'.
+            if !(c.is_ascii_alphanumeric() || c == b'-' || (c == b'.' && i > 0)) {
+                return false;
+            }
+        }
+        true
+    }
+
     /// Version-type 0 byte encoding:
     ///
     /// ```text
@@ -282,25 +305,6 @@ impl ProtocolVersionFormatV0 {
             pre_release: u32::from_be_bytes(value[27..31].try_into()?),
         })
     }
-}
-
-/// Returns true if the build tag is human-readable, false otherwise.
-fn is_human_readable_build_tag(build: B64) -> bool {
-    for (i, &c) in build.iter().enumerate() {
-        if c == 0 {
-            // Trailing zeros are allowed
-            if build[i..].iter().any(|&d| d != 0) {
-                return false;
-            }
-            return true;
-        }
-
-        // following semver.org advertised regex, alphanumeric with '-' and '.', except leading '.'.
-        if !(c.is_ascii_alphanumeric() || c == b'-' || (c == b'.' && i > 0)) {
-            return false;
-        }
-    }
-    true
 }
 
 #[cfg(test)]

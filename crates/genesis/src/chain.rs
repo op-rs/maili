@@ -9,10 +9,12 @@ use crate::{
     RollupConfig, GRANITE_CHANNEL_TIMEOUT,
 };
 
+#[cfg(feature = "serde")]
 const fn default_governed_by_optimism() -> bool {
     false
 }
 
+#[cfg(feature = "serde")]
 const fn default_batch_inbox_addr() -> Address {
     Address::ZERO
 }

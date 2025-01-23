@@ -1,22 +1,26 @@
-#![cfg(feature = "jsonrpsee")]
-#![allow(missing_docs)]
-
-//! Rollup Node
+//! The Optimism RPC API.
 
 use alloc::{boxed::Box, string::String, vec::Vec};
 use core::net::IpAddr;
 
 use alloy_eips::BlockNumberOrTag;
-use alloy_primitives::{B256, U64};
-#[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
-use getrandom as _; // required for compiling wasm32-unknown-unknown
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
+use maili_genesis::RollupConfig;
 use maili_protocol::{ExecutingMessage, SafetyLevel};
 
+#[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
+use getrandom as _; // required for compiling wasm32-unknown-unknown
+
 use crate::{
-    OutputResponse, PeerDump, PeerInfo, PeerStats, ProtocolVersion, RollupConfig, SafeHeadResponse,
+    OutputResponse, PeerDump, PeerInfo, PeerStats, ProtocolVersion, SafeHeadResponse,
     SuperchainSignal, SyncStatus,
 };
+
+// Re-export apis defined in upstream `op-alloy-rpc-jsonrpsee`
+pub use op_alloy_rpc_jsonrpsee::traits::{MinerApiExtServer, OpAdminApiServer};
+
+#[cfg(feature = "client")]
+pub use op_alloy_rpc_jsonrpsee::traits::{MinerApiExtClient, OpAdminApiClient};
 
 /// Optimism specified rpc interface.
 ///
@@ -58,71 +62,68 @@ pub trait OpP2PApi {
     #[method(name = "self")]
     async fn opp2p_self(&self) -> RpcResult<PeerInfo>;
 
+    /// Returns information of peers
     #[method(name = "peers")]
     async fn opp2p_peers(&self) -> RpcResult<PeerDump>;
 
+    /// Returns statistics of peers
     #[method(name = "peerStats")]
     async fn opp2p_peer_stats(&self) -> RpcResult<PeerStats>;
 
+    /// Returns the discovery table
     #[method(name = "discoveryTable")]
     async fn opp2p_discovery_table(&self) -> RpcResult<Vec<String>>;
 
+    /// Blocks the given peer
     #[method(name = "blockPeer")]
     async fn opp2p_block_peer(&self, peer: String) -> RpcResult<()>;
 
+    /// Lists blocked peers
     #[method(name = "listBlockedPeers")]
     async fn opp2p_list_blocked_peers(&self) -> RpcResult<Vec<String>>;
 
+    /// Blocks the given address
     #[method(name = "blocAddr")]
     async fn opp2p_block_addr(&self, ip: IpAddr) -> RpcResult<()>;
 
+    /// Unblocks the given address
     #[method(name = "unblockAddr")]
     async fn opp2p_unblock_addr(&self, ip: IpAddr) -> RpcResult<()>;
 
+    /// Lists blocked addresses
     #[method(name = "listBlockedAddrs")]
     async fn opp2p_list_blocked_addrs(&self) -> RpcResult<Vec<IpAddr>>;
 
-    /// todo: should be IPNet?
+    // TODO: should be IPNet?
+    /// Blocks the given subnet
     #[method(name = "blockSubnet")]
     async fn opp2p_block_subnet(&self, subnet: String) -> RpcResult<()>;
 
-    /// todo: should be IPNet?
+    // TODO: should be IPNet?
+    /// Unblocks the given subnet
     #[method(name = "unblockSubnet")]
     async fn opp2p_unblock_subnet(&self, subnet: String) -> RpcResult<()>;
 
-    /// todo: should be IPNet?
+    // TODO: should be IPNet?
+    /// Lists blocked subnets
     #[method(name = "listBlockedSubnets")]
     async fn opp2p_list_blocked_subnets(&self) -> RpcResult<Vec<String>>;
 
+    /// Protects the given peer
     #[method(name = "protectPeer")]
     async fn opp2p_protect_peer(&self, peer: String) -> RpcResult<()>;
 
+    /// Unprotects the given peer
     #[method(name = "unprotectPeer")]
     async fn opp2p_unprotect_peer(&self, peer: String) -> RpcResult<()>;
 
+    /// Connects to the given peer
     #[method(name = "connectPeer")]
     async fn opp2p_connect_peer(&self, peer: String) -> RpcResult<()>;
 
+    /// Disconnects from the given peer
     #[method(name = "disconnectPeer")]
     async fn opp2p_disconnect_peer(&self, peer: String) -> RpcResult<()>;
-}
-
-/// The admin namespace endpoints
-/// https://github.com/ethereum-optimism/optimism/blob/c7ad0ebae5dca3bf8aa6f219367a95c15a15ae41/op-node/node/api.go#L28-L36
-#[cfg_attr(not(feature = "client"), rpc(server, namespace = "admin"))]
-#[cfg_attr(feature = "client", rpc(server, client, namespace = "admin"))]
-pub trait OpAdminApi {
-    #[method(name = "resetDerivationPipeline")]
-    async fn admin_reset_derivation_pipeline(&self) -> RpcResult<()>;
-
-    #[method(name = "startSequencer")]
-    async fn admin_start_sequencer(&self, block_hash: B256) -> RpcResult<()>;
-
-    #[method(name = "stopSequencer")]
-    async fn admin_stop_sequencer(&self) -> RpcResult<B256>;
-
-    #[method(name = "sequencerActive")]
-    async fn admin_sequencer_active(&self) -> RpcResult<bool>;
 }
 
 /// Engine API extension for Optimism superchain signaling
@@ -141,16 +142,6 @@ pub trait EngineApiExt {
     /// See: <https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1>
     #[method(name = "signalSuperchainV1")]
     async fn signal_superchain_v1(&self, signal: SuperchainSignal) -> RpcResult<ProtocolVersion>;
-}
-
-/// Op API extension for controlling the miner.
-#[cfg_attr(not(feature = "client"), rpc(server, namespace = "miner"))]
-#[cfg_attr(feature = "client", rpc(server, client, namespace = "miner"))]
-pub trait MinerApiExt {
-    /// Sets the maximum data availability size of any tx allowed in a block, and the total max l1
-    /// data size of the block. 0 means no maximum.
-    #[method(name = "setMaxDASize")]
-    async fn set_max_da_size(&self, max_tx_size: U64, max_block_size: U64) -> RpcResult<bool>;
 }
 
 /// Supervisor API for interop.

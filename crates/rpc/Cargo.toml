@@ -16,13 +16,16 @@ workspace = true
 
 [dependencies]
 # Workspace
-maili-interop = { workspace = true, features = ["serde"] }
 maili-protocol = { workspace = true, features = ["serde"] }
 
 # Alloy
 alloy-eips = { workspace = true, features = ["serde"] }
-alloy-rpc-client = { workspace = true, features = ["reqwest"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
+
+# `interop` feature
+async-trait = { workspace = true, optional = true }
+maili-interop = { workspace = true, features = ["serde"], optional = true }
+alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
 
 # RPC
 jsonrpsee = { workspace = true, optional = true }
@@ -30,7 +33,6 @@ getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unkno
 serde.workspace = true
 
 # Misc
-async-trait.workspace = true
 derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
 
 [dev-dependencies]
@@ -42,6 +44,11 @@ std = [
     "maili-protocol/std",
     "alloy-eips/std",
     "alloy-primitives/std",
+]
+interop = [
+    "dep:maili-interop",
+    "dep:alloy-rpc-client",
+    "dep:async-trait",
 ]
 jsonrpsee = [
     "dep:jsonrpsee",

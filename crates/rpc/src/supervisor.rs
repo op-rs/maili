@@ -17,7 +17,7 @@ use maili_protocol::BlockInfo;
 #[async_trait]
 pub trait Supervisor {
     /// The error returned by supervisor methods.
-    type Error;
+    type Error: Send + Sync;
 
     /// Returns the safety level of a single message.
     async fn check_message(

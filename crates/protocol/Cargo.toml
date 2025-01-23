@@ -28,6 +28,10 @@ alloy-sol-types.workspace = true
 alloy-rlp.workspace = true
 alloy-eips.workspace = true
 alloy-consensus.workspace = true
+alloy-network.workspace = true
+alloy-network-primitives.workspace = true
+alloy-provider.workspace = true
+alloy-transport.workspace = true
 
 # Misc
 rand = { workspace = true, features = ["small_rng"] }
@@ -48,6 +52,7 @@ arbitrary = { workspace = true, features = ["derive"], optional = true }
 # `serde` feature
 serde = { workspace = true, optional = true }
 alloy-serde = { workspace = true, optional = true }
+serde_json.workspace = true
 
 # `test-utils` feature
 spin = { workspace = true, optional = true }

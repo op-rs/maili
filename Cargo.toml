@@ -128,3 +128,8 @@ rstest = "0.24.0"
 ## crypto
 c-kzg = { version = "1.0", default-features = false }
 k256 = { version = "0.13.4", default-features = false, features = ["ecdsa"] }
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"

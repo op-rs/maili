@@ -5,9 +5,15 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
-#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(any(test, feature = "std")), no_std)]
 
 extern crate alloc;
+
+mod root;
+pub use root::{ChainRootInfo, OutputRootWithChain, SuperRoot, SuperRootResponse};
+
+mod errors;
+pub use errors::{SuperRootError, SuperRootResult};
 
 mod safety;
 pub use safety::SafetyLevel;
@@ -17,6 +23,9 @@ pub use message::{
     extract_executing_messages, EnrichedExecutingMessage, ExecutingMessage, MessageIdentifier,
     MessagePayload,
 };
+
+mod derived;
+pub use derived::DerivedIdPair;
 
 mod constants;
 pub use constants::{CROSS_L2_INBOX_ADDRESS, MESSAGE_EXPIRY_WINDOW, SUPER_ROOT_VERSION};

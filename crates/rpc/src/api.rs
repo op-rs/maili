@@ -6,7 +6,6 @@ use core::net::IpAddr;
 use alloy_eips::BlockNumberOrTag;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_genesis::RollupConfig;
-use maili_protocol::{ExecutingMessage, SafetyLevel};
 
 #[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
 use getrandom as _; // required for compiling wasm32-unknown-unknown
@@ -142,17 +141,4 @@ pub trait EngineApiExt {
     /// See: <https://specs.optimism.io/protocol/exec-engine.html#engine_signalsuperchainv1>
     #[method(name = "signalSuperchainV1")]
     async fn signal_superchain_v1(&self, signal: SuperchainSignal) -> RpcResult<ProtocolVersion>;
-}
-
-/// Supervisor API for interop.
-#[cfg_attr(not(feature = "client"), rpc(server, namespace = "supervisor"))]
-#[cfg_attr(feature = "client", rpc(server, client, namespace = "supervisor"))]
-pub trait SupervisorApi {
-    /// Checks if the given messages meet the given minimum safety level.
-    #[method(name = "checkMessages")]
-    async fn check_messages(
-        &self,
-        messages: Vec<ExecutingMessage>,
-        min_safety: SafetyLevel,
-    ) -> RpcResult<()>;
 }

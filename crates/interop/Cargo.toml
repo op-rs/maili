@@ -16,23 +16,40 @@ workspace = true
 
 [dependencies]
 # Alloy
+alloy-rlp.workspace = true
+alloy-eips.workspace = true
 alloy-sol-types.workspace = true
 alloy-consensus.workspace = true
 alloy-primitives = { workspace = true, features = ["map"] }
 
 # Misc
+thiserror.workspace = true
 derive_more = { workspace = true, default-features = false, features = ["from", "as_ref"] }
+
+# `arbitrary` feature
+arbitrary = { workspace = true, features = ["derive"], optional = true }
 
 # `serde` feature
 serde = { workspace = true, optional = true }
 
 [dev-dependencies]
 serde_json.workspace = true
+rand = { workspace = true, features = ["small_rng"] }
+arbitrary = { workspace = true, features = ["derive"] }
 
 [features]
 default = ["serde", "std"]
 std = []
 serde = [
   "dep:serde",
+  "alloy-eips/serde",
   "alloy-primitives/serde",
+]
+arbitrary = [
+  "std",
+  "dep:arbitrary",
+  "alloy-consensus/arbitrary",
+  "alloy-eips/arbitrary",
+  "alloy-primitives/rand",
+  "alloy-primitives/arbitrary",
 ]

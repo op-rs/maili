@@ -37,6 +37,11 @@ getrandom = { workspace = true, optional = true } # req for wasm32-unknown-unkno
 maili-genesis = { workspace = true, optional = true }
 op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }
 
+# `interop` feature
+async-trait = { workspace = true, optional = true }
+maili-interop = { workspace = true, features = ["serde"], optional = true }
+alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
+
 [dev-dependencies]
 serde_json.workspace = true
 
@@ -56,6 +61,11 @@ serde = [
     "alloy-eips/serde",
     "alloy-primitives/serde",
     "op-alloy-rpc-types-engine/serde",
+]
+interop = [
+    "dep:maili-interop",
+    "dep:alloy-rpc-client",
+    "dep:async-trait",
 ]
 jsonrpsee = [
     "serde",

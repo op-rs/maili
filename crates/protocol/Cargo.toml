@@ -70,9 +70,18 @@ alloy-primitives = { workspace = true, features = ["arbitrary"] }
 [features]
 default = ["serde", "std"]
 std = [
-  "maili-genesis/std",
-  "op-alloy-consensus/std",
-  "brotli/std",
+	"maili-genesis/std",
+	"op-alloy-consensus/std",
+	"brotli/std",
+	"alloy-consensus/std",
+	"alloy-primitives/std",
+	"alloy-rlp/std",
+	"alloy-serde?/std",
+	"alloy-sol-types/std",
+	"derive_more/std",
+	"miniz_oxide/std",
+	"thiserror/std",
+	"unsigned-varint/std"
 ]
 test-utils = [
   "dep:spin",
@@ -89,8 +98,12 @@ arbitrary = [
   "alloy-primitives/arbitrary",
 ]
 serde = [
-  "dep:serde",
-  "dep:alloy-serde",
-  "maili-genesis/serde",
-  "op-alloy-consensus/serde",
+	"dep:serde",
+	"dep:alloy-serde",
+	"maili-genesis/serde",
+	"op-alloy-consensus/serde",
+	"alloy-consensus/serde",
+	"alloy-eips/serde",
+	"alloy-primitives/serde",
+	"tracing-subscriber?/serde"
 ]

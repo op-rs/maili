@@ -33,5 +33,4 @@ std = [
 	"maili-genesis/std",
 	"alloy-primitives/std",
 	"serde/std",
-	"serde_json/std"
 ]

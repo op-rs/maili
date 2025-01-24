@@ -46,9 +46,7 @@ std = [
 	"alloy-rlp/std",
 	"alloy-sol-types/std",
 	"derive_more/std",
-	"rand/std",
 	"serde?/std",
-	"serde_json/std",
 	"thiserror/std"
 ]
 serde = [
@@ -56,7 +54,6 @@ serde = [
 	"alloy-eips/serde",
 	"alloy-primitives/serde",
 	"alloy-consensus/serde",
-	"rand/serde"
 ]
 arbitrary = [
   "std",

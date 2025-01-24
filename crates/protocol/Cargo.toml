@@ -74,7 +74,6 @@ std = [
 	"op-alloy-consensus/std",
 	"brotli/std",
 	"alloy-consensus/std",
-	"alloy-eips/std",
 	"alloy-primitives/std",
 	"alloy-rlp/std",
 	"alloy-serde?/std",
@@ -83,7 +82,6 @@ std = [
 	"miniz_oxide/std",
 	"rand/std",
 	"serde?/std",
-	"serde_json/std",
 	"spin?/std",
 	"thiserror/std",
 	"tracing/std",
@@ -111,7 +109,5 @@ serde = [
 	"alloy-consensus/serde",
 	"alloy-eips/serde",
 	"alloy-primitives/serde",
-	"rand/serde",
-	"revm/serde",
 	"tracing-subscriber?/serde"
 ]

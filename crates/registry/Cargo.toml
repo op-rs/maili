@@ -45,7 +45,6 @@ map-foldhash = ["alloy-primitives/map-foldhash"]
 std = [
 	"maili-genesis/std",
 	"serde_json/std",
-	"alloy-eips/std",
 	"alloy-primitives/std",
 	"maili-superchain/std",
 	"serde/std"

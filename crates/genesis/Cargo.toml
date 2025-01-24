@@ -46,9 +46,7 @@ std = [
 	"alloy-consensus/std",
 	"alloy-eips/std",
 	"maili-serde?/std",
-	"rand/std",
 	"serde?/std",
-	"serde_json/std",
 	"thiserror/std"
 ]
 arbitrary = [
@@ -66,5 +64,4 @@ serde = [
 	"alloy-primitives/serde",
 	"alloy-eips/serde",
 	"alloy-consensus/serde",
-	"rand/serde"
 ]

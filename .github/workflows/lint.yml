@@ -17,6 +17,6 @@ jobs:
     steps:
       - name: run zepter
         run: |
-          cargo install zepter -f --locked
+          cargo install zepter
           zepter --version
           time zepter run check

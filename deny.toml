@@ -39,6 +39,7 @@ exceptions = [
     { allow = ["CC0-1.0"], name = "tiny-keccak" },
     { allow = ["CC0-1.0"], name = "to_method" },
     { allow = ["CC0-1.0"], name = "trezor-client" },
+    { allow = ["CC0-1.0"], name = "aurora-engine-modexp" },
 ]
 
 [[licenses.clarify]]

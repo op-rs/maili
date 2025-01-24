@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: run zepter
-        run: |
+      - uses: actions/checkout@v4
+      - run: |
           cargo install zepter
           zepter --version
           time zepter run check

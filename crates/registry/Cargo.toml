@@ -43,6 +43,10 @@ default = ["std", "map-foldhash"]
 map-hashbrown = ["alloy-primitives/map-hashbrown"]
 map-foldhash = ["alloy-primitives/map-foldhash"]
 std = [
-    "maili-genesis/std",
-    "serde_json/std"
+	"maili-genesis/std",
+	"serde_json/std",
+	"alloy-eips/std",
+	"alloy-primitives/std",
+	"maili-superchain/std",
+	"serde/std"
 ]

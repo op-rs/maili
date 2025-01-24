@@ -29,4 +29,9 @@ serde_json.workspace = true
 
 [features]
 default = ["std"]
-std = ["maili-genesis/std"]
+std = [
+	"maili-genesis/std",
+	"alloy-primitives/std",
+	"serde/std",
+	"serde_json/std"
+]

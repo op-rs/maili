@@ -25,6 +25,7 @@ op-alloy-rpc-types-engine.workspace = true
 alloy-eips = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
 alloy-consensus = { workspace = true }
+alloy-sol-types = { workspace = true }
 
 # Misc
 derive_more = { workspace = true, default-features = false, features = ["display", "from"] }

@@ -15,11 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - name: fetch deps
-        run: |
-          # Eagerly pull dependencies
-          time cargo metadata --format-version=1 --locked > /dev/null
       - name: run zepter
         run: |
           cargo install zepter -f --locked

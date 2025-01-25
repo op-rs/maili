@@ -2,7 +2,9 @@ use core::time::Duration;
 
 use crate::api::SupervisorApiClient;
 use alloy_primitives::Log;
-use maili_protocol::ExecutingMessage;
+use alloy_sol_types::SolEvent;
+use maili_interop::ExecutingMessage;
+use maili_interop::CROSS_L2_INBOX_ADDRESS;
 
 /// TODO docs.
 #[derive(thiserror::Error, Debug)]
@@ -21,19 +23,15 @@ pub trait ExecutingMessageValidator {
     /// TODO docs.
     type SupervisorClient: SupervisorApiClient;
 
-    /// TODO docs.
-    fn parse_messages(
-        logs: &[Log],
-    ) -> Result<Vec<ExecutingMessage>, ExecutingMessageValidatorError> {
-        logs.iter()
-            .map(|log| {
-                // TODO: should we `impl From<Log> for ExecutingMessage`?
-                // There is `impl From<Log> for MessagePayload` but I'm unsure
-                // about the relationship between `MessagePayload` and `ExecutingMessage`
-                ExecutingMessage::abi_decode(&log.data.data, true)
-                    .map_err(ExecutingMessageValidatorError::AlloySolTypesError)
-            })
-            .collect()
+    /// Extracts [ExecutingMessage]s from the [Log] if there are any.
+    fn parse_messages(logs: &[Log]) -> impl Iterator<Item = ExecutingMessage> {
+        logs.iter().filter_map(|log| {
+            // TODO: Are there any error variants here that we want to consider
+            // as failures rather than filtering out with `ok()`?
+            (log.address == CROSS_L2_INBOX_ADDRESS && log.topics().len() == 2)
+                .then(|| ExecutingMessage::decode_log_data(&log.data, true).ok())
+                .flatten()
+        })
     }
 
     /// TODO docs.

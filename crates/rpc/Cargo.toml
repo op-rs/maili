@@ -49,7 +49,7 @@ alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
 serde_json.workspace = true
 
 [features]
-default = ["std", "jsonrpsee", "client"] # TODO: rm client from default
+default = ["std", "jsonrpsee", "client", "interop"] # TODO: rm client from default
 std = [
 	"maili-protocol/std",
 	"maili-genesis?/std",

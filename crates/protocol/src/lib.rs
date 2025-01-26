@@ -22,6 +22,9 @@ pub use batch::{
     MAX_SPAN_BATCH_ELEMENTS, SINGLE_BATCH_TYPE, SPAN_BATCH_TYPE,
 };
 
+// TODO: feature flag
+pub use batch::reqwest::*;
+
 mod errors;
 pub use errors::OpBlockConversionError;
 

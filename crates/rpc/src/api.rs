@@ -6,7 +6,7 @@ use core::net::IpAddr;
 use alloy_eips::BlockNumberOrTag;
 use jsonrpsee::{core::RpcResult, proc_macros::rpc};
 use maili_genesis::RollupConfig;
-use maili_protocol::{ExecutingMessage, SafetyLevel};
+use maili_interop::{ExecutingMessage, SafetyLevel};
 
 #[cfg_attr(all(target_arch = "wasm32", target_os = "unknown"), allow(unused_imports))]
 use getrandom as _; // required for compiling wasm32-unknown-unknown

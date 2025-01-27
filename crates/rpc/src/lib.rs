@@ -52,4 +52,4 @@ pub use api::{
 
 mod traits;
 #[cfg(all(feature = "jsonrpsee", feature = "client"))]
-pub use traits::{ExecutingMessageValidator, ExecutingMessageValidatorError, SafetyLevel};
+pub use traits::{ExecutingMessageValidator, ExecutingMessageValidatorError};

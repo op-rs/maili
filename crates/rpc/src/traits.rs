@@ -1,18 +1,15 @@
-use core::time::Duration;
-
 use crate::api::SupervisorApiClient;
 use alloy_primitives::Log;
 use alloy_sol_types::SolEvent;
-use maili_interop::ExecutingMessage as InteropMessage;
+use async_trait::async_trait;
+use core::time::Duration;
 use maili_interop::CROSS_L2_INBOX_ADDRESS;
-use maili_protocol::ExecutingMessage as ProtocolMessage;
+use maili_interop::{ExecutingMessage, SafetyLevel};
 use tokio::time::error::Elapsed;
-
-pub use maili_protocol::SafetyLevel;
 
 /// Failures occurring during validation of [ExecutingMessage]s.
 #[derive(thiserror::Error, Debug)]
-pub enum Error {
+pub enum ExecutingMessageValidatorError {
     /// Failure during Supervisor's validation of [ExecutingMessage]s.
     #[error("Supervisor determined messages are invalid: {0}")]
     SupervisorValidationError(#[from] jsonrpsee_core::ClientError),
@@ -22,7 +19,8 @@ pub enum Error {
     ValidationTimeout(#[from] Elapsed),
 }
 
-/// TODO docs.
+/// Interacts with a Supervisor to validate [ExecutingMessage]s.
+#[async_trait]
 #[cfg(all(feature = "jsonrpsee", feature = "client"))]
 pub trait ExecutingMessageValidator {
     /// RPC client to Supervisor instance used for [ExecutingMessage] validation.
@@ -32,12 +30,12 @@ pub trait ExecutingMessageValidator {
     const DEFAULT_TIMEOUT: Duration;
 
     /// Extracts [ExecutingMessage]s from the [Log] if there are any.
-    fn parse_messages(logs: &[Log]) -> impl Iterator<Item = InteropMessage> {
+    fn parse_messages(logs: &[Log]) -> impl Iterator<Item = ExecutingMessage> {
         logs.iter().filter_map(|log| {
             // TODO: Are there any error variants here that we want to consider
             // as failures rather than filtering out with `ok()`?
             (log.address == CROSS_L2_INBOX_ADDRESS && log.topics().len() == 2)
-                .then(|| InteropMessage::decode_log_data(&log.data, true).ok())
+                .then(|| ExecutingMessage::decode_log_data(&log.data, true).ok())
                 .flatten()
         })
     }
@@ -46,10 +44,10 @@ pub trait ExecutingMessageValidator {
     /// accessed through the [SupervisorClient].
     async fn validate_messages(
         supervisor: &Self::SupervisorClient,
-        messages: &[ProtocolMessage],
+        messages: &[ExecutingMessage],
         safety: SafetyLevel,
         timeout: Option<Duration>,
-    ) -> Result<(), Error> {
+    ) -> Result<(), ExecutingMessageValidatorError> {
         // Set timeout duration based on input if provided.
         let timeout = match timeout {
             Some(t) => t,
@@ -63,10 +61,12 @@ pub trait ExecutingMessageValidator {
             supervisor
                 .check_messages(messages, safety)
                 .await
-                .map_err(|e| Error::SupervisorValidationError(e))
+                .map_err(|e| ExecutingMessageValidatorError::SupervisorValidationError(e))
         };
 
         // Await the validation future with timeout.
-        tokio::time::timeout(timeout, check).await.map_err(Error::ValidationTimeout)?
+        tokio::time::timeout(timeout, check)
+            .await
+            .map_err(ExecutingMessageValidatorError::ValidationTimeout)?
     }
 }

@@ -7,10 +7,10 @@ use core::time::Duration;
 use maili_interop::{ExecutingMessage, SafetyLevel, CROSS_L2_INBOX_ADDRESS};
 use tokio::time::error::Elapsed;
 
-/// Failures occurring during validation of [ExecutingMessage]s.
+/// Failures occurring during validation of [`ExecutingMessage`]s.
 #[derive(thiserror::Error, Debug)]
 pub enum ExecutingMessageValidatorError {
-    /// Failure during Supervisor's validation of [ExecutingMessage]s.
+    /// Failure during Supervisor's validation of [`ExecutingMessage`]s.
     #[error("Supervisor determined messages are invalid: {0}")]
     SupervisorValidationError(#[from] jsonrpsee_core::ClientError),
 
@@ -19,16 +19,16 @@ pub enum ExecutingMessageValidatorError {
     ValidationTimeout(#[from] Elapsed),
 }
 
-/// Interacts with a Supervisor to validate [ExecutingMessage]s.
+/// Interacts with a Supervisor to validate [`ExecutingMessage`]s.
 #[async_trait]
 pub trait ExecutingMessageValidator {
-    /// RPC client to Supervisor instance used for [ExecutingMessage] validation.
+    /// RPC client to Supervisor instance used for [`ExecutingMessage`] validation.
     type SupervisorClient: SupervisorApiClient + Sync;
 
     /// Default duration that message validation is not allowed to exceed.
     const DEFAULT_TIMEOUT: Duration;
 
-    /// Extracts [ExecutingMessage]s from the [Log] if there are any.
+    /// Extracts [`ExecutingMessage`]s from the [`Log`] if there are any.
     fn parse_messages(logs: &[Log]) -> impl Iterator<Item = ExecutingMessage> {
         logs.iter().filter_map(|log| {
             // TODO: Are there any error variants here that we want to consider
@@ -39,7 +39,7 @@ pub trait ExecutingMessageValidator {
         })
     }
 
-    /// Validates a list of [ExecutingMessage]s against a Supervisor.
+    /// Validates a list of [`ExecutingMessage`]s against a Supervisor.
     async fn validate_messages(
         supervisor: &Self::SupervisorClient,
         messages: Vec<ExecutingMessage>,

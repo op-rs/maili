@@ -52,7 +52,7 @@ tokio = { workspace = true, features = ["time"], optional = true }
 serde_json.workspace = true
 
 [features]
-default = ["std", "jsonrpsee", "interop", "client"]
+default = ["std", "jsonrpsee"]
 std = [
 	"maili-protocol/std",
 	"maili-genesis?/std",

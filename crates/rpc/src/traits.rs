@@ -3,8 +3,7 @@ use alloy_primitives::Log;
 use alloy_sol_types::SolEvent;
 use async_trait::async_trait;
 use core::time::Duration;
-use maili_interop::CROSS_L2_INBOX_ADDRESS;
-use maili_interop::{ExecutingMessage, SafetyLevel};
+use maili_interop::{ExecutingMessage, SafetyLevel, CROSS_L2_INBOX_ADDRESS};
 use tokio::time::error::Elapsed;
 
 /// Failures occurring during validation of [ExecutingMessage]s.
@@ -21,7 +20,6 @@ pub enum ExecutingMessageValidatorError {
 
 /// Interacts with a Supervisor to validate [ExecutingMessage]s.
 #[async_trait]
-#[cfg(all(feature = "jsonrpsee", feature = "client"))]
 pub trait ExecutingMessageValidator {
     /// RPC client to Supervisor instance used for [ExecutingMessage] validation.
     type SupervisorClient: SupervisorApiClient + Sync;

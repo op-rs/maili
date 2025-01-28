@@ -2,10 +2,9 @@
 
 use crate::{SpanBatchError, SpanDecodingError};
 use alloy_consensus::{SignableTransaction, Signed, TxEip7702};
-use alloy_eips::eip2930::AccessList;
+use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
 use alloy_primitives::{Address, PrimitiveSignature as Signature, U256};
 use alloy_rlp::{Bytes, RlpDecodable, RlpEncodable};
-use alloy_eips::eip7702::SignedAuthorization;
 
 /// The transaction data for an EIP-7702 transaction within a span batch.
 #[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
@@ -83,9 +82,7 @@ mod test {
             max_priority_fee_per_gas: U256::from(0xDD),
             data: Bytes::from(alloc::vec![0x01, 0x02, 0x03]),
             access_list: AccessList::default(),
-            authorization_list: vec!(
-                arb_authorization.clone(),
-            )
+            authorization_list: vec![arb_authorization],
         };
 
         let mut encoded_buf = Vec::new();

@@ -339,7 +339,7 @@ mod tests {
     #[test]
     fn test_arbitrary_rollup_config() {
         let mut bytes = [0u8; 1024];
-        rand::thread_rng().fill(bytes.as_mut_slice());
+        rand::rng().fill(bytes.as_mut_slice());
         RollupConfig::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();
     }
 

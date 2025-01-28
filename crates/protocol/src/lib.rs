@@ -23,6 +23,9 @@ pub use batch::{
     SPAN_BATCH_TYPE,
 };
 
+// TODO: feature flag
+pub use batch::reqwest::*;
+
 mod errors;
 pub use errors::OpBlockConversionError;
 

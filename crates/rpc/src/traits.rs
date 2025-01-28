@@ -1,5 +1,5 @@
-use crate::api::SupervisorApiClient;
-use alloc::{boxed::Box, vec::Vec};
+use crate::supervisor::{Supervisor, SupervisorError};
+use alloc::boxed::Box;
 use alloy_primitives::Log;
 use alloy_sol_types::SolEvent;
 use async_trait::async_trait;
@@ -12,7 +12,7 @@ use tokio::time::error::Elapsed;
 pub enum ExecutingMessageValidatorError {
     /// Failure during Supervisor's validation of [`ExecutingMessage`]s.
     #[error("Supervisor determined messages are invalid: {0}")]
-    SupervisorValidationError(#[from] jsonrpsee_core::ClientError),
+    SupervisorValidationError(#[from] SupervisorError),
 
     /// Message validation against the Supervisor took longer than allowed.
     #[error("Message validation timed out: {0}")]
@@ -23,7 +23,7 @@ pub enum ExecutingMessageValidatorError {
 #[async_trait]
 pub trait ExecutingMessageValidator {
     /// RPC client to Supervisor instance used for [`ExecutingMessage`] validation.
-    type SupervisorClient: SupervisorApiClient + Sync;
+    type SupervisorClient: Supervisor<Error = SupervisorError> + Sync;
 
     /// Default duration that message validation is not allowed to exceed.
     const DEFAULT_TIMEOUT: Duration;
@@ -40,7 +40,7 @@ pub trait ExecutingMessageValidator {
     /// Validates a list of [`ExecutingMessage`]s against a Supervisor.
     async fn validate_messages(
         supervisor: &Self::SupervisorClient,
-        messages: Vec<ExecutingMessage>,
+        messages: &[ExecutingMessage],
         safety: SafetyLevel,
         timeout: Option<Duration>,
     ) -> Result<(), ExecutingMessageValidatorError> {

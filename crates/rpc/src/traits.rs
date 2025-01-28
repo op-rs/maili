@@ -1,4 +1,5 @@
 use crate::api::SupervisorApiClient;
+use alloc::{boxed::Box, vec::Vec};
 use alloy_primitives::Log;
 use alloy_sol_types::SolEvent;
 use async_trait::async_trait;

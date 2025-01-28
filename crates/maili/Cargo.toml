@@ -58,6 +58,4 @@ jsonrpsee = ["maili-rpc?/jsonrpsee"]
 registry = ["dep:maili-registry"]
 protocol = ["dep:maili-protocol"]
 genesis = ["dep:maili-genesis"]
-
-# std features
 rpc = ["dep:maili-rpc"]

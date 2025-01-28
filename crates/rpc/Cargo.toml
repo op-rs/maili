@@ -80,6 +80,7 @@ interop = [
 jsonrpsee = [
     "serde",
     "dep:maili-genesis",
+    "dep:maili-interop",
     "dep:jsonrpsee",
     "dep:getrandom",
     "dep:op-alloy-rpc-jsonrpsee",

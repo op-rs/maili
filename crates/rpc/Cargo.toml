@@ -35,7 +35,6 @@ serde = { workspace = true, optional = true }
 
 # `jsonrpsee`
 jsonrpsee = { workspace = true, optional = true }
-jsonrpsee-core = "0.24.8"
 getrandom = { workspace = true, optional = true, features = ["js"] } # req for wasm32-unknown-unknown
 maili-genesis = { workspace = true, optional = true }
 op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }

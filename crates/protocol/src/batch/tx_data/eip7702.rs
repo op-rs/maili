@@ -1,7 +1,7 @@
 //! This module contains the eip7702 transaction data type for a span batch.
 
-use alloc::vec::Vec;
 use crate::{SpanBatchError, SpanDecodingError};
+use alloc::vec::Vec;
 use alloy_consensus::{SignableTransaction, Signed, TxEip7702};
 use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
 use alloy_primitives::{Address, PrimitiveSignature as Signature, U256};

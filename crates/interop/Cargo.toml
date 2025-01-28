@@ -39,11 +39,21 @@ arbitrary = { workspace = true, features = ["derive"] }
 
 [features]
 default = ["serde", "std"]
-std = []
+std = [
+	"alloy-consensus/std",
+	"alloy-eips/std",
+	"alloy-primitives/std",
+	"alloy-rlp/std",
+	"alloy-sol-types/std",
+	"derive_more/std",
+	"serde?/std",
+	"thiserror/std"
+]
 serde = [
-  "dep:serde",
-  "alloy-eips/serde",
-  "alloy-primitives/serde",
+	"dep:serde",
+	"alloy-eips/serde",
+	"alloy-primitives/serde",
+	"alloy-consensus/serde",
 ]
 arbitrary = [
   "std",

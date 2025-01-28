@@ -41,10 +41,13 @@ alloy-primitives = { workspace = true, features = ["rand", "arbitrary"] }
 [features]
 default = ["serde", "std"]
 std = [
-    "alloy-primitives/std",
-    "alloy-sol-types/std",
-    "alloy-consensus/std",
-    "alloy-eips/std",
+	"alloy-primitives/std",
+	"alloy-sol-types/std",
+	"alloy-consensus/std",
+	"alloy-eips/std",
+	"maili-serde?/std",
+	"serde?/std",
+	"thiserror/std"
 ]
 arbitrary = [
     "std",
@@ -55,10 +58,10 @@ arbitrary = [
     "alloy-primitives/arbitrary",
 ]
 serde = [
-    "dep:serde",
-    "dep:serde_repr",
-    "dep:maili-serde",
-    "alloy-primitives/serde",
-    "alloy-eips/serde",
-    "alloy-consensus/serde",
+	"dep:serde",
+	"dep:serde_repr",
+	"dep:maili-serde",
+	"alloy-primitives/serde",
+	"alloy-eips/serde",
+	"alloy-consensus/serde",
 ]

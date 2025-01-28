@@ -28,9 +28,10 @@ maili-genesis  = { workspace = true, optional = true }
 default = ["std", "serde"]
 
 std = [
-  "maili-protocol?/std",
-  "maili-registry?/std",
-  "maili-genesis?/std",
+	"maili-protocol?/std",
+	"maili-registry?/std",
+	"maili-genesis?/std",
+	"maili-rpc?/std"
 ]
 
 full = [
@@ -46,8 +47,9 @@ arbitrary = [
 ]
 
 serde = [
-  "maili-protocol?/serde",
-  "maili-genesis?/serde",
+	"maili-protocol?/serde",
+	"maili-genesis?/serde",
+	"maili-rpc?/serde"
 ]
 
 jsonrpsee = ["maili-rpc?/jsonrpsee"]

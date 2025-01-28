@@ -44,7 +44,7 @@ pub trait ExecutingMessageValidator {
     /// accessed through the [SupervisorClient].
     async fn validate_messages(
         supervisor: &Self::SupervisorClient,
-        messages: &[ExecutingMessage],
+        messages: Vec<ExecutingMessage>,
         safety: SafetyLevel,
         timeout: Option<Duration>,
     ) -> Result<(), ExecutingMessageValidatorError> {
@@ -55,9 +55,7 @@ pub trait ExecutingMessageValidator {
         };
 
         // Construct the future to validate all messages using supervisor.
-        // TODO: SupervisorApiClient::check_messages() should take &[ExecutingMessage]?
-        let messages = messages.to_vec();
-        let check = async {
+        let fut = async {
             supervisor
                 .check_messages(messages, safety)
                 .await
@@ -65,7 +63,7 @@ pub trait ExecutingMessageValidator {
         };
 
         // Await the validation future with timeout.
-        tokio::time::timeout(timeout, check)
+        tokio::time::timeout(timeout, fut)
             .await
             .map_err(ExecutingMessageValidatorError::ValidationTimeout)?
     }

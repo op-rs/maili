@@ -49,6 +49,7 @@ mod tx_data;
 pub use tx_data::{
     SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData,
     SpanBatchLegacyTransactionData, SpanBatchTransactionData,
+    SpanBatchEip7702TransactionData
 };
 
 mod traits;

@@ -1,14 +1,15 @@
-//! This module contains the eip1559 transaction data type for a span batch.
+//! This module contains the eip7702 transaction data type for a span batch.
 
 use crate::{SpanBatchError, SpanDecodingError};
-use alloy_consensus::{SignableTransaction, Signed, TxEip1559};
+use alloy_consensus::{SignableTransaction, Signed, TxEip7702};
 use alloy_eips::eip2930::AccessList;
-use alloy_primitives::{Address, PrimitiveSignature as Signature, TxKind, U256};
+use alloy_primitives::{Address, PrimitiveSignature as Signature, U256};
 use alloy_rlp::{Bytes, RlpDecodable, RlpEncodable};
+use alloy_eips::eip7702::SignedAuthorization;
 
-/// The transaction data for an EIP-1559 transaction within a span batch.
+/// The transaction data for an EIP-7702 transaction within a span batch.
 #[derive(Debug, Clone, PartialEq, Eq, RlpEncodable, RlpDecodable)]
-pub struct SpanBatchEip1559TransactionData {
+pub struct SpanBatchEip7702TransactionData {
     /// The ETH value of the transaction.
     pub value: U256,
     /// Maximum priority fee per gas.
@@ -19,19 +20,21 @@ pub struct SpanBatchEip1559TransactionData {
     pub data: Bytes,
     /// Access list, used to pre-warm storage slots through static declaration.
     pub access_list: AccessList,
+    /// Authorization list, used to allow a signer to delegate code to a contract
+    pub authorization_list: Vec<SignedAuthorization>,
 }
 
-impl SpanBatchEip1559TransactionData {
-    /// Converts [SpanBatchEip7702TransactionData] into a signed [`TxEip1559`].
+impl SpanBatchEip7702TransactionData {
+    /// Converts [SpanBatchEip7702TransactionData] into a signed [`TxEip7702`].
     pub fn to_signed_tx(
         &self,
         nonce: u64,
         gas: u64,
-        to: Option<Address>,
+        to: Address,
         chain_id: u64,
         signature: Signature,
-    ) -> Result<Signed<TxEip1559>, SpanBatchError> {
-        let eip1559_tx = TxEip1559 {
+    ) -> Result<Signed<TxEip7702>, SpanBatchError> {
+        let eip7702_tx = TxEip7702 {
             chain_id,
             nonce,
             max_fee_per_gas: u128::from_be_bytes(
@@ -45,13 +48,14 @@ impl SpanBatchEip1559TransactionData {
                 )?,
             ),
             gas_limit: gas,
-            to: to.map_or(TxKind::Create, TxKind::Call),
+            to,
             value: self.value,
             input: self.data.clone().into(),
             access_list: self.access_list.clone(),
+            authorization_list: self.authorization_list.clone(),
         };
-        let signature_hash = eip1559_tx.signature_hash();
-        Ok(Signed::new_unchecked(eip1559_tx, signature, signature_hash))
+        let signature_hash = eip7702_tx.signature_hash();
+        Ok(Signed::new_unchecked(eip7702_tx, signature, signature_hash))
     }
 }
 
@@ -61,21 +65,34 @@ mod test {
     use crate::SpanBatchTransactionData;
     use alloc::vec::Vec;
     use alloy_rlp::{Decodable, Encodable};
+    use revm::primitives::Authorization;
 
     #[test]
     fn encode_eip1559_tx_data_roundtrip() {
-        let variable_fee_tx = SpanBatchEip1559TransactionData {
+        let authorization = Authorization {
+            chain_id: U256::from(0x01),
+            address: Address::left_padding_from(&[0x01, 0x02, 0x03]),
+            nonce: 2,
+        };
+        let signature = Signature::test_signature();
+        let arb_authorization: SignedAuthorization = authorization.into_signed(signature);
+
+        let variable_fee_tx = SpanBatchEip7702TransactionData {
             value: U256::from(0xFF),
             max_fee_per_gas: U256::from(0xEE),
             max_priority_fee_per_gas: U256::from(0xDD),
             data: Bytes::from(alloc::vec![0x01, 0x02, 0x03]),
             access_list: AccessList::default(),
+            authorization_list: vec!(
+                arb_authorization.clone(),
+            )
         };
+
         let mut encoded_buf = Vec::new();
-        SpanBatchTransactionData::Eip1559(variable_fee_tx.clone()).encode(&mut encoded_buf);
+        SpanBatchTransactionData::Eip7702(variable_fee_tx.clone()).encode(&mut encoded_buf);
 
         let decoded = SpanBatchTransactionData::decode(&mut encoded_buf.as_slice()).unwrap();
-        let SpanBatchTransactionData::Eip1559(variable_fee_decoded) = decoded else {
+        let SpanBatchTransactionData::Eip7702(variable_fee_decoded) = decoded else {
             panic!("Expected SpanBatchEip1559TransactionData, got {:?}", decoded);
         };
 

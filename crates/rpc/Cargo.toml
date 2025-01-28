@@ -41,19 +41,19 @@ getrandom = { workspace = true, optional = true, features = ["js"] } # req for w
 maili-genesis = { workspace = true, optional = true }
 op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }
 
-tokio = { workspace = true, features = ["time"], optional = true }
-
-
 # `interop` feature
 async-trait = { workspace = true, optional = true }
 maili-interop = { workspace = true, features = ["serde"], optional = true }
 alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
 
+# `client` feature
+tokio = { workspace = true, features = ["time"], optional = true }
+
 [dev-dependencies]
 serde_json.workspace = true
 
 [features]
-default = ["std", "jsonrpsee", "client", "interop"] # TODO: rm client from default
+default = ["std", "jsonrpsee", "interop"]
 std = [
 	"maili-protocol/std",
 	"maili-genesis?/std",

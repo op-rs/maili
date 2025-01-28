@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.8](https://github.com/op-rs/maili
-/releases/tag/v0.1.8) - 2025-01-28
+## [0.1.9](https://github.com/op-rs/maili
+/releases/tag/v0.1.9) - 2025-01-28
 
 ### Bug Fixes
 
@@ -138,6 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Implement EIP-7702 span batch support ([#135](https://github.com/op-rs/maili/issues/135))
 - [ci] Feature propagation checks ([#134](https://github.com/op-rs/maili/issues/134))
 - [rpc] Supervisor traits + client ([#128](https://github.com/op-rs/maili/issues/128))
 - Interop crate ([#127](https://github.com/op-rs/maili/issues/127))
@@ -436,6 +437,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.1.8 ([#137](https://github.com/op-rs/maili/issues/137))
 - [BOT] Update Submodules ([#110](https://github.com/op-rs/maili/issues/110))
 - 0.1.7 ([#114](https://github.com/op-rs/maili/issues/114))
 - Add more Span Batch unit tests ([#102](https://github.com/op-rs/maili/issues/102))

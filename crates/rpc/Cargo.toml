@@ -24,7 +24,6 @@ op-alloy-rpc-types-engine.workspace = true
 # Alloy
 alloy-eips = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
-alloy-consensus = { workspace = true }
 alloy-sol-types = { workspace = true }
 
 # Misc

@@ -47,17 +47,14 @@ pub trait ExecutingMessageValidator {
         timeout: Option<Duration>,
     ) -> Result<(), ExecutingMessageValidatorError> {
         // Set timeout duration based on input if provided.
-        let timeout = match timeout {
-            Some(t) => t,
-            None => Self::DEFAULT_TIMEOUT,
-        };
+        let timeout = timeout.map_or(Self::DEFAULT_TIMEOUT, |t| t);
 
         // Construct the future to validate all messages using supervisor.
         let fut = async {
             supervisor
                 .check_messages(messages, safety)
                 .await
-                .map_err(|e| ExecutingMessageValidatorError::SupervisorValidationError(e))
+                .map_err(ExecutingMessageValidatorError::SupervisorValidationError)
         };
 
         // Await the validation future with timeout.

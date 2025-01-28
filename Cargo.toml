@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.1.8"
+version = "0.1.9"
 edition = "2021"
 rust-version = "1.81"
 authors = ["Alloy Contributors"]
@@ -36,13 +36,13 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
-maili-rpc = { version = "0.1.8", path = "crates/rpc", default-features = false }
-maili-serde = { version = "0.1.8", path = "crates/serde", default-features = false }
-maili-interop = { version = "0.1.8", path = "crates/interop", default-features = false }
-maili-genesis = { version = "0.1.8", path = "crates/genesis", default-features = false }
-maili-protocol = { version = "0.1.8", path = "crates/protocol", default-features = false }
-maili-registry = { version = "0.1.8", path = "crates/registry", default-features = false }
-maili-superchain = { version = "0.1.8", path = "crates/registry/superchain", default-features = false }
+maili-rpc = { version = "0.1.9", path = "crates/rpc", default-features = false }
+maili-serde = { version = "0.1.9", path = "crates/serde", default-features = false }
+maili-interop = { version = "0.1.9", path = "crates/interop", default-features = false }
+maili-genesis = { version = "0.1.9", path = "crates/genesis", default-features = false }
+maili-protocol = { version = "0.1.9", path = "crates/protocol", default-features = false }
+maili-registry = { version = "0.1.9", path = "crates/registry", default-features = false }
+maili-superchain = { version = "0.1.9", path = "crates/registry/superchain", default-features = false }
 
 # OP Alloy
 op-alloy-flz = { version = "0.9.6", default-features = false }

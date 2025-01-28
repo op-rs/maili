@@ -85,6 +85,7 @@ jsonrpsee = [
     "dep:op-alloy-rpc-jsonrpsee",
 ]
 client = [
+    "dep:maili-interop",
     "jsonrpsee",
     "jsonrpsee/client",
     "jsonrpsee/async-client",

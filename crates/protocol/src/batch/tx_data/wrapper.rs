@@ -5,8 +5,9 @@ use alloy_primitives::{Address, PrimitiveSignature as Signature, U256};
 use alloy_rlp::{Bytes, Decodable, Encodable};
 
 use crate::{
-    SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData, SpanBatchError,
-    SpanBatchLegacyTransactionData, SpanDecodingError, SpanBatchEip7702TransactionData
+    SpanBatchEip1559TransactionData, SpanBatchEip2930TransactionData,
+    SpanBatchEip7702TransactionData, SpanBatchError, SpanBatchLegacyTransactionData,
+    SpanDecodingError,
 };
 
 /// The typed transaction data for a transaction within a span batch.
@@ -161,7 +162,9 @@ impl SpanBatchTransactionData {
             }
             Self::Eip7702(data) => {
                 let Some(addr) = to else {
-                    return Err(SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionData));
+                    return Err(SpanBatchError::Decoding(
+                        SpanDecodingError::InvalidTransactionData,
+                    ));
                 };
                 TxEnvelope::Eip7702(data.to_signed_tx(nonce, gas, addr, chain_id, signature)?)
             }

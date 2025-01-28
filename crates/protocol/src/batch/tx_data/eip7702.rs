@@ -68,7 +68,7 @@ mod test {
     use revm::primitives::Authorization;
 
     #[test]
-    fn encode_eip1559_tx_data_roundtrip() {
+    fn encode_eip7702_tx_data_roundtrip() {
         let authorization = Authorization {
             chain_id: U256::from(0x01),
             address: Address::left_padding_from(&[0x01, 0x02, 0x03]),
@@ -93,7 +93,7 @@ mod test {
 
         let decoded = SpanBatchTransactionData::decode(&mut encoded_buf.as_slice()).unwrap();
         let SpanBatchTransactionData::Eip7702(variable_fee_decoded) = decoded else {
-            panic!("Expected SpanBatchEip1559TransactionData, got {:?}", decoded);
+            panic!("Expected SpanBatchEip7702TransactionData, got {:?}", decoded);
         };
 
         assert_eq!(variable_fee_tx, variable_fee_decoded);

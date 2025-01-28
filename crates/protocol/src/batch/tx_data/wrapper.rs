@@ -37,7 +37,7 @@ impl Encodable for SpanBatchTransactionData {
                 data.encode(out);
             }
             Self::Eip7702(data) => {
-                out.put_u8(TxType::Eip1559 as u8);
+                out.put_u8(TxType::Eip7702 as u8);
                 data.encode(out);
             }
         }
@@ -89,12 +89,13 @@ impl TryFrom<&TxEnvelope> for SpanBatchTransactionData {
             }
             TxEnvelope::Eip7702(s) => {
                 let s = s.tx();
-                Ok(Self::Eip1559(SpanBatchEip1559TransactionData {
+                Ok(Self::Eip7702(SpanBatchEip7702TransactionData {
                     value: s.value,
                     max_fee_per_gas: U256::from(s.max_fee_per_gas),
                     max_priority_fee_per_gas: U256::from(s.max_priority_fee_per_gas),
                     data: Bytes::from(s.input().to_vec()),
                     access_list: s.access_list.clone(),
+                    authorization_list: s.authorization_list.clone(),
                 }))
             }
             _ => Err(SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionType)),
@@ -109,7 +110,7 @@ impl SpanBatchTransactionData {
             Self::Legacy(_) => TxType::Legacy,
             Self::Eip2930(_) => TxType::Eip2930,
             Self::Eip1559(_) => TxType::Eip1559,
-            Self::Eip7702(_) => TxType::Eip1559,
+            Self::Eip7702(_) => TxType::Eip7702,
         }
     }
 
@@ -125,6 +126,9 @@ impl SpanBatchTransactionData {
             }
             TxType::Eip1559 => {
                 Ok(Self::Eip1559(SpanBatchEip1559TransactionData::decode(&mut &b[1..])?))
+            }
+            TxType::Eip7702 => {
+                Ok(Self::Eip7702(SpanBatchEip7702TransactionData::decode(&mut &b[1..])?))
             }
             _ => Err(alloy_rlp::Error::Custom("Invalid transaction type")),
         }

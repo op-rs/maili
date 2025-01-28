@@ -308,6 +308,10 @@ impl SpanBatchTransactions {
                     let (tx, sig) = (tx.tx(), tx.signature());
                     (sig, tx.to(), tx.nonce(), tx.gas_limit(), tx.chain_id())
                 }
+                TxEnvelope::Eip7702(tx) => {
+                    let (tx, sig) = (tx.tx(), tx.signature());
+                    (sig, tx.to(), tx.nonce(), tx.gas_limit(), tx.chain_id())
+                }
                 _ => {
                     return Err(SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionData))
                 }
@@ -346,7 +350,7 @@ impl SpanBatchTransactions {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_consensus::{Signed, TxEip1559, TxEip2930};
+    use alloy_consensus::{Signed, TxEip1559, TxEip2930, TxEip7702};
     use alloy_primitives::{address, PrimitiveSignature as Signature, TxKind};
 
     #[test]
@@ -402,6 +406,25 @@ mod tests {
         let to = address!("0123456789012345678901234567890123456789");
         let tx = TxEnvelope::Eip1559(Signed::new_unchecked(
             TxEip1559 { to: TxKind::Call(to), chain_id: 1, ..Default::default() },
+            sig,
+            Default::default(),
+        ));
+        let mut span_batch_txs = SpanBatchTransactions::default();
+        let mut buf = vec![];
+        tx.encode(&mut buf);
+        let txs = vec![Bytes::from(buf)];
+        let chain_id = 1;
+        let result = span_batch_txs.add_txs(txs, chain_id);
+        assert_eq!(result, Ok(()));
+        assert_eq!(span_batch_txs.total_block_tx_count, 1);
+    }
+
+    #[test]
+    fn test_span_batch_transactions_add_eip7702_tx() {
+        let sig = Signature::test_signature();
+        let to = address!("0123456789012345678901234567890123456789");
+        let tx = TxEnvelope::Eip7702(Signed::new_unchecked(
+            TxEip7702 { to, chain_id: 1, ..Default::default() },
             sig,
             Default::default(),
         ));

@@ -29,10 +29,8 @@ pub trait ExecutingMessageValidator {
     const DEFAULT_TIMEOUT: Duration;
 
     /// Extracts [`ExecutingMessage`]s from the [`Log`] if there are any.
-    fn parse_messages(logs: &[Log]) -> impl Iterator<Item = ExecutingMessage> {
-        logs.iter().filter_map(|log| {
-            // TODO: Are there any error variants here that we want to consider
-            // as failures rather than filtering out with `ok()`?
+    fn parse_messages(logs: &[Log]) -> impl Iterator<Item = Option<ExecutingMessage>> {
+        logs.iter().map(|log| {
             (log.address == CROSS_L2_INBOX_ADDRESS && log.topics().len() == 2)
                 .then(|| ExecutingMessage::decode_log_data(&log.data, true).ok())
                 .flatten()

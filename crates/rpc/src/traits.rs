@@ -38,8 +38,7 @@ pub trait ExecutingMessageValidator {
         })
     }
 
-    /// Validates a list of [ExecutingMessages] against a Supervisor instance
-    /// accessed through the [SupervisorClient].
+    /// Validates a list of [ExecutingMessage]s against a Supervisor.
     async fn validate_messages(
         supervisor: &Self::SupervisorClient,
         messages: Vec<ExecutingMessage>,

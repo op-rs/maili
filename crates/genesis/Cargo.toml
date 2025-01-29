@@ -33,7 +33,7 @@ serde_repr = { workspace = true, optional = true }
 maili-serde = { workspace = true, optional = true }
 
 [dev-dependencies]
-rand.workspace = true
+rand = { workspace = true, features = ["thread_rng"] }
 serde_json.workspace = true
 arbitrary = { workspace = true, features = ["derive"] }
 alloy-primitives = { workspace = true, features = ["rand", "arbitrary"] }

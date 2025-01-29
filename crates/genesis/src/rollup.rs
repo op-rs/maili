@@ -208,6 +208,34 @@ impl Default for RollupConfig {
     }
 }
 
+#[cfg(feature = "revm")]
+impl RollupConfig {
+    /// Returns the active [`revm::primitives::SpecId`] for the executor.
+    ///
+    /// ## Takes
+    /// - `timestamp`: The timestamp of the executing block.
+    ///
+    /// ## Returns
+    /// The active [`revm::primitives::SpecId`] for the executor.
+    pub fn spec_id(&self, timestamp: u64) -> revm::primitives::SpecId {
+        if self.is_isthmus_active(timestamp) {
+            revm::primitives::SpecId::ISTHMUS
+        } else if self.is_holocene_active(timestamp) {
+            revm::primitives::SpecId::HOLOCENE
+        } else if self.is_fjord_active(timestamp) {
+            revm::primitives::SpecId::FJORD
+        } else if self.is_ecotone_active(timestamp) {
+            revm::primitives::SpecId::ECOTONE
+        } else if self.is_canyon_active(timestamp) {
+            revm::primitives::SpecId::CANYON
+        } else if self.is_regolith_active(timestamp) {
+            revm::primitives::SpecId::REGOLITH
+        } else {
+            revm::primitives::SpecId::BEDROCK
+        }
+    }
+}
+
 impl RollupConfig {
     /// Returns true if Regolith is active at the given timestamp.
     pub fn is_regolith_active(&self, timestamp: u64) -> bool {
@@ -341,6 +369,25 @@ mod tests {
         let mut bytes = [0u8; 1024];
         rand::rng().fill(bytes.as_mut_slice());
         RollupConfig::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();
+    }
+
+    #[test]
+    #[cfg(feature = "revm")]
+    fn test_revm_spec_id() {
+        // By default, the spec ID should be BEDROCK.
+        let mut config = RollupConfig { regolith_time: Some(10), ..Default::default() };
+        assert_eq!(config.spec_id(0), revm::primitives::SpecId::BEDROCK);
+        assert_eq!(config.spec_id(10), revm::primitives::SpecId::REGOLITH);
+        config.canyon_time = Some(20);
+        assert_eq!(config.spec_id(20), revm::primitives::SpecId::CANYON);
+        config.ecotone_time = Some(30);
+        assert_eq!(config.spec_id(30), revm::primitives::SpecId::ECOTONE);
+        config.fjord_time = Some(40);
+        assert_eq!(config.spec_id(40), revm::primitives::SpecId::FJORD);
+        config.holocene_time = Some(50);
+        assert_eq!(config.spec_id(50), revm::primitives::SpecId::HOLOCENE);
+        config.isthmus_time = Some(60);
+        assert_eq!(config.spec_id(60), revm::primitives::SpecId::ISTHMUS);
     }
 
     #[test]

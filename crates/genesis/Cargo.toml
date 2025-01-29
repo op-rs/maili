@@ -24,6 +24,9 @@ alloy-eips.workspace = true
 # Misc
 thiserror.workspace = true
 
+# `revm` feature
+revm = { workspace = true, optional = true, features = ["optimism"] }
+
 # `arbitrary` feature
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
@@ -40,6 +43,7 @@ alloy-primitives = { workspace = true, features = ["rand", "arbitrary"] }
 
 [features]
 default = ["serde", "std"]
+revm = ["dep:revm"]
 std = [
 	"alloy-primitives/std",
 	"alloy-sol-types/std",

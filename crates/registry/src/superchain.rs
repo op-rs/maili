@@ -76,7 +76,7 @@ mod tests {
             public_rpc: String::from("https://mainnet.base.org"),
             sequencer_rpc: String::from("https://mainnet-sequencer.base.org"),
             explorer: String::from("https://explorer.base.org"),
-            superchain_level: SuperchainLevel::Frontier,
+            superchain_level: SuperchainLevel::StandardCandidate,
             governed_by_optimism: false,
             superchain_time: Some(0),
             batch_inbox_addr: address!("ff00000000000000000000000000000000008453"),

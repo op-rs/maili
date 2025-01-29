@@ -66,7 +66,7 @@ pub trait Supervisor {
 }
 
 /// An error from the `op-supervisor`.
-#[derive(Copy, Clone, Debug, Display, From)]
+#[derive(Copy, Clone, Debug, Display, From, thiserror::Error)]
 pub enum SupervisorError {
     /// A failed request.
     RequestFailed,

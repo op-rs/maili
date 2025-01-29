@@ -49,3 +49,8 @@ pub use api::{
     EngineApiExtServer, MinerApiExtServer, OpAdminApiServer, OpP2PApiServer, RollupNodeServer,
     SupervisorApiServer,
 };
+
+#[cfg(all(feature = "jsonrpsee", feature = "client", feature = "interop"))]
+mod traits;
+#[cfg(all(feature = "jsonrpsee", feature = "client", feature = "interop"))]
+pub use traits::{ExecutingMessageValidator, ExecutingMessageValidatorError};

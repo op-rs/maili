@@ -22,11 +22,13 @@ maili-protocol.workspace = true
 op-alloy-rpc-types-engine.workspace = true
 
 # Alloy
-alloy-eips.workspace = true
-alloy-primitives = { workspace = true, features = ["map", "rlp"] }
+alloy-eips = { workspace = true, features = ["serde"] }
+alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
+alloy-sol-types = { workspace = true }
 
 # Misc
 derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
+thiserror = { workspace = true }
 
 # `serde`
 serde = { workspace = true, optional = true }
@@ -41,6 +43,9 @@ op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }
 async-trait = { workspace = true, optional = true }
 maili-interop = { workspace = true, features = ["serde"], optional = true }
 alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
+
+# `client` feature
+tokio = { workspace = true, features = ["time"], optional = true }
 
 [dev-dependencies]
 serde_json.workspace = true
@@ -74,13 +79,16 @@ interop = [
 jsonrpsee = [
     "serde",
     "dep:maili-genesis",
+    "dep:maili-interop",
     "dep:jsonrpsee",
     "dep:getrandom",
     "dep:op-alloy-rpc-jsonrpsee",
 ]
 client = [
+    "dep:maili-interop",
     "jsonrpsee",
     "jsonrpsee/client",
     "jsonrpsee/async-client",
     "op-alloy-rpc-jsonrpsee/client",
+    "tokio",
 ]

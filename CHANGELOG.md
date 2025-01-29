@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.9](https://github.com/op-rs/maili
-/releases/tag/v0.1.9) - 2025-01-28
+## [0.1.10](https://github.com/op-rs/maili
+/releases/tag/v0.1.10) - 2025-01-29
 
 ### Bug Fixes
 
+- [maili] Touchup Manifest ([#143](https://github.com/op-rs/maili/issues/143))
 - [rpc] RPC Crate Cleanup ([#126](https://github.com/op-rs/maili/issues/126))
 - [protocol] Re-export op-alloy flz ([#124](https://github.com/op-rs/maili/issues/124))
 - Op-alloy-consensus ([#123](https://github.com/op-rs/maili/issues/123))
@@ -100,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Update Dependencies ([#141](https://github.com/op-rs/maili/issues/141))
 - [deps] Replace `OpTxEnvelope` with `TxEnvelope` ([#61](https://github.com/op-rs/maili/issues/61))
 - [deps] Bump `op-alloy` to 0.9.3 ([#60](https://github.com/op-rs/maili/issues/60))
 - [deps] Bump op-alloy to 0.9.2 ([#25](https://github.com/op-rs/maili/issues/25))
@@ -281,6 +283,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [genesis] De-dup Revm SpecId Helper ([#142](https://github.com/op-rs/maili/issues/142))
 - [protocol] Superchain Registry V2.0 ([#99](https://github.com/op-rs/maili/issues/99))
 - [flz] Compression Re-exports ([#95](https://github.com/op-rs/maili/issues/95))
 - [flz] Touchup FLZ docs ([#91](https://github.com/op-rs/maili/issues/91))
@@ -437,6 +440,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- Add ExecutingMessageValidator trait ([#129](https://github.com/op-rs/maili/issues/129))
+- [BOT] Update Submodules ([#125](https://github.com/op-rs/maili/issues/125))
+- 0.1.9 ([#139](https://github.com/op-rs/maili/issues/139))
 - 0.1.8 ([#137](https://github.com/op-rs/maili/issues/137))
 - [BOT] Update Submodules ([#110](https://github.com/op-rs/maili/issues/110))
 - 0.1.7 ([#114](https://github.com/op-rs/maili/issues/114))

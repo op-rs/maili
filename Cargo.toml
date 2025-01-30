@@ -71,7 +71,7 @@ alloy-sol-types = { version = "0.8.18", default-features = false }
 alloy-primitives = { version = "0.8.18", default-features = false }
 
 # Revm
-revm = "19.4.0"
+revm = { version = "19.4.0", default-features = false }
 
 # Serde
 serde_repr = "0.1.19"

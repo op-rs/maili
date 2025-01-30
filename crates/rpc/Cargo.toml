@@ -24,11 +24,9 @@ op-alloy-rpc-types-engine.workspace = true
 # Alloy
 alloy-eips = { workspace = true, features = ["serde"] }
 alloy-primitives = { workspace = true, features = ["map", "rlp", "serde"] }
-alloy-sol-types = { workspace = true }
 
 # Misc
 derive_more = { workspace = true, default-features = false, features = ["display", "from"] }
-thiserror = { workspace = true }
 
 # `serde`
 serde = { workspace = true, optional = true }
@@ -37,9 +35,11 @@ serde = { workspace = true, optional = true }
 jsonrpsee = { workspace = true, optional = true }
 getrandom = { workspace = true, optional = true, features = ["js"] } # req for wasm32-unknown-unknown
 maili-genesis = { workspace = true, optional = true }
+alloy-sol-types = { workspace = true, optional = true }
 op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }
 
 # `interop` feature
+thiserror = { workspace = true, optional = true }
 async-trait = { workspace = true, optional = true }
 maili-interop = { workspace = true, features = ["serde"], optional = true }
 alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
@@ -72,6 +72,7 @@ serde = [
 	"maili-interop?/serde"
 ]
 interop = [
+    "dep:thiserror",
     "dep:maili-interop",
     "dep:alloy-rpc-client",
     "dep:async-trait",
@@ -82,6 +83,7 @@ jsonrpsee = [
     "dep:maili-interop",
     "dep:jsonrpsee",
     "dep:getrandom",
+    "dep:alloy-sol-types",
     "dep:op-alloy-rpc-jsonrpsee",
 ]
 client = [

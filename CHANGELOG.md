@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.11](https://github.com/op-rs/maili
-/releases/tag/v0.1.11) - 2025-01-30
+## [0.2.0](https://github.com/op-rs/maili
+/releases/tag/v0.2.0) - 2025-01-31
 
 ### Bug Fixes
 
+- Registry configs ([#148](https://github.com/op-rs/maili/issues/148))
 - Turn revm defaults off ([#146](https://github.com/op-rs/maili/issues/146))
 - [maili] Touchup Manifest ([#143](https://github.com/op-rs/maili/issues/143))
 - [rpc] RPC Crate Cleanup ([#126](https://github.com/op-rs/maili/issues/126))
@@ -102,6 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Bump alloy 0.11 op-alloy 0.10 ([#151](https://github.com/op-rs/maili/issues/151))
 - Update Dependencies ([#141](https://github.com/op-rs/maili/issues/141))
 - [deps] Replace `OpTxEnvelope` with `TxEnvelope` ([#61](https://github.com/op-rs/maili/issues/61))
 - [deps] Bump `op-alloy` to 0.9.3 ([#60](https://github.com/op-rs/maili/issues/60))
@@ -441,6 +443,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.1.11 ([#147](https://github.com/op-rs/maili/issues/147))
 - [BOT] Update Submodules ([#144](https://github.com/op-rs/maili/issues/144))
 - 0.1.10 ([#145](https://github.com/op-rs/maili/issues/145))
 - Add ExecutingMessageValidator trait ([#129](https://github.com/op-rs/maili/issues/129))

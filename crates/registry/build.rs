@@ -7,6 +7,12 @@ fn main() {
     // Get the directory of this file from the environment
     let src_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
 
+    // Check if the `superchain-registry` directory exists
+    let superchain_registry = format!("{}/superchain-registry", src_dir);
+    if !std::path::Path::new(&superchain_registry).exists() {
+        panic!("Git Submodule missing. Please run `just source` to initialize the submodule.");
+    }
+
     // Copy the `superchain-registry/chainList.json` file to `etc/chainList.json`
     let chain_list = format!("{}/superchain-registry/chainList.json", src_dir);
     std::fs::copy(chain_list, "etc/chainList.json").unwrap();

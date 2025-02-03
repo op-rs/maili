@@ -7,3 +7,7 @@ default:
 # Generate file bindings
 bind:
   cargo build
+
+# Update the `superchain-registry` git submodule source
+source:
+  git submodule update --remote --init --recursive

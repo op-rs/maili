@@ -58,7 +58,7 @@ hack:
 
 # Updates the git submodule source
 source:
-  git submodule update --remote
+  @just --justfile ./crates/registry/Justfile source
 
 # Generate file bindings for super-registry
 bind:

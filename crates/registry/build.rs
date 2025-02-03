@@ -46,5 +46,6 @@ fn main() {
             superchains.superchains.push(superchain);
         }
     }
-    std::fs::write("etc/configs.json", serde_json::to_string(&superchains).unwrap()).unwrap();
+    std::fs::write("etc/configs.json", serde_json::to_string_pretty(&superchains).unwrap())
+        .unwrap();
 }

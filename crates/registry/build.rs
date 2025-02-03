@@ -52,6 +52,15 @@ fn main() {
             superchains.superchains.push(superchain);
         }
     }
+
+    // Sort the superchains by name.
+    superchains.superchains.sort_by(|a, b| a.name.cmp(&b.name));
+
+    // For each superchain, sort the list of chains by chain id.
+    for superchain in superchains.superchains.iter_mut() {
+        superchain.chains.sort_by(|a, b| a.chain_id.cmp(&b.chain_id));
+    }
+
     std::fs::write("etc/configs.json", serde_json::to_string_pretty(&superchains).unwrap())
         .unwrap();
 }

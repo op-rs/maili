@@ -103,6 +103,7 @@ pub fn extract_executing_messages(receipts: &[impl TxReceipt<Log = Log>]) -> Vec
 #[cfg(feature = "serde")]
 mod tests {
     use super::*;
+    use alloc::vec;
     use alloy_consensus::{Receipt, ReceiptEnvelope, ReceiptWithBloom};
     use alloy_primitives::{address, hex, keccak256, uint, LogData, B256, U256};
     use alloy_sol_types::SolValue;
@@ -162,6 +163,7 @@ mod tests {
         };
         assert_eq!(id, expected);
     }
+
     #[test]
     fn test_executing_message_serde() {
         let raw_msg = r#"

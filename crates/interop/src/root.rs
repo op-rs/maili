@@ -9,7 +9,7 @@ use alloy_rlp::{Buf, BufMut};
 
 /// The [SuperRoot] is the snapshot of the superchain at a given timestamp.
 #[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(any(feature = "arbitrary", test), derive(arbitrary::Arbitrary))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub struct SuperRoot {
     /// The timestamp of the superchain snapshot, in seconds.
     pub timestamp: u64,
@@ -119,7 +119,7 @@ pub struct SuperRootResponse {
 
 /// A wrapper around an output root hash with the chain ID it belongs to.
 #[derive(Debug, Clone, Eq, PartialEq)]
-#[cfg_attr(any(feature = "arbitrary", test), derive(arbitrary::Arbitrary))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub struct OutputRootWithChain {
     /// The chain ID of the output root.
     pub chain_id: u64,
@@ -137,11 +137,10 @@ impl OutputRootWithChain {
 #[cfg(test)]
 mod test {
     use crate::{SuperRootError, SUPER_ROOT_VERSION};
+    use alloc::{vec, vec::Vec};
 
     use super::{OutputRootWithChain, SuperRoot};
     use alloy_primitives::{b256, B256};
-    use arbitrary::Arbitrary;
-    use rand::Rng;
 
     #[test]
     fn test_super_root_sorts_outputs() {
@@ -224,7 +223,10 @@ mod test {
     }
 
     #[test]
+    #[cfg(feature = "arbitrary")]
     fn test_arbitrary_super_root_roundtrip() {
+        use arbitrary::Arbitrary;
+        use rand::Rng;
         let mut bytes = [0u8; 1024];
         rand::rng().fill(bytes.as_mut_slice());
         let super_root = SuperRoot::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();

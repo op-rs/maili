@@ -44,7 +44,7 @@ impl Registry {
                 if let Some(a) = &mut chain_config.addresses {
                     a.zero_proof_addresses();
                 }
-                let mut rollup = chain_config.load_op_stack_rollup_config();
+                let mut rollup = chain_config.as_rollup_config();
                 rollup.protocol_versions_address = superchain
                     .config
                     .protocol_versions_addr

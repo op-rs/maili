@@ -8,7 +8,7 @@ use maili_genesis::{RollupConfig, SystemConfig};
 use op_alloy_consensus::OpBlock;
 
 use crate::{
-    info::L1BlockInfoInterop, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoTx,
+    L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop, L1BlockInfoIsthmus, L1BlockInfoTx,
     OpBlockConversionError, SpanBatchError, SpanDecodingError,
 };
 
@@ -54,6 +54,11 @@ pub fn to_system_config(
             ..
         })
         | L1BlockInfoTx::Interop(L1BlockInfoInterop {
+            base_fee_scalar,
+            blob_base_fee_scalar,
+            ..
+        })
+        | L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
             base_fee_scalar,
             blob_base_fee_scalar,
             ..

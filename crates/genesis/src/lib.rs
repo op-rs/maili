@@ -33,8 +33,9 @@ pub use addresses::AddressList;
 mod system;
 pub use system::{
     BatcherUpdateError, EIP1559UpdateError, GasConfigUpdateError, GasLimitUpdateError,
-    LogProcessingError, SystemAccounts, SystemConfig, SystemConfigUpdateError,
-    SystemConfigUpdateType, CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC,
+    LogProcessingError, OperatorFeeUpdateError, SystemAccounts, SystemConfig,
+    SystemConfigUpdateError, SystemConfigUpdateType, CONFIG_UPDATE_EVENT_VERSION_0,
+    CONFIG_UPDATE_TOPIC,
 };
 
 mod chain;

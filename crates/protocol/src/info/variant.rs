@@ -8,9 +8,10 @@ use alloy_primitives::{address, Address, Bytes, Sealable, Sealed, TxKind, B256, 
 use maili_genesis::{RollupConfig, SystemConfig};
 use op_alloy_consensus::{DepositSourceDomain, L1InfoDepositSource, TxDeposit};
 
-use crate::{BlockInfoError, DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone};
-
-use super::L1BlockInfoInterop;
+use crate::{
+    BlockInfoError, DecodeError, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop,
+    L1BlockInfoIsthmus,
+};
 
 /// The system transaction gas limit post-Regolith
 const REGOLITH_SYSTEM_TX_GAS: u64 = 1_000_000;
@@ -36,6 +37,8 @@ pub enum L1BlockInfoTx {
     Ecotone(L1BlockInfoEcotone),
     /// An Interop L1 info transaction
     Interop(L1BlockInfoInterop),
+    /// An Isthmus L1 info transaction
+    Isthmus(L1BlockInfoIsthmus),
 }
 
 impl L1BlockInfoTx {
@@ -85,7 +88,7 @@ impl L1BlockInfoTx {
         if rollup_config.is_interop_active(l2_block_time)
             && rollup_config.interop_time.unwrap_or_default() != l2_block_time
         {
-            Ok(Self::Interop(L1BlockInfoInterop {
+            return Ok(Self::Interop(L1BlockInfoInterop {
                 number: l1_header.number,
                 time: l1_header.timestamp,
                 base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
@@ -95,22 +98,42 @@ impl L1BlockInfoTx {
                 blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
                 blob_base_fee_scalar,
                 base_fee_scalar,
-            }))
-        } else {
-            Ok(Self::Ecotone(L1BlockInfoEcotone {
-                number: l1_header.number,
-                time: l1_header.timestamp,
-                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
-                block_hash: l1_header.hash_slow(),
-                sequence_number,
-                batcher_address: system_config.batcher_address,
-                blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
-                blob_base_fee_scalar,
-                base_fee_scalar,
-                empty_scalars: false,
-                l1_fee_overhead: U256::ZERO,
-            }))
+            }));
         }
+
+        if rollup_config.is_isthmus_active(l2_block_time)
+            && rollup_config.isthmus_time.unwrap_or_default() != l2_block_time
+        {
+            let operator_fee_scalar = system_config.operator_fee_scalar.unwrap_or_default();
+            let operator_fee_constant = system_config.operator_fee_constant.unwrap_or_default();
+            return Ok(Self::Isthmus(L1BlockInfoIsthmus {
+                number: l1_header.number,
+                time: l1_header.timestamp,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
+                block_hash: l1_header.hash_slow(),
+                sequence_number,
+                batcher_address: system_config.batcher_address,
+                blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
+                blob_base_fee_scalar,
+                base_fee_scalar,
+                operator_fee_scalar,
+                operator_fee_constant,
+            }));
+        }
+
+        Ok(Self::Ecotone(L1BlockInfoEcotone {
+            number: l1_header.number,
+            time: l1_header.timestamp,
+            base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
+            block_hash: l1_header.hash_slow(),
+            sequence_number,
+            batcher_address: system_config.batcher_address,
+            blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
+            blob_base_fee_scalar,
+            base_fee_scalar,
+            empty_scalars: false,
+            l1_fee_overhead: U256::ZERO,
+        }))
     }
 
     /// Creates a new [L1BlockInfoTx] from the given information and returns a typed [TxDeposit] to
@@ -171,6 +194,9 @@ impl L1BlockInfoTx {
             L1BlockInfoInterop::L1_INFO_TX_SELECTOR => L1BlockInfoInterop::decode_calldata(r)
                 .map(Self::Interop)
                 .map_err(|e| DecodeError::ParseError(format!("Interop decode error: {}", e))),
+            L1BlockInfoIsthmus::L1_INFO_TX_SELECTOR => L1BlockInfoIsthmus::decode_calldata(r)
+                .map(Self::Isthmus)
+                .map_err(|e| DecodeError::ParseError(format!("Isthmus decode error: {}", e))),
             _ => Err(DecodeError::InvalidSelector),
         }
     }
@@ -178,7 +204,7 @@ impl L1BlockInfoTx {
     /// Returns whether the scalars are empty.
     pub const fn empty_scalars(&self) -> bool {
         match self {
-            Self::Bedrock(_) | Self::Interop(_) => false,
+            Self::Bedrock(_) | Self::Interop(_) | Self::Isthmus(..) => false,
             Self::Ecotone(L1BlockInfoEcotone { empty_scalars, .. }) => *empty_scalars,
         }
     }
@@ -189,6 +215,7 @@ impl L1BlockInfoTx {
             Self::Bedrock(ref tx) => tx.block_hash,
             Self::Ecotone(ref tx) => tx.block_hash,
             Self::Interop(ref tx) => tx.block_hash,
+            Self::Isthmus(ref tx) => tx.block_hash,
         }
     }
 
@@ -198,6 +225,7 @@ impl L1BlockInfoTx {
             Self::Bedrock(bedrock_tx) => bedrock_tx.encode_calldata(),
             Self::Ecotone(ecotone_tx) => ecotone_tx.encode_calldata(),
             Self::Interop(interop_tx) => interop_tx.encode_calldata(),
+            Self::Isthmus(isthmus_tx) => isthmus_tx.encode_calldata(),
         }
     }
 
@@ -206,6 +234,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Ecotone(L1BlockInfoEcotone { number, block_hash, .. })
             | Self::Bedrock(L1BlockInfoBedrock { number, block_hash, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { number, block_hash, .. })
             | Self::Interop(L1BlockInfoInterop { number, block_hash, .. }) => {
                 BlockNumHash { number: *number, hash: *block_hash }
             }
@@ -217,6 +246,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { base_fee, .. })
             | Self::Ecotone(L1BlockInfoEcotone { base_fee, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { base_fee, .. })
             | Self::Interop(L1BlockInfoInterop { base_fee, .. }) => U256::from(*base_fee),
         }
     }
@@ -226,6 +256,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { l1_fee_scalar, .. }) => *l1_fee_scalar,
             Self::Ecotone(L1BlockInfoEcotone { base_fee_scalar, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { base_fee_scalar, .. })
             | Self::Interop(L1BlockInfoInterop { base_fee_scalar, .. }) => {
                 U256::from(*base_fee_scalar)
             }
@@ -237,6 +268,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(_) => U256::ZERO,
             Self::Ecotone(L1BlockInfoEcotone { blob_base_fee, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { blob_base_fee, .. })
             | Self::Interop(L1BlockInfoInterop { blob_base_fee, .. }) => U256::from(*blob_base_fee),
         }
     }
@@ -246,6 +278,7 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(_) => U256::ZERO,
             Self::Ecotone(L1BlockInfoEcotone { blob_base_fee_scalar, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { blob_base_fee_scalar, .. })
             | Self::Interop(L1BlockInfoInterop { blob_base_fee_scalar, .. }) => {
                 U256::from(*blob_base_fee_scalar)
             }
@@ -258,6 +291,7 @@ impl L1BlockInfoTx {
             Self::Bedrock(L1BlockInfoBedrock { l1_fee_overhead, .. }) => *l1_fee_overhead,
             Self::Ecotone(L1BlockInfoEcotone { l1_fee_overhead, .. }) => *l1_fee_overhead,
             Self::Interop(_) => U256::ZERO,
+            Self::Isthmus(_) => U256::ZERO,
         }
     }
 
@@ -266,7 +300,8 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { batcher_address, .. })
             | Self::Ecotone(L1BlockInfoEcotone { batcher_address, .. })
-            | Self::Interop(L1BlockInfoInterop { batcher_address, .. }) => *batcher_address,
+            | Self::Interop(L1BlockInfoInterop { batcher_address, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { batcher_address, .. }) => *batcher_address,
         }
     }
 
@@ -275,7 +310,8 @@ impl L1BlockInfoTx {
         match self {
             Self::Bedrock(L1BlockInfoBedrock { sequence_number, .. })
             | Self::Ecotone(L1BlockInfoEcotone { sequence_number, .. })
-            | Self::Interop(L1BlockInfoInterop { sequence_number, .. }) => *sequence_number,
+            | Self::Interop(L1BlockInfoInterop { sequence_number, .. })
+            | Self::Isthmus(L1BlockInfoIsthmus { sequence_number, .. }) => *sequence_number,
         }
     }
 }
@@ -289,6 +325,7 @@ mod test {
     const RAW_BEDROCK_INFO_TX: [u8; L1BlockInfoBedrock::L1_INFO_TX_LEN] = hex!("015d8eb9000000000000000000000000000000000000000000000000000000000117c4eb0000000000000000000000000000000000000000000000000000000065280377000000000000000000000000000000000000000000000000000000026d05d953392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc00000000000000000000000000000000000000000000000000000000000000040000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f3298500000000000000000000000000000000000000000000000000000000000000bc00000000000000000000000000000000000000000000000000000000000a6fe0");
     const RAW_ECOTONE_INFO_TX: [u8; L1BlockInfoEcotone::L1_INFO_TX_LEN] = hex!("440a5e2000000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f32985");
     const RAW_INTEROP_INFO_TX: [u8; L1BlockInfoInterop::L1_INFO_TX_LEN] = hex!("760ee04d00000558000c5fc50000000000000001000000006789ab380000000000000000000000000000000000000000000000000000000000000000000000003b9aca0000000000000000000000000000000000000000000000000000000000000000014f98b83baf52c498b49bfff33e59965b27da7febbea9a2fcc4719d06dc06932a000000000000000000000000c0658ee336b551ff83216fbdf85ec92613d23602");
+    const RAW_ISTHMUS_INFO_TX: [u8; L1BlockInfoIsthmus::L1_INFO_TX_LEN] = hex!("098999be00000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f329850000abcd000000000000dcba");
 
     #[test]
     fn bedrock_l1_block_info_invalid_len() {
@@ -455,6 +492,31 @@ mod test {
 
         let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
         assert!(!ecotone.empty_scalars());
+    }
+
+    #[test]
+    fn test_isthmus_l1_block_info_tx_roundtrip() {
+        let expected = L1BlockInfoIsthmus {
+            number: 19655712,
+            time: 1713121139,
+            base_fee: 10445852825,
+            block_hash: b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3"),
+            sequence_number: 5,
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            blob_base_fee: 1,
+            blob_base_fee_scalar: 810949,
+            base_fee_scalar: 1368,
+            operator_fee_scalar: 0xabcd,
+            operator_fee_constant: 0xdcba,
+        };
+
+        let L1BlockInfoTx::Isthmus(decoded) =
+            L1BlockInfoTx::decode_calldata(RAW_ISTHMUS_INFO_TX.as_ref()).unwrap()
+        else {
+            panic!("Wrong fork");
+        };
+        assert_eq!(expected, decoded);
+        assert_eq!(decoded.encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
     }
 
     #[test]

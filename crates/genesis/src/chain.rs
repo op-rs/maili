@@ -5,83 +5,13 @@ use alloy_eips::eip1559::BaseFeeParams;
 use alloy_primitives::Address;
 
 use crate::{
-    base_fee_params, base_fee_params_canyon, AddressList, BaseFeeConfig, ChainGenesis, Roles,
-    RollupConfig, GRANITE_CHANNEL_TIMEOUT,
+    base_fee_params, base_fee_params_canyon, AddressList, AltDAConfig, BaseFeeConfig, ChainGenesis,
+    HardForkConfiguration, Roles, RollupConfig, SuperchainLevel, GRANITE_CHANNEL_TIMEOUT,
 };
-
-#[cfg(feature = "serde")]
-const fn default_governed_by_optimism() -> bool {
-    false
-}
 
 #[cfg(feature = "serde")]
 const fn default_batch_inbox_addr() -> Address {
     Address::ZERO
-}
-
-/// OP Mainnet chain ID.
-pub const OP_MAINNET_CHAIN_ID: u64 = 10;
-
-/// OP Sepolia chain ID.
-pub const OP_SEPOLIA_CHAIN_ID: u64 = 11155420;
-
-/// Base Sepolia chain ID.
-pub const BASE_MAINNET_CHAIN_ID: u64 = 8453;
-
-/// Base Sepolia chain ID.
-pub const BASE_SEPOLIA_CHAIN_ID: u64 = 84532;
-
-/// Level of integration with the superchain.
-#[derive(Debug, Copy, Clone, Default, Hash, Eq, PartialEq)]
-#[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(feature = "serde", derive(serde_repr::Serialize_repr, serde_repr::Deserialize_repr))]
-#[repr(u8)]
-pub enum SuperchainLevel {
-    /// Frontier chains are chains with customizations beyond the
-    /// standard OP Stack configuration and are considered "advanced".
-    Frontier = 0,
-    /// A candidate for a standard chain.
-    #[default]
-    StandardCandidate = 1,
-    /// Standard chains don't have any customizations beyond the
-    /// standard OP Stack configuration and are considered "vanilla".
-    Standard = 2,
-}
-
-/// AltDA configuration.
-#[derive(Debug, Copy, Clone, Default, Hash, Eq, PartialEq)]
-#[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct AltDAConfig {
-    /// AltDA challenge address
-    pub da_challenge_address: Option<Address>,
-    /// AltDA challenge window time (in seconds)
-    pub da_challenge_window: Option<u64>,
-    /// AltDA resolution window time (in seconds)
-    pub da_resolve_window: Option<u64>,
-}
-
-/// Hardfork configuration.
-#[derive(Debug, Copy, Clone, Default, Hash, Eq, PartialEq)]
-#[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct HardForkConfiguration {
-    /// Canyon hardfork activation time
-    pub canyon_time: Option<u64>,
-    /// Delta hardfork activation time
-    pub delta_time: Option<u64>,
-    /// Ecotone hardfork activation time
-    pub ecotone_time: Option<u64>,
-    /// Fjord hardfork activation time
-    pub fjord_time: Option<u64>,
-    /// Granite hardfork activation time
-    pub granite_time: Option<u64>,
-    /// Holocene hardfork activation time
-    pub holocene_time: Option<u64>,
-    /// Isthmus hardfork activation time
-    pub isthmus_time: Option<u64>,
-    /// Interop hardfork activation time
-    pub interop_time: Option<u64>,
 }
 
 /// Defines core blockchain settings per block.
@@ -127,7 +57,7 @@ pub struct ChainConfig {
         feature = "serde",
         serde(rename = "GovernedByOptimism", alias = "governed_by_optimism")
     )]
-    #[cfg_attr(feature = "serde", serde(default = "default_governed_by_optimism"))]
+    #[cfg_attr(feature = "serde", serde(default))]
     pub governed_by_optimism: bool,
     /// Time of when a given chain is opted in to the Superchain.
     /// If set, hardforks times after the superchain time
@@ -185,41 +115,6 @@ pub struct ChainConfig {
 }
 
 impl ChainConfig {
-    /// Set missing hardfork configurations to the defaults, if the chain has
-    /// a superchain_time set. Defaults are only used if the chain's hardfork
-    /// activated after the superchain_time.
-    pub fn set_missing_fork_configs(&mut self, defaults: &HardForkConfiguration) {
-        let Some(super_time) = self.superchain_time else {
-            return;
-        };
-        let cfg = &mut self.hardfork_configuration;
-
-        if cfg.canyon_time.is_none() && defaults.canyon_time.is_some_and(|t| t > super_time) {
-            cfg.canyon_time = defaults.canyon_time;
-        }
-        if cfg.delta_time.is_none() && defaults.delta_time.is_some_and(|t| t > super_time) {
-            cfg.delta_time = defaults.delta_time;
-        }
-        if cfg.ecotone_time.is_none() && defaults.ecotone_time.is_some_and(|t| t > super_time) {
-            cfg.ecotone_time = defaults.ecotone_time;
-        }
-        if cfg.fjord_time.is_none() && defaults.fjord_time.is_some_and(|t| t > super_time) {
-            cfg.fjord_time = defaults.fjord_time;
-        }
-        if cfg.granite_time.is_none() && defaults.granite_time.is_some_and(|t| t > super_time) {
-            cfg.granite_time = defaults.granite_time;
-        }
-        if cfg.holocene_time.is_none() && defaults.holocene_time.is_some_and(|t| t > super_time) {
-            cfg.holocene_time = defaults.holocene_time;
-        }
-        if cfg.isthmus_time.is_none() && defaults.isthmus_time.is_some_and(|t| t > super_time) {
-            cfg.isthmus_time = defaults.isthmus_time;
-        }
-        if cfg.interop_time.is_none() && defaults.interop_time.is_some_and(|t| t > super_time) {
-            cfg.interop_time = defaults.interop_time;
-        }
-    }
-
     /// Returns the base fee params for the chain.
     pub fn base_fee_params(&self) -> BaseFeeParams {
         self.optimism

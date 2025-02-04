@@ -9,6 +9,32 @@
 
 extern crate alloc;
 
+mod accounts;
+pub use accounts::SystemAccounts;
+
+mod addresses;
+pub use addresses::AddressList;
+
+mod hardforks;
+pub use hardforks::HardForkConfiguration;
+
+mod altda;
+pub use altda::AltDAConfig;
+
+mod superchain;
+pub use superchain::SuperchainLevel;
+
+mod chain;
+pub use chain::ChainConfig;
+
+mod chain_ids;
+pub use chain_ids::{
+    BASE_MAINNET_CHAIN_ID, BASE_SEPOLIA_CHAIN_ID, OP_MAINNET_CHAIN_ID, OP_SEPOLIA_CHAIN_ID,
+};
+
+mod genesis;
+pub use genesis::ChainGenesis;
+
 mod params;
 pub use params::{
     base_fee_params, base_fee_params_canyon, BaseFeeConfig, BASE_SEPOLIA_BASE_FEE_CONFIG,
@@ -27,25 +53,12 @@ pub use params::{
 mod roles;
 pub use roles::Roles;
 
-mod addresses;
-pub use addresses::AddressList;
-
 mod system;
 pub use system::{
     BatcherUpdateError, EIP1559UpdateError, GasConfigUpdateError, GasLimitUpdateError,
-    LogProcessingError, OperatorFeeUpdateError, SystemAccounts, SystemConfig,
-    SystemConfigUpdateError, SystemConfigUpdateType, CONFIG_UPDATE_EVENT_VERSION_0,
-    CONFIG_UPDATE_TOPIC,
+    LogProcessingError, OperatorFeeUpdateError, SystemConfig, SystemConfigUpdateError,
+    SystemConfigUpdateType, CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC,
 };
-
-mod chain;
-pub use chain::{
-    AltDAConfig, ChainConfig, HardForkConfiguration, SuperchainLevel, BASE_MAINNET_CHAIN_ID,
-    BASE_SEPOLIA_CHAIN_ID, OP_MAINNET_CHAIN_ID, OP_SEPOLIA_CHAIN_ID,
-};
-
-mod genesis;
-pub use genesis::ChainGenesis;
 
 mod rollup;
 pub use rollup::{

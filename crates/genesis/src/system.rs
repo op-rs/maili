@@ -1,7 +1,7 @@
 //! System Config Type
 
 use alloy_consensus::{Eip658Value, Receipt};
-use alloy_primitives::{address, b256, Address, Log, B256, B64, U256, U64};
+use alloy_primitives::{b256, Address, Log, B256, B64, U256, U64};
 use alloy_sol_types::{sol, SolType};
 
 use crate::RollupConfig;
@@ -541,33 +541,11 @@ pub enum OperatorFeeUpdateError {
     ConstantDecodingError,
 }
 
-/// System accounts
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct SystemAccounts {
-    /// The address that can deposit attributes
-    pub attributes_depositor: Address,
-    /// The address of the attributes predeploy
-    pub attributes_predeploy: Address,
-    /// The address of the fee vault
-    pub fee_vault: Address,
-}
-
-impl Default for SystemAccounts {
-    fn default() -> Self {
-        Self {
-            attributes_depositor: address!("deaddeaddeaddeaddeaddeaddeaddeaddead0001"),
-            attributes_predeploy: address!("4200000000000000000000000000000000000015"),
-            fee_vault: address!("4200000000000000000000000000000000000011"),
-        }
-    }
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
     use alloc::vec;
-    use alloy_primitives::{b256, hex, LogData, B256};
+    use alloy_primitives::{address, b256, hex, LogData, B256};
     use arbitrary::Arbitrary;
     use rand::Rng;
 

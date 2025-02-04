@@ -12,15 +12,27 @@ env:
   REF_NAME: ${{ github.ref_name }}
 
 jobs:
-  print-branch-name:
+  crates-io-publish:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Print the head ref env variable
-        run: echo "$HEAD_REF"
-      - name: Print the ref name
-        run: echo "$REF_NAME"
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
+      - name: Check that the head ref is "bot/release-branch"
+        if: $HEAD_REF == 'bot/release-branch'
+        run: echo "Verified head ref is bot/release-branch" && \
+             echo "HEAD_REF_VERIFIED=true" >> $GITHUB_ENV
+      - name: Check that the ref name is "main"
+        if: $REF_NAME == 'main'
+        run: echo "Verified ref name is main" && \
+             echo "REF_NAME_VERIFIED=true" >> $GITHUB_ENV
+      - name: Verified both sources
+        if: $HEAD_REF_VERIFIED == true && $REF_NAME_VERIFIED == true
+        run: echo "Verified both ref name and head ref!"
+      # - name: Print the head ref env variable
+      #   run: echo "$HEAD_REF"
+      # - name: Print the ref name
+      #   run: echo "$REF_NAME"
+      # - name: Extract branch name
+      #   shell: bash
+      #   run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      #   id: extract_branch

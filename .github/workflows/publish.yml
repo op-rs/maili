@@ -1,19 +1,25 @@
 name: Publish
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
+  pull_request:
+    types:
+      - closed
 
 env:
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  HEAD_REF: ${{ github.head_ref }}
+  REF_NAME: ${{ github.ref_name }}
 
 jobs:
   print-branch-name:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Print the branch name env variable
-        run: echo "$BRANCH_NAME"
+      - name: Print the head ref env variable
+        run: echo "$HEAD_REF"
+      - name: Print the ref name
+        run: echo "$REF_NAME"
       - name: Extract branch name
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT

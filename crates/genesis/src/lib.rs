@@ -9,9 +9,6 @@
 
 extern crate alloc;
 
-mod accounts;
-pub use accounts::SystemAccounts;
-
 mod addresses;
 pub use addresses::AddressList;
 

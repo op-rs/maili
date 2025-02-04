@@ -9,11 +9,6 @@ use crate::{
     HardForkConfiguration, Roles, RollupConfig, SuperchainLevel, GRANITE_CHANNEL_TIMEOUT,
 };
 
-#[cfg(feature = "serde")]
-const fn default_batch_inbox_addr() -> Address {
-    Address::ZERO
-}
-
 /// Defines core blockchain settings per block.
 ///
 /// Tailors unique settings for each network based on
@@ -69,7 +64,7 @@ pub struct ChainConfig {
         feature = "serde",
         serde(rename = "batch_inbox_address", alias = "batch_inbox_addr")
     )]
-    #[cfg_attr(feature = "serde", serde(default = "default_batch_inbox_addr"))]
+    #[cfg_attr(feature = "serde", serde(default))]
     pub batch_inbox_addr: Address,
     /// Chain is a simple string to identify the chain, within its superchain context.
     /// This matches the resource filename, it is not encoded in the config file itself.
@@ -132,7 +127,13 @@ impl ChainConfig {
     }
 
     /// Loads the rollup config for the OP-Stack chain given the chain config and address list.
+    #[deprecated(since="0.2.1", note="please use `as_rollup_config` instead")]
     pub fn load_op_stack_rollup_config(&self) -> RollupConfig {
+        self.as_rollup_config()
+    }
+
+    /// Loads the rollup config for the OP-Stack chain given the chain config and address list.
+    pub fn as_rollup_config(&self) -> RollupConfig {
         RollupConfig {
             genesis: self.genesis,
             l1_chain_id: self.l1_chain_id,

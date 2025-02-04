@@ -1,0 +1,15 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  print-branch-name:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch

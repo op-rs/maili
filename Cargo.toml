@@ -45,10 +45,10 @@ maili-registry = { version = "0.2.0", path = "crates/registry", default-features
 maili-superchain = { version = "0.2.0", path = "crates/registry/superchain", default-features = false }
 
 # OP Alloy
-op-alloy-flz = { version = "0.10.1", default-features = false }
-op-alloy-consensus = { version = "0.10.1", default-features = false }
-op-alloy-rpc-jsonrpsee = { version = "0.10.1", default-features = false }
-op-alloy-rpc-types-engine = { version = "0.10.1", default-features = false }
+op-alloy-flz = { version = "0.10.2", default-features = false }
+op-alloy-consensus = { version = "0.10.2", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.10.2", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.10.2", default-features = false }
 
 # Alloy
 alloy-eips = { version = "0.11.0", default-features = false }

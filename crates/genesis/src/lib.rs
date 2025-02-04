@@ -26,9 +26,10 @@ pub use params::{
 
 mod system;
 pub use system::{
-    BatcherUpdateError, EIP1559UpdateError, GasConfigUpdateError, GasLimitUpdateError,
-    LogProcessingError, OperatorFeeUpdateError, SystemAccounts, SystemConfig,
-    SystemConfigUpdateError, SystemConfigUpdateType, CONFIG_UPDATE_EVENT_VERSION_0,
+    BatcherUpdate, BatcherUpdateError, EIP1559UpdateError, Eip1559Update, GasConfigUpdate,
+    GasConfigUpdateError, GasLimitUpdate, GasLimitUpdateError, LogProcessingError,
+    OperatorFeeUpdate, OperatorFeeUpdateError, SystemConfig, SystemConfigLog, SystemConfigUpdate,
+    SystemConfigUpdateError, SystemConfigUpdateKind, CONFIG_UPDATE_EVENT_VERSION_0,
     CONFIG_UPDATE_TOPIC,
 };
 

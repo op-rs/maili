@@ -1,7 +1,6 @@
 //! Build script that generates a `configs.json` file from the configs.
 
-use maili_genesis::ChainConfig;
-use maili_superchain::{Superchain, SuperchainConfig, Superchains};
+use maili_genesis::{ChainConfig, Superchain, SuperchainConfig, Superchains};
 
 fn main() {
     // Get the directory of this file from the environment

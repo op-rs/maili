@@ -23,7 +23,6 @@ The following crates are provided by `maili`.
 - ![maili-interop](https://img.shields.io/crates/v/maili-interop?label=maili-interop)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
-- ![maili-superchain](https://img.shields.io/crates/v/maili-superchain?label=maili-superchain)
 
 
 ## Development Status
@@ -60,7 +59,6 @@ All `maili` crates currently support `no_std` and are listed below.
 - [`maili-genesis`][maili-genesis]
 - [`maili-interop`][maili-interop]
 - [`maili-protocol`][maili-protocol]
-- [`maili-superchain`][maili-superchain]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
 
 If you would like to add `no_std` support to a crate,
@@ -96,7 +94,6 @@ shall be dual licensed as above, without any additional terms or conditions.
 [maili-protocol]: https://crates.io/crates/maili-protocol
 [maili-serde]: https://crates.io/crates/maili-serde
 [maili-interop]: https://crates.io/crates/maili-interop
-[maili-superchain]: https://crates.io/crates/maili-superchain
 [maili-registry]: https://crates.io/crates/maili-registry
 [maili-genesis]: https://crates.io/crates/maili-genesis
 [maili-rpc]: https://crates.io/crates/maili-rpc

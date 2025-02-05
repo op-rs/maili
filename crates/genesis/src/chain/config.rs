@@ -29,9 +29,6 @@ pub struct ChainConfig {
     /// Chain name (e.g. "Base")
     #[cfg_attr(feature = "serde", serde(rename = "Name", alias = "name"))]
     pub name: String,
-    /// Chain ID
-    #[cfg_attr(feature = "serde", serde(rename = "l2_chain_id", alias = "chain_id"))]
-    pub chain_id: u64,
     /// L1 chain ID
     #[cfg_attr(feature = "serde", serde(skip))]
     pub l1_chain_id: u64,
@@ -59,6 +56,15 @@ pub struct ChainConfig {
     /// will be inherited from the superchain-wide config.
     #[cfg_attr(feature = "serde", serde(rename = "SuperchainTime", alias = "superchain_time"))]
     pub superchain_time: Option<u64>,
+    /// Data availability type.
+    #[cfg_attr(
+        feature = "serde",
+        serde(rename = "DataAvailabilityType", alias = "data_availability_type")
+    )]
+    pub data_availability_type: String,
+    /// Chain ID
+    #[cfg_attr(feature = "serde", serde(rename = "l2_chain_id", alias = "chain_id"))]
+    pub chain_id: u64,
     /// Chain-specific batch inbox address
     #[cfg_attr(
         feature = "serde",
@@ -66,13 +72,6 @@ pub struct ChainConfig {
     )]
     #[cfg_attr(feature = "serde", serde(default))]
     pub batch_inbox_addr: Address,
-    /// Chain is a simple string to identify the chain, within its superchain context.
-    /// This matches the resource filename, it is not encoded in the config file itself.
-    #[cfg_attr(feature = "serde", serde(skip))]
-    pub chain: String,
-    /// Hardfork Configuration. These values may override the superchain-wide defaults.
-    #[cfg_attr(feature = "serde", serde(alias = "hardforks"))]
-    pub hardfork_configuration: HardForkConfiguration,
     /// The block time in seconds.
     #[cfg_attr(feature = "serde", serde(rename = "block_time"))]
     pub block_time: u64,
@@ -82,31 +81,26 @@ pub struct ChainConfig {
     /// The maximum sequencer drift in seconds.
     #[cfg_attr(feature = "serde", serde(rename = "max_sequencer_drift"))]
     pub max_sequencer_drift: u64,
-    /// Data availability type.
-    #[cfg_attr(
-        feature = "serde",
-        serde(rename = "DataAvailabilityType", alias = "data_availability_type")
-    )]
-    pub data_availability_type: String,
+    /// Gas paying token metadata. Not consumed by downstream OPStack components.
+    #[cfg_attr(feature = "serde", serde(rename = "GasPayingToken", alias = "gas_paying_token"))]
+    pub gas_paying_token: Option<Address>,
+    /// Hardfork Configuration. These values may override the superchain-wide defaults.
+    #[cfg_attr(feature = "serde", serde(alias = "hardforks"))]
+    pub hardfork_configuration: HardForkConfiguration,
     /// Optimism configuration
     #[cfg_attr(feature = "serde", serde(rename = "optimism"))]
     pub optimism: Option<BaseFeeConfig>,
-
-    // -- Optional Features --
     /// Alternative DA configuration
     #[cfg_attr(feature = "serde", serde(rename = "alt_da"))]
     pub alt_da: Option<AltDAConfig>,
     /// Chain-specific genesis information
     pub genesis: ChainGenesis,
-    /// Addresses
-    #[cfg_attr(feature = "serde", serde(rename = "Addresses", alias = "addresses"))]
-    pub addresses: Option<AddressList>,
     /// Roles
     #[cfg_attr(feature = "serde", serde(rename = "Roles", alias = "roles"))]
     pub roles: Option<Roles>,
-    /// Gas paying token metadata. Not consumed by downstream OPStack components.
-    #[cfg_attr(feature = "serde", serde(rename = "GasPayingToken", alias = "gas_paying_token"))]
-    pub gas_paying_token: Option<Address>,
+    /// Addresses
+    #[cfg_attr(feature = "serde", serde(rename = "Addresses", alias = "addresses"))]
+    pub addresses: Option<AddressList>,
 }
 
 impl ChainConfig {

@@ -1,5 +1,6 @@
 # maili
 
+<a href="https://crates.io/crates/v/maili"><img src="https://img.shields.io/crates/v/maili?label=maili" alt="Maili Crate"></a>
 <a href="https://github.com/op-rs/maili/actions/workflows/ci.yml"><img src="https://github.com/op-rs/maili/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
@@ -16,7 +17,6 @@ Types and interfaces unique to the OP Stack.
 
 The following crates are provided by `maili`.
 
-- ![maili](https://img.shields.io/crates/v/maili?label=maili)
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-interop](https://img.shields.io/crates/v/maili-interop?label=maili-interop)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)

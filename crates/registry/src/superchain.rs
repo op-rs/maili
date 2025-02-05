@@ -117,6 +117,7 @@ mod tests {
                 optimism_portal_proxy: address!("49048044D57e1C92A77f79988d21Fa8fAF74E97e"),
                 system_config_proxy: address!("73a79Fab69143498Ed3712e519A88a918e1f4072"),
                 proxy_admin: address!("0475cBCAebd9CE8AfA5025828d5b98DFb67E059E"),
+                superchain_config: None,
                 anchor_state_registry_proxy: Some(address!(
                     "db9091e48b1c42992a1213e6916184f9ebdbfedf"
                 )),
@@ -130,6 +131,7 @@ mod tests {
                     "19009debf8954b610f207d5925eede827805986e"
                 )),
                 preimage_oracle: Some(address!("9c065e11870b891d214bc2da7ef1f9ddfa1be277")),
+                data_availability_challenge: None,
             }),
             gas_paying_token: None,
         };

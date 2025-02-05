@@ -9,21 +9,6 @@ pub const CONFIG_UPDATE_TOPIC: B256 =
 /// The initial version of the system config event log.
 pub const CONFIG_UPDATE_EVENT_VERSION_0: B256 = B256::ZERO;
 
-mod batcher;
-pub use batcher::BatcherUpdate;
-
-mod gas_config;
-pub use gas_config::GasConfigUpdate;
-
-mod eip1559;
-pub use eip1559::Eip1559Update;
-
-mod operator_fee;
-pub use operator_fee::OperatorFeeUpdate;
-
-mod gas_limit;
-pub use gas_limit::GasLimitUpdate;
-
 mod config;
 pub use config::SystemConfig;
 

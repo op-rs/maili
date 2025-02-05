@@ -1,9 +1,9 @@
 //! The batcher update type.
 
-use alloy_primitives::{Address, Log};
+use alloy_primitives::Address;
 use alloy_sol_types::{sol, SolType};
 
-use crate::{BatcherUpdateError, SystemConfig};
+use crate::{BatcherUpdateError, SystemConfig, SystemConfigLog};
 
 /// The batcher update type.
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
@@ -20,10 +20,11 @@ impl BatcherUpdate {
     }
 }
 
-impl TryFrom<Log> for BatcherUpdate {
+impl TryFrom<&SystemConfigLog> for BatcherUpdate {
     type Error = BatcherUpdateError;
 
-    fn try_from(log: Log) -> Result<Self, Self::Error> {
+    fn try_from(log: &SystemConfigLog) -> Result<Self, Self::Error> {
+        let log = &log.log;
         if log.data.data.len() != 96 {
             return Err(BatcherUpdateError::InvalidDataLen(log.data.data.len()));
         }
@@ -46,5 +47,33 @@ impl TryFrom<Log> for BatcherUpdate {
         };
 
         Ok(Self { batcher_address })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloy_primitives::{address, hex, Log, LogData, B256};
+
+    #[test]
+    fn test_batcher_update_try_from() {
+        let update_type = B256::ZERO;
+
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    update_type,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let update = BatcherUpdate::try_from(&system_log).unwrap();
+        assert_eq!(update.batcher_address, address!("000000000000000000000000000000000000bEEF"),);
     }
 }

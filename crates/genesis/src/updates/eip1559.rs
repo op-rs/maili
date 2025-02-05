@@ -1,9 +1,8 @@
 //! The EIP-1559 update type.
 
-use alloy_primitives::Log;
 use alloy_sol_types::{sol, SolType};
 
-use crate::{EIP1559UpdateError, SystemConfig};
+use crate::{EIP1559UpdateError, SystemConfig, SystemConfigLog};
 
 /// The EIP-1559 update type.
 #[derive(Debug, Default, Clone, Hash, PartialEq, Eq)]
@@ -23,10 +22,11 @@ impl Eip1559Update {
     }
 }
 
-impl TryFrom<Log> for Eip1559Update {
+impl TryFrom<&SystemConfigLog> for Eip1559Update {
     type Error = EIP1559UpdateError;
 
-    fn try_from(log: Log) -> Result<Self, Self::Error> {
+    fn try_from(log: &SystemConfigLog) -> Result<Self, Self::Error> {
+        let log = &log.log;
         if log.data.data.len() != 96 {
             return Err(EIP1559UpdateError::InvalidDataLen(log.data.data.len()));
         }

@@ -72,23 +72,23 @@ impl SystemConfigLog {
         self.validate_version()?;
         match self.update_type()? {
             SystemConfigUpdateKind::Batcher => {
-                let update = BatcherUpdate::try_from(self.log.clone())?;
+                let update = BatcherUpdate::try_from(self)?;
                 Ok(SystemConfigUpdate::Batcher(update))
             }
             SystemConfigUpdateKind::GasConfig => {
-                let update = GasConfigUpdate::try_new(self.log.clone(), self.ecotone_active)?;
+                let update = GasConfigUpdate::try_from(self)?;
                 Ok(SystemConfigUpdate::GasConfig(update))
             }
             SystemConfigUpdateKind::GasLimit => {
-                let update = GasLimitUpdate::try_from(self.log.clone())?;
+                let update = GasLimitUpdate::try_from(self)?;
                 Ok(SystemConfigUpdate::GasLimit(update))
             }
             SystemConfigUpdateKind::Eip1559 => {
-                let update = Eip1559Update::try_from(self.log.clone())?;
+                let update = Eip1559Update::try_from(self)?;
                 Ok(SystemConfigUpdate::Eip1559(update))
             }
             SystemConfigUpdateKind::OperatorFee => {
-                let update = OperatorFeeUpdate::try_from(self.log.clone())?;
+                let update = OperatorFeeUpdate::try_from(self)?;
                 Ok(SystemConfigUpdate::OperatorFee(update))
             }
             SystemConfigUpdateKind::UnsafeBlockSigner => Ok(SystemConfigUpdate::UnsafeBlockSigner),

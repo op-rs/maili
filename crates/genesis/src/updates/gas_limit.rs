@@ -1,9 +1,9 @@
 //! The gas limit update type.
 
-use alloy_primitives::{Log, U64};
+use alloy_primitives::U64;
 use alloy_sol_types::{sol, SolType};
 
-use crate::{GasLimitUpdateError, SystemConfig};
+use crate::{GasLimitUpdateError, SystemConfig, SystemConfigLog};
 
 /// The gas limit update type.
 #[derive(Debug, Default, Clone, Hash, PartialEq, Eq)]
@@ -20,10 +20,11 @@ impl GasLimitUpdate {
     }
 }
 
-impl TryFrom<Log> for GasLimitUpdate {
+impl TryFrom<&SystemConfigLog> for GasLimitUpdate {
     type Error = GasLimitUpdateError;
 
-    fn try_from(log: Log) -> Result<Self, Self::Error> {
+    fn try_from(log: &SystemConfigLog) -> Result<Self, Self::Error> {
+        let log = &log.log;
         if log.data.data.len() != 96 {
             return Err(GasLimitUpdateError::InvalidDataLen(log.data.data.len()));
         }

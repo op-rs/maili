@@ -1,9 +1,8 @@
 //! The Operator Fee update type.
 
-use alloy_primitives::Log;
 use alloy_sol_types::{sol, SolType};
 
-use crate::{OperatorFeeUpdateError, SystemConfig};
+use crate::{OperatorFeeUpdateError, SystemConfig, SystemConfigLog};
 
 /// The Operator Fee update type.
 #[derive(Debug, Default, Clone, Hash, PartialEq, Eq)]
@@ -23,10 +22,11 @@ impl OperatorFeeUpdate {
     }
 }
 
-impl TryFrom<Log> for OperatorFeeUpdate {
+impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
     type Error = OperatorFeeUpdateError;
 
-    fn try_from(log: Log) -> Result<Self, Self::Error> {
+    fn try_from(log: &SystemConfigLog) -> Result<Self, Self::Error> {
+        let log = &log.log;
         if log.data.data.len() != 128 {
             return Err(OperatorFeeUpdateError::InvalidDataLen(log.data.data.len()));
         }

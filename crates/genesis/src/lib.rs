@@ -24,12 +24,6 @@ pub use params::{
     OP_SEPOLIA_EIP1559_DEFAULT_ELASTICITY_MULTIPLIER,
 };
 
-mod roles;
-pub use roles::Roles;
-
-mod addresses;
-pub use addresses::AddressList;
-
 mod system;
 pub use system::{
     BatcherUpdateError, EIP1559UpdateError, GasConfigUpdateError, GasLimitUpdateError,
@@ -40,8 +34,8 @@ pub use system::{
 
 mod chain;
 pub use chain::{
-    AltDAConfig, ChainConfig, HardForkConfiguration, SuperchainLevel, BASE_MAINNET_CHAIN_ID,
-    BASE_SEPOLIA_CHAIN_ID, OP_MAINNET_CHAIN_ID, OP_SEPOLIA_CHAIN_ID,
+    AddressList, AltDAConfig, ChainConfig, HardForkConfiguration, Roles, SuperchainLevel,
+    BASE_MAINNET_CHAIN_ID, BASE_SEPOLIA_CHAIN_ID, OP_MAINNET_CHAIN_ID, OP_SEPOLIA_CHAIN_ID,
 };
 
 mod genesis;

@@ -352,14 +352,14 @@ impl SystemConfig {
         let Ok(length) = <sol!(uint64)>::abi_decode(&log_data[32..64], true) else {
             return Err(OperatorFeeUpdateError::LengthDecodingError);
         };
-        if length != 64 {
+        if length != 32 {
             return Err(OperatorFeeUpdateError::InvalidDataLength(length));
         }
 
-        let Ok(operator_fee_scalar) = <sol!(uint32)>::abi_decode(&log_data[64..80], true) else {
+        let Ok(operator_fee_scalar) = <sol!(uint32)>::abi_decode(&log_data[64..96], true) else {
             return Err(OperatorFeeUpdateError::ScalarDecodingError);
         };
-        let Ok(operator_fee_constant) = <sol!(uint64)>::abi_decode(&log_data[80..], true) else {
+        let Ok(operator_fee_constant) = <sol!(uint64)>::abi_decode(&log_data[96..], true) else {
             return Err(OperatorFeeUpdateError::ConstantDecodingError);
         };
 

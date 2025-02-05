@@ -17,13 +17,13 @@ Types and interfaces unique to the OP Stack.
 
 The following crates are provided by `maili`.
 
+- ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
+- ![maili-serde](https://img.shields.io/crates/v/maili-serde?label=maili-serde)
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
 - ![maili-interop](https://img.shields.io/crates/v/maili-interop?label=maili-interop)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
-- ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
-- ![maili-serde](https://img.shields.io/crates/v/maili-serde?label=maili-serde) (helper crate)
-- ![maili-superchain](https://img.shields.io/crates/v/maili-superchain?label=maili-superchain) (helper crate)
+- ![maili-superchain](https://img.shields.io/crates/v/maili-superchain?label=maili-superchain)
 
 
 ## Development Status
@@ -35,46 +35,44 @@ The following crates are provided by `maili`.
 
 The current MSRV (minimum supported rust version) is 1.81.
 
-Unlike Alloy, maili may use the latest stable release,
-to benefit from the latest features.
-
 The MSRV is not increased automatically, and will be updated
 only as part of a patch (pre-1.0) or minor (post-1.0) release.
 
 
 ## Contributing
 
-maili is built by open source contributors like you, thank you for improving the project!
+`maili` is built by open source contributors like you, thank you for improving the project!
 
 A [contributing guide][contributing] is available that sets guidelines for contributing.
 
-Pull requests will not be merged unless CI passes, so please ensure that your contribution follows the
-linting rules and passes clippy.
+Pull requests will not be merged unless CI passes, so please ensure that your contribution
+follows the linting rules and passes clippy.
 
 
 ## `no_std`
 
-maili is intended to be `no_std` compatible, initially for use in [kona][kona].
+`maili` is intended to be `no_std` compatible, most notably for use in [kona][kona].
 
-The following crates support `no_std`.
-Notice, provider crates do not support `no_std` compatibility.
+All `maili` crates currently support `no_std` and are listed below.
 
+- [`maili-rpc`][maili-rpc]
+- [`maili-serde`][maili-serde]
 - [`maili-genesis`][maili-genesis]
 - [`maili-interop`][maili-interop]
-- [`maili-superchain`][maili-superchain]
 - [`maili-protocol`][maili-protocol]
+- [`maili-superchain`][maili-superchain]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
-- [`maili-rpc`][maili-rpc]
 
-If you would like to add no_std support to a crate,
+If you would like to add `no_std` support to a crate,
 please make sure to update [scripts/check_no_std.sh][check-no-std].
 
 
 ## Credits
 
-maili implements the OP-unique spec, [op-alloy][op-alloy] is the glue that sticks OP to Ethereum.
+`maili` contains OP Stack specific specs, whereas [op-alloy][op-alloy]
+providers OP modifications to Ethereum types.
 
-This would not be possible without the hard work from open source contributors. Thank you.
+`maili` is only possible with the hard work from open source contributors. Thank you.
 
 
 ## License
@@ -96,6 +94,7 @@ shall be dual licensed as above, without any additional terms or conditions.
 [contributing]: https://op-rs.github.io/maili
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
+[maili-serde]: https://crates.io/crates/maili-serde
 [maili-interop]: https://crates.io/crates/maili-interop
 [maili-superchain]: https://crates.io/crates/maili-superchain
 [maili-registry]: https://crates.io/crates/maili-registry

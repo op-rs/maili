@@ -24,7 +24,7 @@ After `maili` is added as a dependency, crates re-exported by `maili` are now av
 ```rust
 use maili::{
    protocol::BlockInfo,
-   provider::ext::engine::OpEngineApi,
+   genesis::RollupConfig,
 };
 ```
 

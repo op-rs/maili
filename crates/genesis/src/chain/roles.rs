@@ -3,6 +3,8 @@
 use alloy_primitives::Address;
 
 /// Roles in the OP Stack.
+///
+/// See: <https://github.com/ethereum-optimism/superchain-registry/blob/8ff62ada16e14dd59d0fb94ffb47761c7fa96e01/ops/internal/config/chain.go#L146-L154>
 #[derive(Debug, Clone, Hash, PartialEq, Eq, Default)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]

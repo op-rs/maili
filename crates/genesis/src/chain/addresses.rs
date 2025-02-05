@@ -3,6 +3,8 @@
 use alloy_primitives::Address;
 
 /// The set of network-specific contracts for a given chain.
+///
+/// See: <https://github.com/ethereum-optimism/superchain-registry/blob/8ff62ada16e14dd59d0fb94ffb47761c7fa96e01/ops/internal/config/chain.go#L156-L175>
 #[derive(Debug, Clone, Hash, PartialEq, Eq, Default)]
 #[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -28,6 +30,8 @@ pub struct AddressList {
     pub system_config_proxy: Address,
     /// Proxy Admin address
     pub proxy_admin: Address,
+    /// The superchain config address
+    pub superchain_config: Option<Address>,
 
     // Fault Proof Contract Addresses
     /// Anchor State Registry Proxy address
@@ -46,6 +50,9 @@ pub struct AddressList {
     pub permissioned_dispute_game: Option<Address>,
     /// Preimage Oracle Proxy address
     pub preimage_oracle: Option<Address>,
+    /// The data availability challenge contract address
+    #[cfg_attr(feature = "serde", serde(alias = "DAChallengeAddress"))]
+    pub data_availability_challenge: Option<Address>,
 }
 
 impl AddressList {

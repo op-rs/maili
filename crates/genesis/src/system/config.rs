@@ -421,4 +421,29 @@ mod test {
         assert_eq!(system_config.eip1559_denominator, Some(0xbabe_u32));
         assert_eq!(system_config.eip1559_elasticity, Some(0xbeef_u32));
     }
+
+    #[test]
+    fn test_system_config_update_operator_fee_log() {
+        const UPDATE_TYPE: B256 =
+            b256!("0000000000000000000000000000000000000000000000000000000000000005");
+
+        let mut system_config = SystemConfig::default();
+        let update_log  = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    UPDATE_TYPE,
+                ],
+                hex!("0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000babe000000000000beef").into()
+            )
+        };
+
+        // Update the operator fee.
+        system_config.process_config_update_log(&update_log, false).unwrap();
+
+        assert_eq!(system_config.operator_fee_scalar, Some(0xbabe_u32));
+        assert_eq!(system_config.operator_fee_constant, Some(0xbeef_u64));
+    }
 }

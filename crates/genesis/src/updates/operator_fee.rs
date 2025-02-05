@@ -27,7 +27,7 @@ impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
 
     fn try_from(log: &SystemConfigLog) -> Result<Self, Self::Error> {
         let log = &log.log;
-        if log.data.data.len() != 128 {
+        if log.data.data.len() != 96 {
             return Err(OperatorFeeUpdateError::InvalidDataLen(log.data.data.len()));
         }
 
@@ -44,14 +44,22 @@ impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
             return Err(OperatorFeeUpdateError::InvalidDataLength(length));
         }
 
-        let Ok(operator_fee_scalar) = <sol!(uint32)>::abi_decode(&log.data.data[64..96], true)
-        else {
-            return Err(OperatorFeeUpdateError::ScalarDecodingError);
-        };
-        let Ok(operator_fee_constant) = <sol!(uint64)>::abi_decode(&log.data.data[96..], true)
-        else {
-            return Err(OperatorFeeUpdateError::ConstantDecodingError);
-        };
+        // The operator fee scalar and constant are
+        // packed into a single u256 as follows:
+        //
+        // | Bytes    | Actual Size | Variable |
+        // |----------|-------------|----------|
+        // | 0 .. 24  | uint32      | scalar   |
+        // | 24 .. 32 | uint64      | constant |
+        // |----------|-------------|----------|
+
+        let mut be_bytes = [0u8; 4];
+        be_bytes[0..4].copy_from_slice(&log.data.data[84..88]);
+        let operator_fee_scalar = u32::from_be_bytes(be_bytes);
+
+        let mut be_bytes = [0u8; 8];
+        be_bytes[0..8].copy_from_slice(&log.data.data[88..96]);
+        let operator_fee_constant = u64::from_be_bytes(be_bytes);
 
         Ok(Self { operator_fee_scalar, operator_fee_constant })
     }
@@ -60,22 +68,15 @@ impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
-    use alloy_primitives::{hex, Address, Log, LogData, B256};
+    use alloy_primitives::{hex, Address, Log, LogData};
 
     #[test]
     fn test_operator_fee_update_try_from() {
-        let update_type = B256::ZERO;
-
         let log = Log {
             address: Address::ZERO,
             data: LogData::new_unchecked(
-                vec![
-                    CONFIG_UPDATE_TOPIC,
-                    CONFIG_UPDATE_EVENT_VERSION_0,
-                    update_type,
-                ],
-                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+                vec![], // Topics aren't checked
+                hex!("0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000babe000000000000beef").into()
             )
         };
 

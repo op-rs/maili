@@ -1,5 +1,6 @@
 //! Contains the AltDA config type.
 
+use alloc::string::String;
 use alloy_primitives::Address;
 
 /// AltDA configuration.

@@ -54,3 +54,137 @@ impl TryFrom<&SystemConfigLog> for Eip1559Update {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloy_primitives::{hex, Address, Bytes, Log, LogData, B256};
+
+    #[test]
+    fn test_eip1559_update_try_from() {
+        let update_type = B256::ZERO;
+
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    update_type,
+                ],
+                hex!("000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let update = Eip1559Update::try_from(&system_log).unwrap();
+
+        assert_eq!(update.eip1559_denominator, 0xbabe_u32);
+        assert_eq!(update.eip1559_elasticity, 0xbeef_u32);
+    }
+
+    #[test]
+    fn test_eip1559_update_invalid_data_len() {
+        let log =
+            Log { address: Address::ZERO, data: LogData::new_unchecked(vec![], Bytes::default()) };
+        let system_log = SystemConfigLog::new(log, false);
+        let err = Eip1559Update::try_from(&system_log).unwrap_err();
+        assert_eq!(err, EIP1559UpdateError::InvalidDataLen(0));
+    }
+
+    #[test]
+    fn test_eip1559_update_pointer_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = Eip1559Update::try_from(&system_log).unwrap_err();
+        assert_eq!(err, EIP1559UpdateError::PointerDecodingError);
+    }
+
+    #[test]
+    fn test_eip1559_update_invalid_point_length() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("000000000000000000000000000000000000000000000000000000000000002100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = Eip1559Update::try_from(&system_log).unwrap_err();
+        assert_eq!(err, EIP1559UpdateError::InvalidDataPointer(33));
+    }
+
+    #[test]
+    fn test_eip1559_update_length_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("0000000000000000000000000000000000000000000000000000000000000020FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = Eip1559Update::try_from(&system_log).unwrap_err();
+        assert_eq!(err, EIP1559UpdateError::LengthDecodingError);
+    }
+
+    #[test]
+    fn test_eip1559_update_invalid_data_length() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000210000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = Eip1559Update::try_from(&system_log).unwrap_err();
+        assert_eq!(err, EIP1559UpdateError::InvalidDataLength(33));
+    }
+
+    #[test]
+    fn test_eip1559_update_eip1559_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = Eip1559Update::try_from(&system_log).unwrap_err();
+        assert_eq!(err, EIP1559UpdateError::EIP1559DecodingError);
+    }
+}

@@ -69,3 +69,33 @@ impl TryFrom<&SystemConfigLog> for GasConfigUpdate {
         Ok(Self { scalar: Some(scalar), overhead: Some(overhead) })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloy_primitives::{hex, uint, Address, Log, LogData, B256};
+
+    #[test]
+    fn test_gas_config_update_try_from() {
+        let update_type = B256::ZERO;
+
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    update_type,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let update = GasConfigUpdate::try_from(&system_log).unwrap();
+
+        assert_eq!(update.overhead, Some(uint!(0xbabe_U256)));
+        assert_eq!(update.scalar, Some(uint!(0xbeef_U256)));
+    }
+}

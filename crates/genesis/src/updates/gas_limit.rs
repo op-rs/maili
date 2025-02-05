@@ -49,3 +49,32 @@ impl TryFrom<&SystemConfigLog> for GasLimitUpdate {
         Ok(Self { gas_limit: U64::from(gas_limit).saturating_to::<u64>() })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloy_primitives::{hex, Address, Log, LogData, B256};
+
+    #[test]
+    fn test_gas_limit_update_try_from() {
+        let update_type = B256::ZERO;
+
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    update_type,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let update = GasLimitUpdate::try_from(&system_log).unwrap();
+
+        assert_eq!(update.gas_limit, 0xbeef_u64);
+    }
+}

@@ -56,3 +56,33 @@ impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
         Ok(Self { operator_fee_scalar, operator_fee_constant })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloy_primitives::{hex, Address, Log, LogData, B256};
+
+    #[test]
+    fn test_operator_fee_update_try_from() {
+        let update_type = B256::ZERO;
+
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    update_type,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let update = OperatorFeeUpdate::try_from(&system_log).unwrap();
+
+        assert_eq!(update.operator_fee_scalar, 0xbabe_u32);
+        assert_eq!(update.operator_fee_constant, 0xbeef_u64);
+    }
+}

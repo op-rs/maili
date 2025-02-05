@@ -24,11 +24,16 @@ pub use params::{
     OP_SEPOLIA_EIP1559_DEFAULT_ELASTICITY_MULTIPLIER,
 };
 
+mod updates;
+pub use updates::{
+    BatcherUpdate, Eip1559Update, GasConfigUpdate, GasLimitUpdate, OperatorFeeUpdate,
+};
+
 mod system;
 pub use system::{
     BatcherUpdateError, EIP1559UpdateError, GasConfigUpdateError, GasLimitUpdateError,
-    LogProcessingError, OperatorFeeUpdateError, SystemAccounts, SystemConfig,
-    SystemConfigUpdateError, SystemConfigUpdateType, CONFIG_UPDATE_EVENT_VERSION_0,
+    LogProcessingError, OperatorFeeUpdateError, SystemConfig, SystemConfigLog, SystemConfigUpdate,
+    SystemConfigUpdateError, SystemConfigUpdateKind, CONFIG_UPDATE_EVENT_VERSION_0,
     CONFIG_UPDATE_TOPIC,
 };
 

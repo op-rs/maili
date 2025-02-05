@@ -1,22 +1,29 @@
 # maili
 
+<a href="https://crates.io/crates/v/maili"><img src="https://img.shields.io/crates/v/maili?label=maili" alt="Maili Crate"></a>
 <a href="https://github.com/op-rs/maili/actions/workflows/ci.yml"><img src="https://github.com/op-rs/maili/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://op-rs.github.io/maili"><img src="https://img.shields.io/badge/Book-854a15?logo=mdBook&labelColor=2a2f35" alt="Book"></a>
 
-OP Stack unique types and interfaces.
+Types and interfaces unique to the OP Stack.
+
+> [!IMPORTANT]
+>
+> Ethereum types modified for the OP Stack live in [op-alloy](https://github.com/alloy-rs/op-alloy).
 
 
 ## Usage
 
 The following crates are provided by `maili`.
 
-- ![maili](https://img.shields.io/crates/v/maili?label=maili)
 - ![maili-genesis](https://img.shields.io/crates/v/maili-genesis?label=maili-genesis)
+- ![maili-interop](https://img.shields.io/crates/v/maili-interop?label=maili-interop)
 - ![maili-protocol](https://img.shields.io/crates/v/maili-protocol?label=maili-protocol)
 - ![maili-registry](https://img.shields.io/crates/v/maili-registry?label=maili-registry)
 - ![maili-rpc](https://img.shields.io/crates/v/maili-rpc?label=maili-rpc)
+- ![maili-serde](https://img.shields.io/crates/v/maili-serde?label=maili-serde) (helper crate)
+- ![maili-superchain](https://img.shields.io/crates/v/maili-superchain?label=maili-superchain) (helper crate)
 
 
 ## Development Status
@@ -53,6 +60,8 @@ The following crates support `no_std`.
 Notice, provider crates do not support `no_std` compatibility.
 
 - [`maili-genesis`][maili-genesis]
+- [`maili-interop`][maili-interop]
+- [`maili-superchain`][maili-superchain]
 - [`maili-protocol`][maili-protocol]
 - [`maili-registry`][maili-registry] (note: requires `serde`)
 - [`maili-rpc`][maili-rpc]
@@ -87,6 +96,8 @@ shall be dual licensed as above, without any additional terms or conditions.
 [contributing]: https://op-rs.github.io/maili
 
 [maili-protocol]: https://crates.io/crates/maili-protocol
+[maili-interop]: https://crates.io/crates/maili-interop
+[maili-superchain]: https://crates.io/crates/maili-superchain
 [maili-registry]: https://crates.io/crates/maili-registry
 [maili-genesis]: https://crates.io/crates/maili-genesis
 [maili-rpc]: https://crates.io/crates/maili-rpc

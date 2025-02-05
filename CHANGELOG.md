@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.0](https://github.com/op-rs/maili
-/releases/tag/v0.2.0) - 2025-01-31
+## [0.2.1](https://github.com/op-rs/maili
+/releases/tag/v0.2.1) - 2025-02-05
 
 ### Bug Fixes
 
+- [genesis] Small Operator Fee Fix ([#167](https://github.com/op-rs/maili/issues/167))
+- [protocol] Remove old interop types and supervisor API ([#132](https://github.com/op-rs/maili/issues/132))
 - Registry configs ([#148](https://github.com/op-rs/maili/issues/148))
 - Turn revm defaults off ([#146](https://github.com/op-rs/maili/issues/146))
 - [maili] Touchup Manifest ([#143](https://github.com/op-rs/maili/issues/143))
@@ -103,6 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Alloy Dep Bump ([#162](https://github.com/op-rs/maili/issues/162))
 - Bump alloy 0.11 op-alloy 0.10 ([#151](https://github.com/op-rs/maili/issues/151))
 - Update Dependencies ([#141](https://github.com/op-rs/maili/issues/141))
 - [deps] Replace `OpTxEnvelope` with `TxEnvelope` ([#61](https://github.com/op-rs/maili/issues/61))
@@ -143,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [protocol] Operator Fee ([#10](https://github.com/op-rs/maili/issues/10))
 - Implement EIP-7702 span batch support ([#135](https://github.com/op-rs/maili/issues/135))
 - [ci] Feature propagation checks ([#134](https://github.com/op-rs/maili/issues/134))
 - [rpc] Supervisor traits + client ([#128](https://github.com/op-rs/maili/issues/128))
@@ -286,6 +290,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Touchup Readme Again ([#172](https://github.com/op-rs/maili/issues/172))
+- Touchup README ([#171](https://github.com/op-rs/maili/issues/171))
+- [genesis] Cleanup System Config ([#169](https://github.com/op-rs/maili/issues/169))
+- [genesis] Clean up ChainConfig ([#168](https://github.com/op-rs/maili/issues/168))
+- [registry] Sort Superchains and Chains ([#161](https://github.com/op-rs/maili/issues/161))
+- [registry] Pretty Missing Submodule Warnings ([#160](https://github.com/op-rs/maili/issues/160))
+- Clean up maili-interop ([#156](https://github.com/op-rs/maili/issues/156))
+- [registry] Pretty Print SCR Configs ([#157](https://github.com/op-rs/maili/issues/157))
+- Update SCR ([#155](https://github.com/op-rs/maili/issues/155))
 - [genesis] De-dup Revm SpecId Helper ([#142](https://github.com/op-rs/maili/issues/142))
 - [protocol] Superchain Registry V2.0 ([#99](https://github.com/op-rs/maili/issues/99))
 - [flz] Compression Re-exports ([#95](https://github.com/op-rs/maili/issues/95))
@@ -443,6 +456,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- [BOT] Update Submodules ([#154](https://github.com/op-rs/maili/issues/154))
+- [BOT] Update Submodules ([#149](https://github.com/op-rs/maili/issues/149))
+- 0.2.0 ([#153](https://github.com/op-rs/maili/issues/153))
 - 0.1.11 ([#147](https://github.com/op-rs/maili/issues/147))
 - [BOT] Update Submodules ([#144](https://github.com/op-rs/maili/issues/144))
 - 0.1.10 ([#145](https://github.com/op-rs/maili/issues/145))
@@ -562,6 +578,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Testing
 
+- Print source branch name ([#165](https://github.com/op-rs/maili/issues/165))
+- Print head ref ([#164](https://github.com/op-rs/maili/issues/164))
+- Print branch name ([#163](https://github.com/op-rs/maili/issues/163))
 - Cargo dist ([#133](https://github.com/op-rs/maili/issues/133))
 - Cargo-dist ([#131](https://github.com/op-rs/maili/issues/131))
 

@@ -76,8 +76,8 @@ pub use fee::{
     data_gas_bedrock, data_gas_fjord, data_gas_regolith, flz_compress_len, tx_estimated_size_fjord,
 };
 
-pub mod predeploys;
-pub use predeploys::ADDRESS_L2_TO_L1_MESSAGE_PASSER;
+mod predeploys;
+pub use predeploys::Predeploys;
 
 #[cfg(any(test, feature = "test-utils"))]
 pub mod test_utils;

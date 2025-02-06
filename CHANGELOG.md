@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.1](https://github.com/op-rs/maili
-/releases/tag/v0.2.1) - 2025-02-05
+## [0.2.2](https://github.com/op-rs/maili
+/releases/tag/v0.2.2) - 2025-02-06
 
 ### Bug Fixes
 
+- [registry] Serialization of Chain Config ([#179](https://github.com/op-rs/maili/issues/179))
+- [superchain] Bad Superchain Types ([#178](https://github.com/op-rs/maili/issues/178))
 - [genesis] Small Operator Fee Fix ([#167](https://github.com/op-rs/maili/issues/167))
 - [protocol] Remove old interop types and supervisor API ([#132](https://github.com/op-rs/maili/issues/132))
 - Registry configs ([#148](https://github.com/op-rs/maili/issues/148))
@@ -146,6 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Add predeploy module ([#166](https://github.com/op-rs/maili/issues/166))
 - [protocol] Operator Fee ([#10](https://github.com/op-rs/maili/issues/10))
 - Implement EIP-7702 span batch support ([#135](https://github.com/op-rs/maili/issues/135))
 - [ci] Feature propagation checks ([#134](https://github.com/op-rs/maili/issues/134))
@@ -290,6 +293,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- Deprecate Maili-superchain ([#182](https://github.com/op-rs/maili/issues/182))
+- [genesis] Cleanup Types ([#180](https://github.com/op-rs/maili/issues/180))
+- Touchups and no_std checks ([#177](https://github.com/op-rs/maili/issues/177))
 - Touchup Readme Again ([#172](https://github.com/op-rs/maili/issues/172))
 - Touchup README ([#171](https://github.com/op-rs/maili/issues/171))
 - [genesis] Cleanup System Config ([#169](https://github.com/op-rs/maili/issues/169))
@@ -456,6 +462,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- [BOT] Update Submodules ([#175](https://github.com/op-rs/maili/issues/175))
+- [BOT] Update Submodules ([#174](https://github.com/op-rs/maili/issues/174))
+- 0.2.1 ([#173](https://github.com/op-rs/maili/issues/173))
 - [BOT] Update Submodules ([#154](https://github.com/op-rs/maili/issues/154))
 - [BOT] Update Submodules ([#149](https://github.com/op-rs/maili/issues/149))
 - 0.2.0 ([#153](https://github.com/op-rs/maili/issues/153))

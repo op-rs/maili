@@ -8,7 +8,6 @@ no_std_packages=(
   maili-registry
   maili-interop
   maili-serde
-  maili-superchain
 )
 
 for package in "${no_std_packages[@]}"; do

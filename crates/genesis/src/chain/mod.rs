@@ -21,9 +21,6 @@ pub use config::ChainConfig;
 mod altda;
 pub use altda::AltDAConfig;
 
-mod superchain;
-pub use superchain::SuperchainLevel;
-
 mod hardfork;
 pub use hardfork::HardForkConfiguration;
 

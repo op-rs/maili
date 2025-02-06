@@ -42,7 +42,6 @@ maili-interop = { version = "0.2.2", path = "crates/interop", default-features =
 maili-genesis = { version = "0.2.2", path = "crates/genesis", default-features = false }
 maili-protocol = { version = "0.2.2", path = "crates/protocol", default-features = false }
 maili-registry = { version = "0.2.2", path = "crates/registry", default-features = false }
-maili-superchain = { version = "0.2.2", path = "crates/registry/superchain", default-features = false }
 
 # OP Alloy
 op-alloy-flz = { version = "0.10.2", default-features = false }

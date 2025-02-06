@@ -1,20 +1,11 @@
-#![doc = include_str!("../README.md")]
-#![doc(
-    html_logo_url = "https://raw.githubusercontent.com/op-rs/maili/main/assets/square.png",
-    html_favicon_url = "https://raw.githubusercontent.com/op-rs/maili/main/assets/favicon.ico"
-)]
-#![cfg_attr(not(test), warn(unused_crate_dependencies))]
-#![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
-#![no_std]
+//! Contains the `Superchain` type.
 
-extern crate alloc;
-
+use crate::{ChainConfig, SuperchainConfig};
 use alloc::{string::String, vec::Vec};
-use alloy_primitives::Address;
-use maili_genesis::{ChainConfig, HardForkConfiguration};
 
 /// A superchain configuration.
-#[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Default, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Superchain {
     /// Superchain identifier, without capitalization or display changes.
     pub name: String,
@@ -24,50 +15,11 @@ pub struct Superchain {
     pub chains: Vec<ChainConfig>,
 }
 
-/// A superchain configuration file format
-#[derive(Debug, Clone, Default, Hash, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-pub struct SuperchainConfig {
-    /// Superchain name (e.g. "Mainnet")
-    pub name: String,
-    /// Superchain L1 anchor information
-    pub l1: SuperchainL1Info,
-    /// Default hardforks timestamps.
-    pub hardforks: HardForkConfiguration,
-    /// Optional addresses for the superchain-wide default protocol versions contract.
-    #[serde(alias = "protocolVersionsAddr")]
-    pub protocol_versions_addr: Option<Address>,
-    /// Optional address for the superchain-wide default superchain config contract.
-    #[serde(alias = "superchainConfigAddr")]
-    pub superchain_config_addr: Option<Address>,
-    /// The op contracts manager proxy address.
-    #[serde(alias = "OPContractsManagerProxyAddr")]
-    pub op_contracts_manager_proxy_addr: Option<Address>,
-}
-
-/// Superchain L1 anchor information
-#[derive(Debug, Clone, Default, Hash, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-pub struct SuperchainL1Info {
-    /// L1 chain ID
-    #[serde(alias = "chainId")]
-    pub chain_id: u64,
-    /// L1 chain public RPC endpoint
-    #[serde(alias = "publicRPC")]
-    pub public_rpc: String,
-    /// L1 chain explorer RPC endpoint
-    pub explorer: String,
-}
-
-/// A list of Hydrated Superchain Configs.
-#[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Superchains {
-    /// A list of superchain configs.
-    pub superchains: Vec<Superchain>,
-}
-
 #[cfg(test)]
+#[cfg(feature = "serde")]
 mod tests {
     use super::*;
+    use crate::{HardForkConfiguration, SuperchainConfig, SuperchainL1Info};
     use alloc::{string::ToString, vec};
 
     #[test]

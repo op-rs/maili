@@ -3,8 +3,7 @@
 use super::Chain;
 use alloc::vec::Vec;
 use alloy_primitives::map::{DefaultHashBuilder, HashMap};
-use maili_genesis::{ChainConfig, RollupConfig};
-use maili_superchain::Superchains;
+use maili_genesis::{ChainConfig, RollupConfig, Superchains};
 
 /// The registry containing all the superchain configurations.
 #[derive(Debug, Clone, Default, Eq, PartialEq, serde::Serialize, serde::Deserialize)]

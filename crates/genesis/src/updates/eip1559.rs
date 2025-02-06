@@ -113,7 +113,7 @@ mod tests {
     }
 
     #[test]
-    fn test_eip1559_update_invalid_point_length() {
+    fn test_eip1559_update_invalid_pointer_length() {
         let log = Log {
             address: Address::ZERO,
             data: LogData::new_unchecked(

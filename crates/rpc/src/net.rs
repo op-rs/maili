@@ -265,9 +265,34 @@ impl core::fmt::Display for Direction {
 }
 
 #[cfg(test)]
-#[cfg(feature = "serde")]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_connectedness_from_u8() {
+        assert_eq!(Connectedness::from(0), Connectedness::NotConnected);
+        assert_eq!(Connectedness::from(1), Connectedness::Connected);
+        assert_eq!(Connectedness::from(2), Connectedness::CanConnect);
+        assert_eq!(Connectedness::from(3), Connectedness::CannotConnect);
+        assert_eq!(Connectedness::from(4), Connectedness::Limited);
+        assert_eq!(Connectedness::from(5), Connectedness::NotConnected);
+    }
+
+    #[test]
+    fn test_connectedness_display() {
+        assert_eq!(Connectedness::NotConnected.to_string(), "Not Connected");
+        assert_eq!(Connectedness::Connected.to_string(), "Connected");
+        assert_eq!(Connectedness::CanConnect.to_string(), "Can Connect");
+        assert_eq!(Connectedness::CannotConnect.to_string(), "Cannot Connect");
+        assert_eq!(Connectedness::Limited.to_string(), "Limited");
+    }
+
+    #[test]
+    fn test_direction_display() {
+        assert_eq!(Direction::Unknown.to_string(), "Unknown");
+        assert_eq!(Direction::Inbound.to_string(), "Inbound");
+        assert_eq!(Direction::Outbound.to_string(), "Outbound");
+    }
 
     #[test]
     #[cfg(feature = "serde")]

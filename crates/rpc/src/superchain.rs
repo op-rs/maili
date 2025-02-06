@@ -314,6 +314,62 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_protocol_version_display() {
+        assert_eq!(
+            ProtocolVersion::V0(ProtocolVersionFormatV0 {
+                build: B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
+                major: 42,
+                minor: 0,
+                patch: 2,
+                pre_release: 0,
+            })
+            .display(),
+            "v42.0.2+0x6162010000000000"
+        );
+    }
+
+    #[test]
+    fn test_protocol_version_accessors() {
+        let inner = ProtocolVersionFormatV0 {
+            build: B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
+            major: 42,
+            minor: 0,
+            patch: 2,
+            pre_release: 0,
+        };
+        let protocol_version = ProtocolVersion::V0(inner);
+
+        assert_eq!(
+            protocol_version.build(),
+            B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00])
+        );
+        assert_eq!(protocol_version.major(), 42);
+        assert_eq!(protocol_version.minor(), 0);
+        assert_eq!(protocol_version.patch(), 2);
+        assert_eq!(protocol_version.pre_release(), 0);
+        assert_eq!(protocol_version.inner(), inner);
+        assert_eq!(protocol_version.as_v0(), Some(inner));
+    }
+
+    #[test]
+    #[cfg(feature = "serde")]
+    fn test_protocol_version_serde() {
+        let raw_protocol_version = r#"
+            "0x000000000000000061620100000000000000002a000000000000000200000000"
+        "#;
+        let protocol_version = ProtocolVersion::V0(ProtocolVersionFormatV0 {
+            build: B64::from_slice(&[0x61, 0x62, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00]),
+            major: 42,
+            minor: 0,
+            patch: 2,
+            pre_release: 0,
+        });
+
+        let encoded = serde_json::to_string(&protocol_version).unwrap();
+        assert_eq!(encoded, raw_protocol_version.trim());
+    }
+
+    #[test]
     fn test_protocol_version_encode_decode() {
         let test_cases = [
             (

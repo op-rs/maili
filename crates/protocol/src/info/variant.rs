@@ -241,6 +241,24 @@ impl L1BlockInfoTx {
         }
     }
 
+    /// Returns the operator fee scalar.
+    pub const fn operator_fee_scalar(&self) -> u32 {
+        match self {
+            Self::Isthmus(L1BlockInfoIsthmus { operator_fee_scalar, .. }) => *operator_fee_scalar,
+            _ => 0,
+        }
+    }
+
+    /// Returns the operator fee constant.
+    pub const fn operator_fee_constant(&self) -> u64 {
+        match self {
+            Self::Isthmus(L1BlockInfoIsthmus { operator_fee_constant, .. }) => {
+                *operator_fee_constant
+            }
+            _ => 0,
+        }
+    }
+
     /// Returns the l1 base fee.
     pub fn l1_base_fee(&self) -> U256 {
         match self {

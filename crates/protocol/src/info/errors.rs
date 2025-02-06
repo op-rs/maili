@@ -26,7 +26,7 @@ pub enum BlockInfoError {
 }
 
 /// An error decoding an L1 block info transaction.
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, Eq, PartialEq, thiserror::Error)]
 pub enum DecodeError {
     /// Invalid selector for the L1 info transaction.
     #[error("Invalid L1 info transaction selector")]

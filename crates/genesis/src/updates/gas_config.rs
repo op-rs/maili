@@ -74,7 +74,7 @@ impl TryFrom<&SystemConfigLog> for GasConfigUpdate {
 mod tests {
     use super::*;
     use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
-    use alloy_primitives::{hex, uint, Address, Log, LogData, B256};
+    use alloy_primitives::{hex, uint, Address, Bytes, Log, LogData, B256};
 
     #[test]
     fn test_gas_config_update_try_from() {
@@ -97,5 +97,126 @@ mod tests {
 
         assert_eq!(update.overhead, Some(uint!(0xbabe_U256)));
         assert_eq!(update.scalar, Some(uint!(0xbeef_U256)));
+    }
+
+    #[test]
+    fn test_gas_config_update_invalid_data_len() {
+        let log =
+            Log { address: Address::ZERO, data: LogData::new_unchecked(vec![], Bytes::default()) };
+        let system_log = SystemConfigLog::new(log, false);
+        let err = GasConfigUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, GasConfigUpdateError::InvalidDataLen(0));
+    }
+
+    #[test]
+    fn test_gas_config_update_pointer_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = GasConfigUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, GasConfigUpdateError::PointerDecodingError);
+    }
+
+    #[test]
+    fn test_gas_config_update_invalid_pointer_length() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000210000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = GasConfigUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, GasConfigUpdateError::InvalidDataPointer(33));
+    }
+
+    #[test]
+    fn test_gas_config_update_length_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("0000000000000000000000000000000000000000000000000000000000000020FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = GasConfigUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, GasConfigUpdateError::LengthDecodingError);
+    }
+
+    #[test]
+    fn test_gas_config_update_invalid_data_length() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000041000000000000000000000000000000000000000000000000000000000000babe000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = GasConfigUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, GasConfigUpdateError::InvalidDataLength(65));
+    }
+
+    #[test]
+    fn test_gas_config_update_overhead_decoding_succeeds_max_u256() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000040FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000000000000000000000000000000000000000000000000000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        assert!(GasConfigUpdate::try_from(&system_log).is_ok());
+    }
+
+    #[test]
+    fn test_gas_config_update_scalar_decoding_succeeds_max_u256() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000babeFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        assert!(GasConfigUpdate::try_from(&system_log).is_ok());
     }
 }

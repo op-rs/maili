@@ -145,12 +145,10 @@ pub fn read_tx_data(r: &mut &[u8]) -> Result<(Vec<u8>, TxType), SpanBatchError> 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::{RAW_BEDROCK_INFO_TX, RAW_ECOTONE_INFO_TX, RAW_ISTHMUS_INFO_TX};
     use alloy_eips::eip1898::BlockNumHash;
     use alloy_primitives::{address, hex, uint, U256};
     use maili_genesis::ChainGenesis;
-
-    const RAW_BEDROCK_INFO_TX: [u8; L1BlockInfoBedrock::L1_INFO_TX_LEN] = hex!("015d8eb9000000000000000000000000000000000000000000000000000000000117c4eb0000000000000000000000000000000000000000000000000000000065280377000000000000000000000000000000000000000000000000000000026d05d953392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc00000000000000000000000000000000000000000000000000000000000000040000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f3298500000000000000000000000000000000000000000000000000000000000000bc00000000000000000000000000000000000000000000000000000000000a6fe0");
-    const RAW_ISTHMUS_INFO_TX: [u8; L1BlockInfoIsthmus::L1_INFO_TX_LEN] = hex!("098999be00000558000c5fc5000000000000000500000000661c277300000000012bec20000000000000000000000000000000000000000000000000000000026e9f109900000000000000000000000000000000000000000000000000000000000000011c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add30000000000000000000000006887246668a3b87f54deb3b94ba47a6f63f329850000abcd000000000000dcba");
 
     #[test]
     fn test_to_system_config_invalid_genesis_hash() {
@@ -283,6 +281,53 @@ mod tests {
             blob_base_fee_scalar: None,
             eip1559_denominator: None,
             eip1559_elasticity: None,
+            operator_fee_scalar: None,
+            operator_fee_constant: None,
+        };
+        assert_eq!(config, expected);
+    }
+
+    #[test]
+    fn test_constructs_ecotone_system_config() {
+        let block = OpBlock {
+            header: alloy_consensus::Header {
+                number: 1,
+                // Holocene EIP1559 parameters stored in the nonce.
+                nonce: hex!("0000beef0000babe").into(),
+                ..Default::default()
+            },
+            body: alloy_consensus::BlockBody {
+                transactions: vec![op_alloy_consensus::OpTxEnvelope::Deposit(
+                    alloy_primitives::Sealed::new(op_alloy_consensus::TxDeposit {
+                        input: alloy_primitives::Bytes::from(&RAW_ECOTONE_INFO_TX),
+                        ..Default::default()
+                    }),
+                )],
+                ..Default::default()
+            },
+        };
+        let block_hash = block.header.hash_slow();
+        let rollup_config = RollupConfig {
+            genesis: ChainGenesis {
+                l2: BlockNumHash { hash: block_hash, ..Default::default() },
+                ..Default::default()
+            },
+            holocene_time: Some(0),
+            ..Default::default()
+        };
+        assert!(rollup_config.is_holocene_active(block.header.timestamp));
+        let config = to_system_config(&block, &rollup_config).unwrap();
+        let expected = SystemConfig {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            overhead: U256::ZERO,
+            scalar: uint!(
+                452312848583266388373324160190187140051835877600158453279134670530344387928_U256
+            ),
+            gas_limit: 0,
+            base_fee_scalar: None,
+            blob_base_fee_scalar: None,
+            eip1559_denominator: Some(0xbeef),
+            eip1559_elasticity: Some(0xbabe),
             operator_fee_scalar: None,
             operator_fee_constant: None,
         };

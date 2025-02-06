@@ -18,8 +18,9 @@ coverage:
         only_pulls: true
 
 ignore:
-  - "**/examples/*"
-  - "**/test_utils/*"
+  - "**/examples/*" # examples/*
+  - "**/test_utils/*" # test_utils/*
+  - "**/test_utils*" # test_utils.rs
 
 # Make comments less noisy
 comment:

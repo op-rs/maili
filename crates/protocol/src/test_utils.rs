@@ -1,7 +1,7 @@
 //! Test utilities for the protocol crate.
 
 use alloc::{boxed::Box, format, string::String, sync::Arc, vec::Vec};
-use alloy_primitives::hex;
+use alloy_primitives::{hex, Bytes};
 use async_trait::async_trait;
 use op_alloy_consensus::OpBlock;
 use spin::Mutex;
@@ -9,8 +9,8 @@ use tracing::{Event, Level, Subscriber};
 use tracing_subscriber::{layer::Context, Layer};
 
 use crate::{
-    BatchValidationProvider, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop,
-    L1BlockInfoIsthmus, L2BlockInfo,
+    BatchValidationProvider, ChannelCompressor, CompressorResult, CompressorWriter,
+    L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop, L1BlockInfoIsthmus, L2BlockInfo,
 };
 
 /// Raw encoded bedrock L1 block info transaction.
@@ -24,6 +24,50 @@ pub const RAW_ISTHMUS_INFO_TX: [u8; L1BlockInfoIsthmus::L1_INFO_TX_LEN] = hex!("
 
 /// Raw encoded interop L1 block info transaction.
 pub const RAW_INTEROP_INFO_TX: [u8; L1BlockInfoInterop::L1_INFO_TX_LEN] = hex!("760ee04d00000558000c5fc50000000000000001000000006789ab380000000000000000000000000000000000000000000000000000000000000000000000003b9aca0000000000000000000000000000000000000000000000000000000000000000014f98b83baf52c498b49bfff33e59965b27da7febbea9a2fcc4719d06dc06932a000000000000000000000000c0658ee336b551ff83216fbdf85ec92613d23602");
+
+/// A Mock compressor for testing.
+#[derive(Debug, Clone, Default)]
+pub struct MockCompressor {
+    /// Compressed bytes
+    pub compressed: Option<Bytes>,
+}
+
+impl CompressorWriter for MockCompressor {
+    fn write(&mut self, data: &[u8]) -> CompressorResult<usize> {
+        let data = data.to_vec();
+        let written = data.len();
+        self.compressed = Some(Bytes::from(data));
+        Ok(written)
+    }
+
+    fn flush(&mut self) -> CompressorResult<()> {
+        Ok(())
+    }
+
+    fn close(&mut self) -> CompressorResult<()> {
+        Ok(())
+    }
+
+    fn reset(&mut self) {
+        self.compressed = None;
+    }
+
+    fn len(&self) -> usize {
+        self.compressed.as_ref().map(|b| b.len()).unwrap_or(0)
+    }
+
+    fn read(&mut self, buf: &mut [u8]) -> CompressorResult<usize> {
+        let len = self.compressed.as_ref().map(|b| b.len()).unwrap_or(0);
+        buf[..len].copy_from_slice(self.compressed.as_ref().unwrap());
+        Ok(len)
+    }
+}
+
+impl ChannelCompressor for MockCompressor {
+    fn get_compressed(&self) -> Vec<u8> {
+        self.compressed.as_ref().unwrap().to_vec()
+    }
+}
 
 /// An error for implementations of the [BatchValidationProvider] trait.
 #[derive(Debug, thiserror::Error)]

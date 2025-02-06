@@ -55,7 +55,13 @@ impl From<Config> for RatioCompressor {
 
 impl CompressorWriter for RatioCompressor {
     fn write(&mut self, data: &[u8]) -> CompressorResult<usize> {
-        self.compressor.write(data)
+        match self.compressor.write(data) {
+            Ok(n) => {
+                self.lake += n as u64;
+                Ok(n)
+            }
+            Err(e) => Err(e),
+        }
     }
 
     fn flush(&mut self) -> CompressorResult<()> {
@@ -68,6 +74,7 @@ impl CompressorWriter for RatioCompressor {
 
     fn reset(&mut self) {
         self.compressor.reset();
+        self.lake = 0;
     }
 
     fn len(&self) -> usize {
@@ -76,5 +83,55 @@ impl CompressorWriter for RatioCompressor {
 
     fn read(&mut self, buf: &mut [u8]) -> CompressorResult<usize> {
         self.compressor.read(buf)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{CompressionAlgo, CompressorType};
+
+    #[test]
+    fn test_input_threshold() {
+        let config = Config {
+            target_output_size: 1024,
+            approx_compr_ratio: 0.5,
+            compression_algo: CompressionAlgo::Zlib,
+            kind: CompressorType::Ratio,
+        };
+
+        let inner = VariantCompressor::from(CompressionAlgo::Zlib);
+        let compressor = RatioCompressor::new(config, inner);
+        assert_eq!(compressor.input_threshold(), 2048);
+    }
+
+    #[test]
+    fn test_ratio_compressor() {
+        let config = Config {
+            target_output_size: 1024,
+            approx_compr_ratio: 0.5,
+            compression_algo: CompressionAlgo::Zlib,
+            kind: CompressorType::Ratio,
+        };
+
+        let inner = VariantCompressor::from(CompressionAlgo::Zlib);
+        let mut compressor = RatioCompressor::new(config, inner);
+
+        assert!(!compressor.is_full());
+        compressor.write(&[0; 2048]).unwrap();
+        assert!(compressor.is_full());
+        assert_eq!(compressor.len(), 18);
+
+        let mut buf = [];
+        compressor.read(&mut buf).unwrap();
+        assert_eq!(buf.len(), 0);
+
+        compressor.flush().unwrap();
+
+        compressor.reset();
+        assert!(!compressor.is_full());
+        assert_eq!(compressor.len(), 0);
+
+        compressor.close().unwrap();
     }
 }

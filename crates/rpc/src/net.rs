@@ -267,6 +267,7 @@ impl core::fmt::Display for Direction {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::string::ToString;
 
     #[test]
     fn test_connectedness_from_u8() {

@@ -1,6 +1,7 @@
 # maili
 
 <a href="https://crates.io/crates/v/maili"><img src="https://img.shields.io/crates/v/maili?label=maili" alt="Maili Crate"></a>
+<a href="https://img.shields.io/codecov/c/github/op-rs/maili"><img src="https://img.shields.io/codecov/c/github/op-rs/maili" alt="Codecov"></a>
 <a href="https://github.com/op-rs/maili/actions/workflows/ci.yml"><img src="https://github.com/op-rs/maili/actions/workflows/ci.yml/badge.svg?label=ci" alt="CI"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-APACHE"><img src="https://img.shields.io/badge/License-APACHE-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>
 <a href="https://github.com/op-rs/maili/blob/main/LICENSE-MIT"><img src="https://img.shields.io/badge/License-MIT-d1d1f6.svg?label=license&labelColor=2a2f35" alt="License"></a>

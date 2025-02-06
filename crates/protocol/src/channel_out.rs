@@ -147,8 +147,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::MockCompressor;
-    use crate::{CompressorWriter, SingleBatch, SpanBatch};
+    use crate::{test_utils::MockCompressor, CompressorWriter, SingleBatch, SpanBatch};
 
     #[test]
     fn test_channel_out_reset() {

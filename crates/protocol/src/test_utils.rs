@@ -1,7 +1,7 @@
 //! Test utilities for the protocol crate.
 
 use alloc::{boxed::Box, format, string::String, sync::Arc, vec::Vec};
-use alloy_primitives::{Bytes, hex};
+use alloy_primitives::{hex, Bytes};
 use async_trait::async_trait;
 use op_alloy_consensus::OpBlock;
 use spin::Mutex;
@@ -9,8 +9,8 @@ use tracing::{Event, Level, Subscriber};
 use tracing_subscriber::{layer::Context, Layer};
 
 use crate::{
-    BatchValidationProvider, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop,
-    L1BlockInfoIsthmus, L2BlockInfo, CompressorWriter, ChannelCompressor, CompressorResult,
+    BatchValidationProvider, ChannelCompressor, CompressorResult, CompressorWriter,
+    L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop, L1BlockInfoIsthmus, L2BlockInfo,
 };
 
 /// Raw encoded bedrock L1 block info transaction.
@@ -68,7 +68,6 @@ impl ChannelCompressor for MockCompressor {
         self.compressed.as_ref().unwrap().to_vec()
     }
 }
-
 
 /// An error for implementations of the [BatchValidationProvider] trait.
 #[derive(Debug, thiserror::Error)]

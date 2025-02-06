@@ -164,6 +164,30 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_base_fee_params_from_chain_id() {
+        assert_eq!(base_fee_params(OP_MAINNET_CHAIN_ID), OP_MAINNET_BASE_FEE_PARAMS);
+        assert_eq!(base_fee_params(OP_SEPOLIA_CHAIN_ID), OP_SEPOLIA_BASE_FEE_PARAMS);
+        assert_eq!(base_fee_params(BASE_MAINNET_CHAIN_ID), OP_MAINNET_BASE_FEE_PARAMS);
+        assert_eq!(base_fee_params(BASE_SEPOLIA_CHAIN_ID), BASE_SEPOLIA_BASE_FEE_PARAMS);
+        assert_eq!(base_fee_params(0), OP_MAINNET_BASE_FEE_PARAMS);
+    }
+
+    #[test]
+    fn test_base_fee_params_canyon_from_chain_id() {
+        assert_eq!(base_fee_params_canyon(OP_MAINNET_CHAIN_ID), OP_MAINNET_BASE_FEE_PARAMS_CANYON);
+        assert_eq!(base_fee_params_canyon(OP_SEPOLIA_CHAIN_ID), OP_SEPOLIA_BASE_FEE_PARAMS_CANYON);
+        assert_eq!(
+            base_fee_params_canyon(BASE_MAINNET_CHAIN_ID),
+            OP_MAINNET_BASE_FEE_PARAMS_CANYON
+        );
+        assert_eq!(
+            base_fee_params_canyon(BASE_SEPOLIA_CHAIN_ID),
+            BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON
+        );
+        assert_eq!(base_fee_params_canyon(0), OP_MAINNET_BASE_FEE_PARAMS_CANYON);
+    }
+
+    #[test]
     fn test_base_fee_config_ser() {
         let config = OP_MAINNET_BASE_FEE_CONFIG;
         let raw_str = serde_json::to_string(&config).unwrap();

@@ -35,8 +35,7 @@ jobs:
             --workspace \
             --lcov \
             --output-path lcov.info \
-            --features test-utils && \
-            mv ./target/nextest/ci/junit.xml ./junit.xml
+            --features test-utils
       - name: Record Rust version
         run: echo "RUST=$(rustc --version)" >> "$GITHUB_ENV"
       - name: Upload coverage to codecov.io

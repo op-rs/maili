@@ -40,3 +40,21 @@ impl OpAttributesWithParent {
         self.is_last_in_span
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_op_attributes_with_parent() {
+        let attributes = OpPayloadAttributes::default();
+        let parent = L2BlockInfo::default();
+        let is_last_in_span = true;
+        let op_attributes_with_parent =
+            OpAttributesWithParent::new(attributes.clone(), parent, is_last_in_span);
+
+        assert_eq!(op_attributes_with_parent.attributes(), &attributes);
+        assert_eq!(op_attributes_with_parent.parent(), &parent);
+        assert_eq!(op_attributes_with_parent.is_last_in_span(), is_last_in_span);
+    }
+}

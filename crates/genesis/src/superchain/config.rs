@@ -15,12 +15,12 @@ pub struct SuperchainConfig {
     /// Default hardforks timestamps.
     pub hardforks: HardForkConfiguration,
     /// Optional addresses for the superchain-wide default protocol versions contract.
-    #[serde(alias = "protocolVersionsAddr")]
+    #[cfg_attr(feature = "serde", serde(alias = "protocolVersionsAddr"))]
     pub protocol_versions_addr: Option<Address>,
     /// Optional address for the superchain-wide default superchain config contract.
-    #[serde(alias = "superchainConfigAddr")]
+    #[cfg_attr(feature = "serde", serde(alias = "superchainConfigAddr"))]
     pub superchain_config_addr: Option<Address>,
     /// The op contracts manager proxy address.
-    #[serde(alias = "OPContractsManagerProxyAddr")]
+    #[cfg_attr(feature = "serde", serde(alias = "OPContractsManagerProxyAddr"))]
     pub op_contracts_manager_proxy_addr: Option<Address>,
 }

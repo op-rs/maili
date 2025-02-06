@@ -1,4 +1,4 @@
-name: Code Coverage
+name: Codecov
 
 on:
   push:
@@ -35,9 +35,7 @@ jobs:
             --workspace \
             --lcov \
             --output-path lcov.info \
-            --features test-utils \
-            --profile ci \
-            -E '!test(test_online)' && \
+            --features test-utils && \
             mv ./target/nextest/ci/junit.xml ./junit.xml
       - name: Record Rust version
         run: echo "RUST=$(rustc --version)" >> "$GITHUB_ENV"

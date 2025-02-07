@@ -9,8 +9,9 @@ use tracing::{Event, Level, Subscriber};
 use tracing_subscriber::{layer::Context, Layer};
 
 use crate::{
-    BatchValidationProvider, ChannelCompressor, CompressorResult, CompressorWriter,
-    L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop, L1BlockInfoIsthmus, L2BlockInfo,
+    BatchValidationProvider, ChannelCompressor, CompressorError, CompressorResult,
+    CompressorWriter, L1BlockInfoBedrock, L1BlockInfoEcotone, L1BlockInfoInterop,
+    L1BlockInfoIsthmus, L2BlockInfo,
 };
 
 /// Raw encoded bedrock L1 block info transaction.
@@ -30,6 +31,8 @@ pub const RAW_INTEROP_INFO_TX: [u8; L1BlockInfoInterop::L1_INFO_TX_LEN] = hex!("
 pub struct MockCompressor {
     /// Compressed bytes
     pub compressed: Option<Bytes>,
+    /// Whether to throw a read error.
+    pub read_error: bool,
 }
 
 impl CompressorWriter for MockCompressor {
@@ -57,6 +60,9 @@ impl CompressorWriter for MockCompressor {
     }
 
     fn read(&mut self, buf: &mut [u8]) -> CompressorResult<usize> {
+        if self.read_error {
+            return Err(CompressorError::Full);
+        }
         let len = self.compressed.as_ref().map(|b| b.len()).unwrap_or(0);
         buf[..len].copy_from_slice(self.compressed.as_ref().unwrap());
         Ok(len)

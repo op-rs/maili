@@ -68,7 +68,8 @@ impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_primitives::{hex, Address, Log, LogData};
+    use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloy_primitives::{hex, Address, Bytes, Log, LogData, B256};
 
     #[test]
     fn test_operator_fee_update_try_from() {
@@ -85,5 +86,90 @@ mod tests {
 
         assert_eq!(update.operator_fee_scalar, 0xbabe_u32);
         assert_eq!(update.operator_fee_constant, 0xbeef_u64);
+    }
+
+    #[test]
+    fn test_operator_fee_update_invalid_data_len() {
+        let log =
+            Log { address: Address::ZERO, data: LogData::new_unchecked(vec![], Bytes::default()) };
+        let system_log = SystemConfigLog::new(log, false);
+        let err = OperatorFeeUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, OperatorFeeUpdateError::InvalidDataLen(0));
+    }
+
+    #[test]
+    fn test_operator_fee_update_pointer_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = OperatorFeeUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, OperatorFeeUpdateError::PointerDecodingError);
+    }
+
+    #[test]
+    fn test_operator_fee_update_invalid_pointer_length() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("000000000000000000000000000000000000000000000000000000000000002100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = OperatorFeeUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, OperatorFeeUpdateError::InvalidDataPointer(33));
+    }
+
+    #[test]
+    fn test_operator_fee_update_length_decoding_error() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("0000000000000000000000000000000000000000000000000000000000000020FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = OperatorFeeUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, OperatorFeeUpdateError::LengthDecodingError);
+    }
+
+    #[test]
+    fn test_operator_fee_update_invalid_data_length() {
+        let log = Log {
+            address: Address::ZERO,
+            data: LogData::new_unchecked(
+                vec![
+                    CONFIG_UPDATE_TOPIC,
+                    CONFIG_UPDATE_EVENT_VERSION_0,
+                    B256::ZERO,
+                ],
+                hex!("000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000210000000000000000000000000000000000000000000000000000babe0000beef").into()
+            )
+        };
+
+        let system_log = SystemConfigLog::new(log, false);
+        let err = OperatorFeeUpdate::try_from(&system_log).unwrap_err();
+        assert_eq!(err, OperatorFeeUpdateError::InvalidDataLength(33));
     }
 }

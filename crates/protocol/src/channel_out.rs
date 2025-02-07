@@ -150,6 +150,39 @@ mod tests {
     use crate::{test_utils::MockCompressor, CompressorWriter, SingleBatch, SpanBatch};
 
     #[test]
+    fn test_output_frame_max_size_too_small() {
+        let config = RollupConfig::default();
+        let mut channel = ChannelOut::new(ChannelId::default(), &config, MockCompressor::default());
+        assert_eq!(channel.output_frame(0), Err(ChannelOutError::MaxFrameSizeTooSmall));
+    }
+
+    #[test]
+    fn test_channel_out_output_frame_no_data() {
+        let config = RollupConfig::default();
+        let mut channel = ChannelOut::new(
+            ChannelId::default(),
+            &config,
+            MockCompressor { read_error: true, compressed: Some(Default::default()) },
+        );
+        let err = channel.output_frame(FRAME_V0_OVERHEAD).unwrap_err();
+        assert_eq!(err, ChannelOutError::Compression(CompressorError::Full));
+    }
+
+    #[test]
+    fn test_channel_out_output() {
+        let config = RollupConfig::default();
+        let mut channel = ChannelOut::new(
+            ChannelId::default(),
+            &config,
+            MockCompressor { compressed: Some(Default::default()), ..Default::default() },
+        );
+        let frame = channel.output_frame(FRAME_V0_OVERHEAD).unwrap();
+        assert_eq!(frame.id, ChannelId::default());
+        assert_eq!(frame.number, 0);
+        assert!(!frame.is_last);
+    }
+
+    #[test]
     fn test_channel_out_reset() {
         let config = RollupConfig::default();
         let mut channel = ChannelOut {

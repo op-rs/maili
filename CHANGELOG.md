@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.2](https://github.com/op-rs/maili
-/releases/tag/v0.2.2) - 2025-02-06
+## [0.2.3](https://github.com/op-rs/maili
+/releases/tag/v0.2.3) - 2025-02-07
 
 ### Bug Fixes
 
+- [protocol] Operator Fees in System Config ([#187](https://github.com/op-rs/maili/issues/187))
 - [registry] Serialization of Chain Config ([#179](https://github.com/op-rs/maili/issues/179))
 - [superchain] Bad Superchain Types ([#178](https://github.com/op-rs/maili/issues/178))
 - [genesis] Small Operator Fee Fix ([#167](https://github.com/op-rs/maili/issues/167))
@@ -148,6 +149,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- Code Coverage ([#184](https://github.com/op-rs/maili/issues/184))
 - Add predeploy module ([#166](https://github.com/op-rs/maili/issues/166))
 - [protocol] Operator Fee ([#10](https://github.com/op-rs/maili/issues/10))
 - Implement EIP-7702 span batch support ([#135](https://github.com/op-rs/maili/issues/135))
@@ -293,6 +295,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [protocol] Test Coverage for Outputting a Frame ([#197](https://github.com/op-rs/maili/issues/197))
+- [genesis] Operator Fee Update Tests ([#196](https://github.com/op-rs/maili/issues/196))
+- [genesis] Gas Limit Update Tests ([#195](https://github.com/op-rs/maili/issues/195))
+- [protocol] Increase Test Coverage ([#194](https://github.com/op-rs/maili/issues/194))
+- [genesis] Gas Config Update Test Coverage ([#193](https://github.com/op-rs/maili/issues/193))
+- [genesis] Batcher Update Test Coverage ([#192](https://github.com/op-rs/maili/issues/192))
+- [genesis] Base Fee Params Testing ([#191](https://github.com/op-rs/maili/issues/191))
+- [rpc] Test Coverage ([#190](https://github.com/op-rs/maili/issues/190))
+- [protocol] ChannelOut Coverage ([#189](https://github.com/op-rs/maili/issues/189))
+- [protocol] Channel Test Coverage ([#188](https://github.com/op-rs/maili/issues/188))
+- README updates ([#186](https://github.com/op-rs/maili/issues/186))
+- Codecov shield ([#185](https://github.com/op-rs/maili/issues/185))
+- Remove superchain crate ([#181](https://github.com/op-rs/maili/issues/181))
 - Deprecate Maili-superchain ([#182](https://github.com/op-rs/maili/issues/182))
 - [genesis] Cleanup Types ([#180](https://github.com/op-rs/maili/issues/180))
 - Touchups and no_std checks ([#177](https://github.com/op-rs/maili/issues/177))
@@ -462,6 +477,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.2.2 ([#183](https://github.com/op-rs/maili/issues/183))
 - [BOT] Update Submodules ([#175](https://github.com/op-rs/maili/issues/175))
 - [BOT] Update Submodules ([#174](https://github.com/op-rs/maili/issues/174))
 - 0.2.1 ([#173](https://github.com/op-rs/maili/issues/173))

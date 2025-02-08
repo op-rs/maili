@@ -177,7 +177,8 @@ mod tests {
     use super::*;
     use alloy_consensus::{SignableTransaction, TxEip1559, TxEip7702, TxEnvelope};
     use alloy_eips::eip2718::{Decodable2718, Encodable2718};
-    use alloy_primitives::{Address, PrimitiveSignature, U256};
+    use alloy_primitives::{Address, PrimitiveSignature, Sealed, TxKind, U256};
+    use op_alloy_consensus::{OpTxEnvelope, TxDeposit};
 
     #[test]
     fn test_check_batch_timestamp_holocene_inactive_future() {
@@ -292,11 +293,8 @@ mod tests {
         );
     }
 
-    fn example_transactions() -> Vec<Bytes> {
-        let mut transactions = Vec::new();
-
-        // First Transaction in the batch.
-        let tx = TxEip1559 {
+    fn eip_1559_tx() -> TxEip1559 {
+        TxEip1559 {
             chain_id: 10u64,
             nonce: 2,
             max_fee_per_gas: 3,
@@ -306,7 +304,14 @@ mod tests {
             value: U256::from(7_u64),
             input: vec![8].into(),
             access_list: Default::default(),
-        };
+        }
+    }
+
+    fn example_transactions() -> Vec<Bytes> {
+        let mut transactions = Vec::new();
+
+        // First Transaction in the batch.
+        let tx = eip_1559_tx();
         let sig = PrimitiveSignature::test_signature();
         let tx_signed = tx.into_signed(sig);
         let envelope: TxEnvelope = tx_signed.into();
@@ -317,17 +322,8 @@ mod tests {
         assert!(matches!(decoded, TxEnvelope::Eip1559(_)));
 
         // Second transaction in the batch.
-        let tx = TxEip1559 {
-            chain_id: 10u64,
-            nonce: 2,
-            max_fee_per_gas: 3,
-            max_priority_fee_per_gas: 4,
-            gas_limit: 5,
-            to: Address::left_padding_from(&[7]).into(),
-            value: U256::from(7_u64),
-            input: vec![8].into(),
-            access_list: Default::default(),
-        };
+        let mut tx = eip_1559_tx();
+        tx.to = Address::left_padding_from(&[7]).into();
         let sig = PrimitiveSignature::test_signature();
         let tx_signed = tx.into_signed(sig);
         let envelope: TxEnvelope = tx_signed.into();
@@ -451,6 +447,78 @@ mod tests {
         assert_eq!(
             single_batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
             BatchValidity::Accept
+        );
+    }
+
+    #[test]
+    fn test_check_batch_drop_empty_tx() {
+        // An empty tx is not valid 2718 encoding.
+        // The batch must be dropped.
+        let transactions = vec![Default::default()];
+
+        // Construct a basic `SingleBatch`
+        let parent_hash = BlockHash::ZERO;
+        let epoch_num = 1;
+        let epoch_hash = BlockHash::ZERO;
+        let timestamp = 1;
+
+        let single_batch =
+            SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
+
+        // Notice: Isthmus is _not_ active yet.
+        let cfg = RollupConfig { max_sequencer_drift: 1, ..Default::default() };
+        let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 1, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        assert_eq!(
+            single_batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Drop
+        );
+    }
+
+    #[test]
+    fn test_check_batch_drop_2718_deposit() {
+        // Add a 2718 deposit transaction to the batch.
+        let mut transactions = example_transactions();
+
+        // Extend the transactions with the 2718 deposit transaction
+        let tx = TxDeposit {
+            source_hash: Default::default(),
+            from: Address::left_padding_from(&[7]),
+            to: TxKind::Create,
+            mint: None,
+            value: U256::from(7_u64),
+            gas_limit: 5,
+            is_system_transaction: false,
+            input: Default::default(),
+        };
+        let envelope = OpTxEnvelope::Deposit(Sealed::new(tx));
+        let encoded = envelope.encoded_2718();
+        transactions.push(encoded.into());
+
+        // Construct a basic `SingleBatch`
+        let parent_hash = BlockHash::ZERO;
+        let epoch_num = 1;
+        let epoch_hash = BlockHash::ZERO;
+        let timestamp = 1;
+
+        let single_batch =
+            SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
+
+        // Notice: Isthmus is _not_ active yet.
+        let cfg = RollupConfig { max_sequencer_drift: 1, ..Default::default() };
+        let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 1, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        assert_eq!(
+            single_batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Drop
         );
     }
 }

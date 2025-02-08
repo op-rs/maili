@@ -163,10 +163,8 @@ impl SingleBatch {
                 return BatchValidity::Drop;
             }
             // If isthmus is not active yet and the transaction is a 7702, drop the batch.
-            if !cfg.is_isthmus_active(batch_origin.timestamp) {
-                if starts_with_7702_tx(tx) {
-                    return BatchValidity::Drop;
-                }
+            if !cfg.is_isthmus_active(self.timestamp) && starts_with_7702_tx(tx) {
+                return BatchValidity::Drop;
             }
         }
 
@@ -177,6 +175,9 @@ impl SingleBatch {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy_consensus::{SignableTransaction, TxEip1559, TxEip7702, TxEnvelope};
+    use alloy_eips::eip2718::{Decodable2718, Encodable2718};
+    use alloy_primitives::{Address, PrimitiveSignature, U256};
 
     #[test]
     fn test_check_batch_timestamp_holocene_inactive_future() {
@@ -292,10 +293,6 @@ mod tests {
     }
 
     fn example_transactions() -> Vec<Bytes> {
-        use alloy_consensus::{SignableTransaction, TxEip1559, TxEnvelope};
-        use alloy_eips::eip2718::{Decodable2718, Encodable2718};
-        use alloy_primitives::{Address, PrimitiveSignature, U256};
-
         let mut transactions = Vec::new();
 
         // First Transaction in the batch.
@@ -358,6 +355,93 @@ mod tests {
             SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
 
         let cfg = RollupConfig { max_sequencer_drift: 1, ..Default::default() };
+        let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 1, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        assert_eq!(
+            single_batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Accept
+        );
+    }
+
+    fn eip_7702_tx() -> TxEip7702 {
+        TxEip7702 {
+            chain_id: 10u64,
+            nonce: 2,
+            gas_limit: 5,
+            max_fee_per_gas: 3,
+            max_priority_fee_per_gas: 4,
+            to: Address::left_padding_from(&[7]),
+            value: U256::from(7_u64),
+            input: vec![8].into(),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn test_check_batch_drop_7702_pre_isthmus() {
+        // Use the example transaction
+        let mut transactions = example_transactions();
+
+        // Extend the transactions with the 7702 transaction
+        let eip_7702_tx = eip_7702_tx();
+        let sig = PrimitiveSignature::test_signature();
+        let tx_signed = eip_7702_tx.into_signed(sig);
+        let envelope: TxEnvelope = tx_signed.into();
+        let encoded = envelope.encoded_2718();
+        transactions.push(encoded.into());
+
+        // Construct a basic `SingleBatch`
+        let parent_hash = BlockHash::ZERO;
+        let epoch_num = 1;
+        let epoch_hash = BlockHash::ZERO;
+        let timestamp = 1;
+
+        let single_batch =
+            SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
+
+        // Notice: Isthmus is _not_ active yet.
+        let cfg = RollupConfig { max_sequencer_drift: 1, ..Default::default() };
+        let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 1, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        assert_eq!(
+            single_batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Drop
+        );
+    }
+
+    #[test]
+    fn test_check_batch_accept_7702_post_isthmus() {
+        // Use the example transaction
+        let mut transactions = example_transactions();
+
+        // Extend the transactions with the 7702 transaction
+        let eip_7702_tx = eip_7702_tx();
+        let sig = PrimitiveSignature::test_signature();
+        let tx_signed = eip_7702_tx.into_signed(sig);
+        let envelope: TxEnvelope = tx_signed.into();
+        let encoded = envelope.encoded_2718();
+        transactions.push(encoded.into());
+
+        // Construct a basic `SingleBatch`
+        let parent_hash = BlockHash::ZERO;
+        let epoch_num = 1;
+        let epoch_hash = BlockHash::ZERO;
+        let timestamp = 1;
+
+        let single_batch =
+            SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
+
+        // Notice: Isthmus is _not_ active yet.
+        let cfg =
+            RollupConfig { max_sequencer_drift: 1, isthmus_time: Some(0), ..Default::default() };
         let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
         let l2_safe_head = L2BlockInfo {
             block_info: BlockInfo { timestamp: 1, ..Default::default() },

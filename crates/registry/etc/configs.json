@@ -2853,7 +2853,7 @@
           "SequencerRPC": "https://rpc.minato.soneium.org",
           "Explorer": "https://soneium-minato.blockscout.com/",
           "SuperchainLevel": 1,
-          "GovernedByOptimism": false,
+          "GovernedByOptimism": true,
           "SuperchainTime": 1734685200,
           "DataAvailabilityType": "eth-da",
           "l2_chain_id": 1946,
@@ -2903,7 +2903,7 @@
           },
           "Roles": {
             "SystemConfigOwner": "0xb278818732e5bebb742dc4aa0617ccd1dec76b65",
-            "ProxyAdminOwner": "0x4d59ccca765e1211bd32aa6f2a037fd37e519a25",
+            "ProxyAdminOwner": "0x1eb2ffc903729a0f03966b917003800b145f56e2",
             "Guardian": "0x7a50f00e8d05b95f98fe38d8bee366a7324dcf7e",
             "Challenger": "0xb278818732e5bebb742dc4aa0617ccd1dec76b65",
             "Proposer": "0xa759a2c80ec4c6421829862da30dd34436114502",
@@ -2925,9 +2925,9 @@
             "DelayedWethProxy": null,
             "DisputeGameFactoryProxy": "0xb3ad2c38e6e0640d7ce6aa952ab3a60e81bf7a01",
             "FaultDisputeGame": null,
-            "Mips": "0x4e3db3fa21566ff2ad6e11d1adc129ecf649e47f",
-            "PermissionedDisputeGame": "0x55bc868c07c8cd48446a76966894f4d87844839c",
-            "PreimageOracle": "0xbfebcf9b8855c3e1d01b2ad28db9f59bc6cb6965",
+            "Mips": "0x69470d6970cd2a006b84b1d4d70179c892cfce01",
+            "PermissionedDisputeGame": "0x3d570de1039b337be88934a778a8ff0e9fb274d2",
+            "PreimageOracle": "0x92240135b46fc1142da181f550ae8f595b858854",
             "DataAvailabilityChallenge": null
           }
         },

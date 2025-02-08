@@ -173,6 +173,51 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_empty_l1_blocks() {
+        let cfg = RollupConfig::default();
+        let l1_blocks = vec![];
+        let l2_safe_head = L2BlockInfo::default();
+        let inclusion_block = BlockInfo::default();
+        let batch = SingleBatch::default();
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Undecided
+        );
+    }
+
+    #[test]
+    fn test_timestamp_future() {
+        let cfg = RollupConfig::default();
+        let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { timestamp: 1, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let batch = SingleBatch { timestamp: 2, ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Future
+        );
+    }
+
+    #[test]
+    fn test_parent_hash_mismatch() {
+        let cfg = RollupConfig::default();
+        let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo { hash: BlockHash::from([0x01; 32]), ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo::default();
+        let batch = SingleBatch { parent_hash: BlockHash::from([0x02; 32]), ..Default::default() };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block),
+            BatchValidity::Drop
+        );
+    }
+
+    #[test]
     fn test_check_batch_timestamp_holocene_inactive_future() {
         let cfg = RollupConfig::default();
         let l2_safe_head = L2BlockInfo {

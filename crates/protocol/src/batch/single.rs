@@ -439,7 +439,7 @@ mod tests {
         let single_batch =
             SingleBatch { parent_hash, epoch_num, epoch_hash, timestamp, transactions };
 
-        // Notice: Isthmus is _not_ active yet.
+        // Notice: Isthmus is active.
         let cfg =
             RollupConfig { max_sequencer_drift: 1, isthmus_time: Some(0), ..Default::default() };
         let l1_blocks = vec![BlockInfo::default(), BlockInfo::default()];

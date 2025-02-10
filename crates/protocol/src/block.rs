@@ -177,6 +177,29 @@ mod tests {
     use alloy_primitives::b256;
 
     #[test]
+    fn test_from_block_error_partial_eq() {
+        assert_eq!(FromBlockError::InvalidGenesisHash, FromBlockError::InvalidGenesisHash);
+        assert_eq!(
+            FromBlockError::MissingL1InfoDeposit(b256!(
+                "04d6fefc87466405ba0e5672dcf5c75325b33e5437da2a42423080aab8be889b"
+            )),
+            FromBlockError::MissingL1InfoDeposit(b256!(
+                "04d6fefc87466405ba0e5672dcf5c75325b33e5437da2a42423080aab8be889b"
+            )),
+        );
+        assert_eq!(FromBlockError::UnexpectedTxType(1), FromBlockError::UnexpectedTxType(1));
+        assert_eq!(
+            FromBlockError::TxEnvelopeDecodeError(Eip2718Error::UnexpectedType(1)),
+            FromBlockError::TxEnvelopeDecodeError(Eip2718Error::UnexpectedType(1))
+        );
+        assert_eq!(FromBlockError::FirstTxNonDeposit(1), FromBlockError::FirstTxNonDeposit(1));
+        assert_eq!(
+            FromBlockError::BlockInfoDecodeError(DecodeError::InvalidSelector),
+            FromBlockError::BlockInfoDecodeError(DecodeError::InvalidSelector)
+        );
+    }
+
+    #[test]
     fn test_l2_block_info_invalid_genesis_hash() {
         let genesis = ChainGenesis {
             l1: BlockNumHash { hash: B256::from([4; 32]), number: 2 },

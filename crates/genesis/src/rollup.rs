@@ -20,9 +20,17 @@ pub const FJORD_MAX_SEQUENCER_DRIFT: u64 = 1800;
 /// The channel timeout once the Granite hardfork is active.
 pub const GRANITE_CHANNEL_TIMEOUT: u64 = 50;
 
+/// The default interop message expiry window. (1 hour, in seconds)
+pub const DEFAULT_INTEROP_MESSAGE_EXPIRY_WINDOW: u64 = 60 * 60;
+
 #[cfg(feature = "serde")]
 const fn default_granite_channel_timeout() -> u64 {
     GRANITE_CHANNEL_TIMEOUT
+}
+
+#[cfg(feature = "serde")]
+const fn default_interop_message_expiry_window() -> u64 {
+    DEFAULT_INTEROP_MESSAGE_EXPIRY_WINDOW
 }
 
 /// The Rollup configuration.
@@ -127,6 +135,10 @@ pub struct RollupConfig {
     /// stored at.
     #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
     pub da_challenge_address: Option<Address>,
+    /// `interop_message_expiry_window` is the maximum time (in seconds) that an initiating message
+    /// can be referenced on a remote chain before it expires.
+    #[cfg_attr(feature = "serde", serde(default = "default_interop_message_expiry_window"))]
+    pub interop_message_expiry_window: u64,
 }
 
 #[cfg(any(test, feature = "arbitrary"))]
@@ -170,6 +182,7 @@ impl<'a> arbitrary::Arbitrary<'a> for RollupConfig {
             superchain_config_address: Option::<Address>::arbitrary(u)?,
             blobs_enabled_l1_timestamp: Option::<u64>::arbitrary(u)?,
             da_challenge_address: Option::<Address>::arbitrary(u)?,
+            interop_message_expiry_window: u.arbitrary()?,
         })
     }
 }
@@ -204,6 +217,7 @@ impl Default for RollupConfig {
             superchain_config_address: None,
             blobs_enabled_l1_timestamp: None,
             da_challenge_address: None,
+            interop_message_expiry_window: DEFAULT_INTEROP_MESSAGE_EXPIRY_WINDOW,
         }
     }
 }
@@ -634,5 +648,6 @@ mod tests {
         assert_eq!(config.granite_channel_timeout, GRANITE_CHANNEL_TIMEOUT);
         assert_eq!(config.base_fee_params, OP_MAINNET_BASE_FEE_PARAMS);
         assert_eq!(config.canyon_base_fee_params, OP_MAINNET_BASE_FEE_PARAMS_CANYON);
+        assert_eq!(config.interop_message_expiry_window, DEFAULT_INTEROP_MESSAGE_EXPIRY_WINDOW);
     }
 }

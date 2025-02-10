@@ -109,6 +109,90 @@
           }
         },
         {
+          "Name": "Unichain",
+          "PublicRPC": "https://mainnet.unichain.org",
+          "SequencerRPC": "https://mainnet-sequencer.unichain.org",
+          "Explorer": "https://explorer.unichain.org",
+          "SuperchainLevel": 1,
+          "GovernedByOptimism": false,
+          "SuperchainTime": 0,
+          "DataAvailabilityType": "eth-da",
+          "l2_chain_id": 130,
+          "batch_inbox_address": "0xff00000000000000000000000000000000000130",
+          "block_time": 1,
+          "seq_window_size": 3600,
+          "max_sequencer_drift": 600,
+          "GasPayingToken": null,
+          "hardfork_configuration": {
+            "canyon_time": 0,
+            "delta_time": 0,
+            "ecotone_time": 0,
+            "fjord_time": 0,
+            "granite_time": 0,
+            "holocene_time": 1736445601,
+            "isthmus_time": null,
+            "interop_time": null
+          },
+          "optimism": {
+            "eip1559Elasticity": "0x6",
+            "eip1559Denominator": "0x32",
+            "eip1559DenominatorCanyon": "0xfa"
+          },
+          "alt_da": null,
+          "genesis": {
+            "l1": {
+              "number": 21116363,
+              "hash": "0x8c799ed21bd97471f76ba48ea54b30f8169c7e4e4a22acfba06951b571e0f4b6"
+            },
+            "l2": {
+              "number": 0,
+              "hash": "0x3425162ddf41a0a1f0106d67b71828c9a9577e6ddeb94e4f33d2cde1fdc3befe"
+            },
+            "l2_time": 1730748359,
+            "system_config": {
+              "batcherAddress": "0x2f60a5184c63ca94f82a27100643dbabe4f3f7fd",
+              "overhead": "0x0",
+              "scalar": "0x10000000000000000000000000000000000000000000000000dbba0000007d0",
+              "gasLimit": 30000000,
+              "baseFeeScalar": null,
+              "blobBaseFeeScalar": null,
+              "eip1559Denominator": null,
+              "eip1559Elasticity": null,
+              "operatorFeeScalar": null,
+              "operatorFeeConstant": null
+            }
+          },
+          "Roles": {
+            "SystemConfigOwner": "0x9245d5d10aa8a842b31530de71ea86c0760ca1b1",
+            "ProxyAdminOwner": "0x6d5b183f538abb8572f5cd17109c617b994d5833",
+            "Guardian": "0x09f7150d8c019bef34450d6920f6b3608cefdaf2",
+            "Challenger": "0x9ba6e03d8b90de867373db8cf1a58d2f7f006b3a",
+            "Proposer": "0xd5f0e2912c70771c589cd8bb087ede0dab4afa9a",
+            "UnsafeBlockSigner": "0x833c6f278474a78658af91ae8edc926fe33a230e",
+            "BatchSubmitter": "0x2f60a5184c63ca94f82a27100643dbabe4f3f7fd"
+          },
+          "Addresses": {
+            "AddressManager": "0x8098f676033a377b9defe302e9fe6877cd63d575",
+            "L1CrossDomainMessengerProxy": "0x9a3d64e386c18cb1d6d5179a9596a4b5736e98a6",
+            "L1Erc721BridgeProxy": "0xd04d0d87e0bd4d2e50286760a3ef323fea6849cf",
+            "L1StandardBridgeProxy": "0x81014f44b0a345033bb2b3b21c7a1a308b35feea",
+            "L2OutputOracleProxy": null,
+            "OptimismMintableErc20FactoryProxy": "0xa2b597eaeacb6f627e088cbead319e934ed5edad",
+            "OptimismPortalProxy": "0x0bd48f6b86a26d3a217d0fa6ffe2b491b956a7a2",
+            "SystemConfigProxy": "0xc407398d063f942febbcc6f80a156b47f3f1bda6",
+            "ProxyAdmin": "0x3b73fa8d82f511a3cae17b5a26e4e1a2d5e2f2a4",
+            "SuperchainConfig": "0x95703e0982140d16f8eba6d158fccede42f04a4c",
+            "AnchorStateRegistryProxy": "0x318a642db9e24a85318b8bf18efd5287ba38643b",
+            "DelayedWethProxy": "0xc9edb4e340f4e9683b4557bd9db8f9d932177c86",
+            "DisputeGameFactoryProxy": "0x2f12d621a16e2d3285929c9996f478508951dfe4",
+            "FaultDisputeGame": "0x08f0f8f4e792d21e16289db7a80759323c446f61",
+            "Mips": null,
+            "PermissionedDisputeGame": "0xc457172937ffa9306099ec4f2317903254bf7223",
+            "PreimageOracle": null,
+            "DataAvailabilityChallenge": null
+          }
+        },
+        {
           "Name": "HashKey Chain",
           "PublicRPC": "https://mainnet.hsk.xyz",
           "SequencerRPC": "https://hashkeychain-mainnet.alt.technology",

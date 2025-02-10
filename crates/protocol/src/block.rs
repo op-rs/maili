@@ -90,7 +90,7 @@ impl arbitrary::Arbitrary<'_> for L2BlockInfo {
 }
 
 /// An error that can occur when converting an OP [Block] to [L2BlockInfo].
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, Clone, thiserror::Error)]
 pub enum FromBlockError {
     /// The genesis block hash does not match the expected value.
     #[error("Invalid genesis hash")]
@@ -110,6 +110,20 @@ pub enum FromBlockError {
     /// Failed to decode the [L1BlockInfoTx] from the deposit transaction.
     #[error("Failed to decode the L1BlockInfoTx from the deposit transaction: {0}")]
     BlockInfoDecodeError(#[from] DecodeError),
+}
+
+impl PartialEq<Self> for FromBlockError {
+    fn eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::InvalidGenesisHash, Self::InvalidGenesisHash) => true,
+            (Self::MissingL1InfoDeposit(a), Self::MissingL1InfoDeposit(b)) => a == b,
+            (Self::UnexpectedTxType(a), Self::UnexpectedTxType(b)) => a == b,
+            (Self::TxEnvelopeDecodeError(_), Self::TxEnvelopeDecodeError(_)) => true,
+            (Self::FirstTxNonDeposit(a), Self::FirstTxNonDeposit(b)) => a == b,
+            (Self::BlockInfoDecodeError(a), Self::BlockInfoDecodeError(b)) => a == b,
+            _ => false,
+        }
+    }
 }
 
 impl From<Eip2718Error> for FromBlockError {
@@ -157,21 +171,103 @@ impl L2BlockInfo {
 }
 
 #[cfg(test)]
-#[cfg(feature = "serde")]
 mod tests {
     use super::*;
-    use arbitrary::Arbitrary;
-    use rand::Rng;
+    use alloy_consensus::{Header, TxEnvelope};
+    use alloy_primitives::b256;
 
     #[test]
+    fn test_from_block_error_partial_eq() {
+        assert_eq!(FromBlockError::InvalidGenesisHash, FromBlockError::InvalidGenesisHash);
+        assert_eq!(
+            FromBlockError::MissingL1InfoDeposit(b256!(
+                "04d6fefc87466405ba0e5672dcf5c75325b33e5437da2a42423080aab8be889b"
+            )),
+            FromBlockError::MissingL1InfoDeposit(b256!(
+                "04d6fefc87466405ba0e5672dcf5c75325b33e5437da2a42423080aab8be889b"
+            )),
+        );
+        assert_eq!(FromBlockError::UnexpectedTxType(1), FromBlockError::UnexpectedTxType(1));
+        assert_eq!(
+            FromBlockError::TxEnvelopeDecodeError(Eip2718Error::UnexpectedType(1)),
+            FromBlockError::TxEnvelopeDecodeError(Eip2718Error::UnexpectedType(1))
+        );
+        assert_eq!(FromBlockError::FirstTxNonDeposit(1), FromBlockError::FirstTxNonDeposit(1));
+        assert_eq!(
+            FromBlockError::BlockInfoDecodeError(DecodeError::InvalidSelector),
+            FromBlockError::BlockInfoDecodeError(DecodeError::InvalidSelector)
+        );
+    }
+
+    #[test]
+    fn test_l2_block_info_invalid_genesis_hash() {
+        let genesis = ChainGenesis {
+            l1: BlockNumHash { hash: B256::from([4; 32]), number: 2 },
+            l2: BlockNumHash { hash: B256::from([5; 32]), number: 1 },
+            ..Default::default()
+        };
+        let op_block = OpBlock {
+            header: Header {
+                number: 1,
+                parent_hash: B256::from([2; 32]),
+                timestamp: 1,
+                ..Default::default()
+            },
+            body: Default::default(),
+        };
+        let err = L2BlockInfo::from_block_and_genesis(&op_block, &genesis).unwrap_err();
+        assert_eq!(err, FromBlockError::InvalidGenesisHash);
+    }
+
+    #[test]
+    fn test_from_block() {
+        let block: Block<TxEnvelope, Header> = Block {
+            header: Header {
+                number: 1,
+                parent_hash: B256::from([2; 32]),
+                timestamp: 1,
+                ..Default::default()
+            },
+            body: Default::default(),
+        };
+        let block_info = BlockInfo::from(&block);
+        assert_eq!(
+            block_info,
+            BlockInfo {
+                hash: b256!("04d6fefc87466405ba0e5672dcf5c75325b33e5437da2a42423080aab8be889b"),
+                number: block.header.number,
+                parent_hash: block.header.parent_hash,
+                timestamp: block.header.timestamp,
+            }
+        );
+    }
+
+    #[test]
+    fn test_block_info_display() {
+        let hash = B256::from([1; 32]);
+        let parent_hash = B256::from([2; 32]);
+        let block_info = BlockInfo::new(hash, 1, parent_hash, 1);
+        assert_eq!(
+            block_info.to_string(),
+            "BlockInfo { hash: 0x0101010101010101010101010101010101010101010101010101010101010101, number: 1, parent_hash: 0x0202020202020202020202020202020202020202020202020202020202020202, timestamp: 1 }"
+        );
+    }
+
+    #[test]
+    #[cfg(feature = "arbitrary")]
     fn test_arbitrary_block_info() {
+        use arbitrary::Arbitrary;
+        use rand::Rng;
         let mut bytes = [0u8; 1024];
         rand::rng().fill(bytes.as_mut_slice());
         BlockInfo::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();
     }
 
     #[test]
+    #[cfg(feature = "arbitrary")]
     fn test_arbitrary_l2_block_info() {
+        use arbitrary::Arbitrary;
+        use rand::Rng;
         let mut bytes = [0u8; 1024];
         rand::rng().fill(bytes.as_mut_slice());
         L2BlockInfo::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();
@@ -199,6 +295,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_deserialize_block_info() {
         let block_info = BlockInfo {
             hash: B256::from([1; 32]),
@@ -219,6 +316,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_deserialize_block_info_with_hex() {
         let block_info = BlockInfo {
             hash: B256::from([1; 32]),
@@ -239,6 +337,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_deserialize_l2_block_info() {
         let l2_block_info = L2BlockInfo {
             block_info: BlockInfo {
@@ -270,6 +369,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_deserialize_l2_block_info_hex() {
         let l2_block_info = L2BlockInfo {
             block_info: BlockInfo {

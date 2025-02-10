@@ -344,27 +344,21 @@ mod test {
     use alloy_primitives::{address, b256};
 
     #[test]
-    fn bedrock_l1_block_info_invalid_len() {
+    fn test_l1_block_info_invalid_len() {
         let err = L1BlockInfoBedrock::decode_calldata(&[0xde, 0xad]);
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
             "Invalid data length: Invalid calldata length for Bedrock L1 info transaction, expected 260, got 2"
         );
-    }
 
-    #[test]
-    fn ecotone_l1_block_info_invalid_len() {
         let err = L1BlockInfoEcotone::decode_calldata(&[0xde, 0xad]);
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
             "Invalid data length: Invalid calldata length for Ecotone L1 info transaction, expected 164, got 2"
         );
-    }
 
-    #[test]
-    fn interop_l1_block_info_invalid_len() {
         let err = L1BlockInfoInterop::decode_calldata(&[0xde, 0xad]);
         assert!(err.is_err());
         assert_eq!(
@@ -374,7 +368,7 @@ mod test {
     }
 
     #[test]
-    fn test_l1_block_info_tx_block_hash_bedrock() {
+    fn test_l1_block_info_tx_block_hash() {
         let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
             block_hash: b256!("392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc"),
             ..Default::default()
@@ -383,10 +377,7 @@ mod test {
             bedrock.block_hash(),
             b256!("392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc")
         );
-    }
 
-    #[test]
-    fn test_l1_block_info_tx_block_hash_ecotone() {
         let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
             block_hash: b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3"),
             ..Default::default()
@@ -395,10 +386,7 @@ mod test {
             ecotone.block_hash(),
             b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3")
         );
-    }
 
-    #[test]
-    fn test_l1_block_info_tx_block_hash_interop() {
         let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop {
             block_hash: b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3"),
             ..Default::default()
@@ -407,6 +395,130 @@ mod test {
             interop.block_hash(),
             b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3")
         );
+    }
+
+    #[test]
+    fn test_decode_calldata_invalid_selector() {
+        let err = L1BlockInfoTx::decode_calldata(&[0xde, 0xad, 0xbe, 0xef]);
+        assert_eq!(err, Err(DecodeError::InvalidSelector));
+    }
+
+    #[test]
+    fn test_l1_block_info_id() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
+            number: 123,
+            block_hash: b256!("392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc"),
+            ..Default::default()
+        });
+        assert_eq!(
+            bedrock.id(),
+            BlockNumHash {
+                number: 123,
+                hash: b256!("392012032675be9f94aae5ab442de73c5f4fb1bf30fa7dd0d2442239899a40fc")
+            }
+        );
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            number: 456,
+            block_hash: b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3"),
+            ..Default::default()
+        });
+        assert_eq!(
+            ecotone.id(),
+            BlockNumHash {
+                number: 456,
+                hash: b256!("1c4c84c50740386c7dc081efddd644405f04cde73e30a2e381737acce9f5add3")
+            }
+        );
+
+        let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop {
+            number: 789,
+            block_hash: b256!("4f98b83baf52c498b49bfff33e59965b27da7febbea9a2fcc4719d06dc06932a"),
+            ..Default::default()
+        });
+        assert_eq!(
+            interop.id(),
+            BlockNumHash {
+                number: 789,
+                hash: b256!("4f98b83baf52c498b49bfff33e59965b27da7febbea9a2fcc4719d06dc06932a")
+            }
+        );
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            number: 101112,
+            block_hash: b256!("4f98b83baf52c498b49bfff33e59965b27da7febbea9a2fcc4719d06dc06932a"),
+            ..Default::default()
+        });
+        assert_eq!(
+            isthmus.id(),
+            BlockNumHash {
+                number: 101112,
+                hash: b256!("4f98b83baf52c498b49bfff33e59965b27da7febbea9a2fcc4719d06dc06932a")
+            }
+        );
+    }
+
+    #[test]
+    fn test_l1_block_info_sequence_number() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
+            sequence_number: 123,
+            ..Default::default()
+        });
+        assert_eq!(bedrock.sequence_number(), 123);
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            sequence_number: 456,
+            ..Default::default()
+        });
+        assert_eq!(ecotone.sequence_number(), 456);
+
+        let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop {
+            sequence_number: 789,
+            ..Default::default()
+        });
+        assert_eq!(interop.sequence_number(), 789);
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            sequence_number: 101112,
+            ..Default::default()
+        });
+        assert_eq!(isthmus.sequence_number(), 101112);
+    }
+
+    #[test]
+    fn test_operator_fee_constant() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock::default());
+        assert_eq!(bedrock.operator_fee_constant(), 0);
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
+        assert_eq!(ecotone.operator_fee_constant(), 0);
+
+        let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop::default());
+        assert_eq!(interop.operator_fee_constant(), 0);
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            operator_fee_constant: 123,
+            ..Default::default()
+        });
+        assert_eq!(isthmus.operator_fee_constant(), 123);
+    }
+
+    #[test]
+    fn test_operator_fee_scalar() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock::default());
+        assert_eq!(bedrock.operator_fee_scalar(), 0);
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
+        assert_eq!(ecotone.operator_fee_scalar(), 0);
+
+        let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop::default());
+        assert_eq!(interop.operator_fee_scalar(), 0);
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            operator_fee_scalar: 123,
+            ..Default::default()
+        });
+        assert_eq!(isthmus.operator_fee_scalar(), 123);
     }
 
     #[test]
@@ -422,6 +534,10 @@ mod test {
         let interop =
             L1BlockInfoTx::Interop(L1BlockInfoInterop { base_fee: 789, ..Default::default() });
         assert_eq!(interop.l1_base_fee(), U256::from(789));
+
+        let isthmus =
+            L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus { base_fee: 101112, ..Default::default() });
+        assert_eq!(isthmus.l1_base_fee(), U256::from(101112));
     }
 
     #[test]
@@ -440,6 +556,9 @@ mod test {
 
         let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop::default());
         assert_eq!(interop.l1_fee_overhead(), U256::ZERO);
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus::default());
+        assert_eq!(isthmus.l1_fee_overhead(), U256::ZERO);
     }
 
     #[test]
@@ -461,6 +580,12 @@ mod test {
             ..Default::default()
         });
         assert_eq!(interop.l1_fee_scalar(), U256::from(789));
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            base_fee_scalar: 101112,
+            ..Default::default()
+        });
+        assert_eq!(isthmus.l1_fee_scalar(), U256::from(101112));
     }
 
     #[test]
@@ -475,6 +600,12 @@ mod test {
         let interop =
             L1BlockInfoTx::Interop(L1BlockInfoInterop { blob_base_fee: 789, ..Default::default() });
         assert_eq!(interop.blob_base_fee(), U256::from(789));
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            blob_base_fee: 101112,
+            ..Default::default()
+        });
+        assert_eq!(isthmus.blob_base_fee(), U256::from(101112));
     }
 
     #[test]
@@ -493,6 +624,12 @@ mod test {
             ..Default::default()
         });
         assert_eq!(interop.blob_base_fee_scalar(), U256::from(789));
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            blob_base_fee_scalar: 101112,
+            ..Default::default()
+        });
+        assert_eq!(isthmus.blob_base_fee_scalar(), U256::from(101112));
     }
 
     #[test]
@@ -508,6 +645,9 @@ mod test {
 
         let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone::default());
         assert!(!ecotone.empty_scalars());
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus::default());
+        assert!(!isthmus.empty_scalars());
     }
 
     #[test]

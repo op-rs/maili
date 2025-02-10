@@ -20,6 +20,14 @@ where
     value.as_ref().first() == Some(&0x7E)
 }
 
+/// Returns if the given `value` is a [`TxType::Eip7702`] transaction.
+pub fn starts_with_7702_tx<B>(value: &B) -> bool
+where
+    B: AsRef<[u8]>,
+{
+    value.as_ref().first() == Some(&(TxType::Eip7702 as u8))
+}
+
 /// Converts the [OpBlock] to a partial [SystemConfig].
 pub fn to_system_config(
     block: &OpBlock,

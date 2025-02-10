@@ -69,6 +69,7 @@ impl TryFrom<&SystemConfigLog> for OperatorFeeUpdate {
 mod tests {
     use super::*;
     use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloc::vec;
     use alloy_primitives::{hex, Address, Bytes, Log, LogData, B256};
 
     #[test]

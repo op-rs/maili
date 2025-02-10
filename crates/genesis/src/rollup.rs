@@ -141,7 +141,7 @@ pub struct RollupConfig {
     pub interop_message_expiry_window: u64,
 }
 
-#[cfg(any(test, feature = "arbitrary"))]
+#[cfg(feature = "arbitrary")]
 impl<'a> arbitrary::Arbitrary<'a> for RollupConfig {
     fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
         use crate::{
@@ -370,16 +370,19 @@ impl RollupConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{SystemConfig, OP_MAINNET_BASE_FEE_PARAMS, OP_MAINNET_BASE_FEE_PARAMS_CANYON};
-    use alloy_eips::BlockNumHash;
     #[cfg(feature = "serde")]
-    use alloy_primitives::U256;
-    use alloy_primitives::{address, b256};
-    use arbitrary::Arbitrary;
-    use rand::Rng;
+    use crate::{SystemConfig, OP_MAINNET_BASE_FEE_PARAMS, OP_MAINNET_BASE_FEE_PARAMS_CANYON};
+    #[cfg(feature = "serde")]
+    use alloy_eips::BlockNumHash;
+    use alloy_primitives::address;
+    #[cfg(feature = "serde")]
+    use alloy_primitives::{b256, U256};
 
     #[test]
+    #[cfg(feature = "arbitrary")]
     fn test_arbitrary_rollup_config() {
+        use arbitrary::Arbitrary;
+        use rand::Rng;
         let mut bytes = [0u8; 1024];
         rand::rng().fill(bytes.as_mut_slice());
         RollupConfig::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();

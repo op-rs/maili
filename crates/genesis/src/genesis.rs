@@ -18,7 +18,7 @@ pub struct ChainGenesis {
     pub system_config: Option<SystemConfig>,
 }
 
-#[cfg(any(test, feature = "arbitrary"))]
+#[cfg(feature = "arbitrary")]
 impl<'a> arbitrary::Arbitrary<'a> for ChainGenesis {
     fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
         let system_config = Option::<SystemConfig>::arbitrary(u)?;

@@ -6,6 +6,11 @@ fn main() {
     // Get the directory of this file from the environment
     let src_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
 
+    // Check if the filesystem is read-only
+    if std::path::Path::new(&src_dir).metadata().unwrap().permissions().readonly() {
+        return;
+    }
+
     // Check if the `superchain-registry` directory exists
     let superchain_registry = format!("{}/superchain-registry", src_dir);
     if !std::path::Path::new(&superchain_registry).exists() {

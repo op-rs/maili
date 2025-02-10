@@ -4,7 +4,7 @@ use alloy_eips::BlockNumHash;
 use alloy_primitives::{address, b256, uint};
 use maili_genesis::{
     ChainGenesis, RollupConfig, SystemConfig, BASE_SEPOLIA_BASE_FEE_PARAMS,
-    BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON,
+    BASE_SEPOLIA_BASE_FEE_PARAMS_CANYON, DEFAULT_INTEROP_MESSAGE_EXPIRY_WINDOW,
 };
 
 /// The [RollupConfig] for Base Sepolia.
@@ -57,4 +57,5 @@ pub const BASE_SEPOLIA_CONFIG: RollupConfig = RollupConfig {
     superchain_config_address: Some(address!("C2Be75506d5724086DEB7245bd260Cc9753911Be")),
     da_challenge_address: None,
     blobs_enabled_l1_timestamp: None,
+    interop_message_expiry_window: DEFAULT_INTEROP_MESSAGE_EXPIRY_WINDOW,
 };

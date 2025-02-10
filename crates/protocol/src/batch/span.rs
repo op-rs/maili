@@ -271,6 +271,11 @@ impl SpanBatch {
                     warn!("sequencers may not embed any deposits into batch data, but found tx that has one, tx_index: {}", tx_index);
                     return BatchValidity::Drop;
                 }
+
+                // If isthmus is not active yet and the transaction is a 7702, drop the batch.
+                if !cfg.is_isthmus_active(batch.timestamp) && crate::starts_with_7702_tx(tx_bytes) {
+                    return BatchValidity::Drop;
+                }
             }
         }
 

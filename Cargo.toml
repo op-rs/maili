@@ -3,7 +3,7 @@ members = ["crates/*"]
 resolver = "2"
 
 [workspace.package]
-version = "0.2.5"
+version = "0.2.6"
 edition = "2021"
 rust-version = "1.81"
 authors = ["Alloy Contributors"]
@@ -36,12 +36,12 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [workspace.dependencies]
 # Workspace
-maili-rpc = { version = "0.2.5", path = "crates/rpc", default-features = false }
-maili-serde = { version = "0.2.5", path = "crates/serde", default-features = false }
-maili-interop = { version = "0.2.5", path = "crates/interop", default-features = false }
-maili-genesis = { version = "0.2.5", path = "crates/genesis", default-features = false }
-maili-protocol = { version = "0.2.5", path = "crates/protocol", default-features = false }
-maili-registry = { version = "0.2.5", path = "crates/registry", default-features = false }
+maili-rpc = { version = "0.2.6", path = "crates/rpc", default-features = false }
+maili-serde = { version = "0.2.6", path = "crates/serde", default-features = false }
+maili-interop = { version = "0.2.6", path = "crates/interop", default-features = false }
+maili-genesis = { version = "0.2.6", path = "crates/genesis", default-features = false }
+maili-protocol = { version = "0.2.6", path = "crates/protocol", default-features = false }
+maili-registry = { version = "0.2.6", path = "crates/registry", default-features = false }
 
 # OP Alloy
 op-alloy-flz = { version = "0.10.3", default-features = false }

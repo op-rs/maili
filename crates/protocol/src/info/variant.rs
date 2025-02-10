@@ -28,7 +28,7 @@ pub(crate) const L1_INFO_DEPOSITOR_ADDRESS: Address =
 ///
 /// This transaction always sits at the top of the block, and alters the `L1 Block` contract's
 /// knowledge of the L1 chain.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Eq, PartialEq, Copy)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum L1BlockInfoTx {
     /// A Bedrock L1 info transaction
@@ -536,7 +536,7 @@ mod test {
     }
 
     #[test]
-    fn bedrock_l1_block_info_tx_roundtrip() {
+    fn test_bedrock_l1_block_info_tx_roundtrip() {
         let expected = L1BlockInfoBedrock {
             number: 18334955,
             time: 1697121143,
@@ -558,7 +558,7 @@ mod test {
     }
 
     #[test]
-    fn ecotone_l1_block_info_tx_roundtrip() {
+    fn test_ecotone_l1_block_info_tx_roundtrip() {
         let expected = L1BlockInfoEcotone {
             number: 19655712,
             time: 1713121139,
@@ -583,7 +583,7 @@ mod test {
     }
 
     #[test]
-    fn interop_l1_block_info_tx_roundtrip() {
+    fn test_interop_l1_block_info_tx_roundtrip() {
         let expected = L1BlockInfoInterop {
             number: 0,
             time: 1737075512,
@@ -606,7 +606,7 @@ mod test {
     }
 
     #[test]
-    fn try_new_with_deposit_tx_bedrock() {
+    fn test_try_new_bedrock() {
         let rollup_config = RollupConfig::default();
         let system_config = SystemConfig::default();
         let sequence_number = 0;
@@ -637,7 +637,7 @@ mod test {
     }
 
     #[test]
-    fn try_new_with_deposit_tx_ecotone() {
+    fn test_try_new_ecotone() {
         let rollup_config = RollupConfig { ecotone_time: Some(1), ..Default::default() };
         let system_config = SystemConfig::default();
         let sequence_number = 0;
@@ -680,7 +680,7 @@ mod test {
     }
 
     #[test]
-    fn try_new_with_deposit_tx_interop() {
+    fn test_try_new_interop() {
         let rollup_config = RollupConfig { interop_time: Some(1), ..Default::default() };
         let system_config = SystemConfig::default();
         let sequence_number = 0;
@@ -720,5 +720,100 @@ mod test {
             u32::from_be_bytes(scalar[28..32].try_into().expect("Failed to parse base fee scalar"));
         assert_eq!(l1_info.blob_base_fee_scalar, blob_base_fee_scalar);
         assert_eq!(l1_info.base_fee_scalar, base_fee_scalar);
+    }
+
+    #[test]
+    fn test_try_new_isthmus() {
+        let rollup_config = RollupConfig { isthmus_time: Some(1), ..Default::default() };
+        let system_config = SystemConfig {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            operator_fee_scalar: Some(0xabcd),
+            operator_fee_constant: Some(0xdcba),
+            ..Default::default()
+        };
+        let sequence_number = 0;
+        let l1_header = Header {
+            number: 19655712,
+            timestamp: 1713121139,
+            base_fee_per_gas: Some(10445852825),
+            ..Default::default()
+        };
+        let l2_block_time = 0xFF;
+
+        let l1_info = L1BlockInfoTx::try_new(
+            &rollup_config,
+            &system_config,
+            sequence_number,
+            &l1_header,
+            l2_block_time,
+        )
+        .unwrap();
+
+        assert!(matches!(l1_info, L1BlockInfoTx::Isthmus(_)));
+
+        let scalar = system_config.scalar.to_be_bytes::<32>();
+        let blob_base_fee_scalar = (scalar[0] == L1BlockInfoInterop::L1_SCALAR)
+            .then(|| {
+                u32::from_be_bytes(
+                    scalar[24..28].try_into().expect("Failed to parse L1 blob base fee scalar"),
+                )
+            })
+            .unwrap_or_default();
+        let base_fee_scalar =
+            u32::from_be_bytes(scalar[28..32].try_into().expect("Failed to parse base fee scalar"));
+
+        assert_eq!(
+            l1_info,
+            L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+                number: l1_header.number,
+                time: l1_header.timestamp,
+                base_fee: l1_header.base_fee_per_gas.unwrap_or(0),
+                block_hash: l1_header.hash_slow(),
+                sequence_number,
+                batcher_address: system_config.batcher_address,
+                blob_base_fee: l1_header.blob_fee(BlobParams::cancun()).unwrap_or(1),
+                blob_base_fee_scalar,
+                base_fee_scalar,
+                operator_fee_scalar: system_config.operator_fee_scalar.unwrap_or_default(),
+                operator_fee_constant: system_config.operator_fee_constant.unwrap_or_default(),
+            })
+        );
+    }
+
+    #[test]
+    fn test_try_new_with_deposit_tx() {
+        let rollup_config = RollupConfig { isthmus_time: Some(1), ..Default::default() };
+        let system_config = SystemConfig {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            operator_fee_scalar: Some(0xabcd),
+            operator_fee_constant: Some(0xdcba),
+            ..Default::default()
+        };
+        let sequence_number = 0;
+        let l1_header = Header {
+            number: 19655712,
+            timestamp: 1713121139,
+            base_fee_per_gas: Some(10445852825),
+            ..Default::default()
+        };
+        let l2_block_time = 0xFF;
+
+        let (l1_info, deposit_tx) = L1BlockInfoTx::try_new_with_deposit_tx(
+            &rollup_config,
+            &system_config,
+            sequence_number,
+            &l1_header,
+            l2_block_time,
+        )
+        .unwrap();
+
+        assert!(matches!(l1_info, L1BlockInfoTx::Isthmus(_)));
+        assert_eq!(deposit_tx.from, L1_INFO_DEPOSITOR_ADDRESS);
+        assert_eq!(deposit_tx.to, TxKind::Call(L1_BLOCK_ADDRESS));
+        assert_eq!(deposit_tx.mint, None);
+        assert_eq!(deposit_tx.value, U256::ZERO);
+        assert_eq!(deposit_tx.gas_limit, REGOLITH_SYSTEM_TX_GAS);
+        assert!(!deposit_tx.is_system_transaction);
+        assert_eq!(deposit_tx.input, l1_info.encode_calldata());
     }
 }

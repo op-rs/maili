@@ -3,7 +3,7 @@
 use alloc::string::String;
 
 /// An error type for parsing L1 block info transactions.
-#[derive(Debug, thiserror::Error, Copy, Clone)]
+#[derive(Debug, thiserror::Error, PartialEq, Eq, Copy, Clone)]
 pub enum BlockInfoError {
     /// Failed to parse the L1 blob base fee scalar.
     #[error("Failed to parse the L1 blob base fee scalar")]
@@ -26,7 +26,7 @@ pub enum BlockInfoError {
 }
 
 /// An error decoding an L1 block info transaction.
-#[derive(Debug, Eq, PartialEq, thiserror::Error)]
+#[derive(Debug, Eq, PartialEq, Clone, thiserror::Error)]
 pub enum DecodeError {
     /// Invalid selector for the L1 info transaction.
     #[error("Invalid L1 info transaction selector")]

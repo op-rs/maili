@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.4](https://github.com/op-rs/maili
-/releases/tag/v0.2.4) - 2025-02-10
+## [0.2.5](https://github.com/op-rs/maili
+/releases/tag/v0.2.5) - 2025-02-10
 
 ### Bug Fixes
 
@@ -151,6 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [genesis] Add optional interop message expiry window field ([#208](https://github.com/op-rs/maili/issues/208))
 - [protocol] Pre-isthmus, Invalidate Single Batches with EIP-7702 txs ([#199](https://github.com/op-rs/maili/issues/199))
 - Code Coverage ([#184](https://github.com/op-rs/maili/issues/184))
 - Add predeploy module ([#166](https://github.com/op-rs/maili/issues/166))
@@ -482,6 +483,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- 0.2.4 ([#207](https://github.com/op-rs/maili/issues/207))
 - [BOT] Update Submodules ([#204](https://github.com/op-rs/maili/issues/204))
 - [BOT] Update Submodules ([#200](https://github.com/op-rs/maili/issues/200))
 - 0.2.3 ([#198](https://github.com/op-rs/maili/issues/198))

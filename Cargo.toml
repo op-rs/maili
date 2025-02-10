@@ -44,10 +44,10 @@ maili-protocol = { version = "0.2.3", path = "crates/protocol", default-features
 maili-registry = { version = "0.2.3", path = "crates/registry", default-features = false }
 
 # OP Alloy
-op-alloy-flz = { version = "0.10.2", default-features = false }
-op-alloy-consensus = { version = "0.10.2", default-features = false }
-op-alloy-rpc-jsonrpsee = { version = "0.10.2", default-features = false }
-op-alloy-rpc-types-engine = { version = "0.10.2", default-features = false }
+op-alloy-flz = { version = "0.10.3", default-features = false }
+op-alloy-consensus = { version = "0.10.3", default-features = false }
+op-alloy-rpc-jsonrpsee = { version = "0.10.3", default-features = false }
+op-alloy-rpc-types-engine = { version = "0.10.3", default-features = false }
 
 # Alloy
 alloy-eips = { version = "0.11.0", default-features = false }

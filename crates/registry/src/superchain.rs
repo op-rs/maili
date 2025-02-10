@@ -61,6 +61,7 @@ impl Registry {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::string::{String, ToString};
     use alloy_primitives::address;
     use maili_genesis::{AddressList, Roles, SuperchainLevel, OP_MAINNET_BASE_FEE_CONFIG};
 

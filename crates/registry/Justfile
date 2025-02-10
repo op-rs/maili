@@ -6,7 +6,7 @@ default:
 
 # Generate file bindings
 bind:
-  cargo build
+  MAILI_BIND=true cargo build
 
 # Update the `superchain-registry` git submodule source
 source:

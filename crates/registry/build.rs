@@ -3,13 +3,15 @@
 use maili_genesis::{ChainConfig, Superchain, SuperchainConfig, Superchains};
 
 fn main() {
-    // Get the directory of this file from the environment
-    let src_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-
-    // Check if the filesystem is read-only
-    if std::path::Path::new(&src_dir).metadata().unwrap().permissions().readonly() {
+    // If the `MAILI_BIND` environment variable is _not_ set, then return early.
+    let maili_bind: bool =
+        std::env::var("MAILI_BIND").unwrap_or_else(|_| "false".to_string()) == "true";
+    if !maili_bind {
         return;
     }
+
+    // Get the directory of this file from the environment
+    let src_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
 
     // Check if the `superchain-registry` directory exists
     let superchain_registry = format!("{}/superchain-registry", src_dir);

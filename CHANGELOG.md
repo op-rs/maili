@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.3](https://github.com/op-rs/maili
-/releases/tag/v0.2.3) - 2025-02-07
+## [0.2.4](https://github.com/op-rs/maili
+/releases/tag/v0.2.4) - 2025-02-10
 
 ### Bug Fixes
 
+- [protocol] Pre-Holocene SB Invalidation for EIP-7702 ([#206](https://github.com/op-rs/maili/issues/206))
 - [protocol] Operator Fees in System Config ([#187](https://github.com/op-rs/maili/issues/187))
 - [registry] Serialization of Chain Config ([#179](https://github.com/op-rs/maili/issues/179))
 - [superchain] Bad Superchain Types ([#178](https://github.com/op-rs/maili/issues/178))
@@ -108,6 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+- Bump op-alloy deps ([#205](https://github.com/op-rs/maili/issues/205))
 - Alloy Dep Bump ([#162](https://github.com/op-rs/maili/issues/162))
 - Bump alloy 0.11 op-alloy 0.10 ([#151](https://github.com/op-rs/maili/issues/151))
 - Update Dependencies ([#141](https://github.com/op-rs/maili/issues/141))
@@ -149,6 +151,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Features
 
+- [protocol] Pre-isthmus, Invalidate Single Batches with EIP-7702 txs ([#199](https://github.com/op-rs/maili/issues/199))
 - Code Coverage ([#184](https://github.com/op-rs/maili/issues/184))
 - Add predeploy module ([#166](https://github.com/op-rs/maili/issues/166))
 - [protocol] Operator Fee ([#10](https://github.com/op-rs/maili/issues/10))
@@ -295,6 +298,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Miscellaneous Tasks
 
+- [protocol] SingleBatch Validation Tests ([#201](https://github.com/op-rs/maili/issues/201))
+- [protocol] Single Batch Validation Tests ([#202](https://github.com/op-rs/maili/issues/202))
 - [protocol] Test Coverage for Outputting a Frame ([#197](https://github.com/op-rs/maili/issues/197))
 - [genesis] Operator Fee Update Tests ([#196](https://github.com/op-rs/maili/issues/196))
 - [genesis] Gas Limit Update Tests ([#195](https://github.com/op-rs/maili/issues/195))
@@ -477,6 +482,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
+- [BOT] Update Submodules ([#204](https://github.com/op-rs/maili/issues/204))
+- [BOT] Update Submodules ([#200](https://github.com/op-rs/maili/issues/200))
+- 0.2.3 ([#198](https://github.com/op-rs/maili/issues/198))
 - 0.2.2 ([#183](https://github.com/op-rs/maili/issues/183))
 - [BOT] Update Submodules ([#175](https://github.com/op-rs/maili/issues/175))
 - [BOT] Update Submodules ([#174](https://github.com/op-rs/maili/issues/174))

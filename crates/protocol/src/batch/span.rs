@@ -271,6 +271,15 @@ impl SpanBatch {
                     warn!("sequencers may not embed any deposits into batch data, but found tx that has one, tx_index: {}", tx_index);
                     return BatchValidity::Drop;
                 }
+
+                // If isthmus is not active yet and the transaction is a 7702, drop the batch.
+                if !cfg.is_isthmus_active(batch.timestamp) && crate::starts_with_7702_tx(tx_bytes) {
+                    warn!(
+                        "EIP-7702 transactions are not supported pre-isthmus. tx_index: {}",
+                        tx_index
+                    );
+                    return BatchValidity::Drop;
+                }
             }
         }
 
@@ -1600,6 +1609,75 @@ mod tests {
         let logs = trace_store.get_by_level(Level::WARN);
         assert_eq!(logs.len(), 1);
         assert!(logs[0].contains("sequencers may not embed any deposits into batch data, but found tx that has one, tx_index: 0"));
+    }
+
+    #[tokio::test]
+    async fn test_check_batch_with_eip7702_tx() {
+        let trace_store: TraceStorage = Default::default();
+        let layer = CollectingLayer::new(trace_store.clone());
+        tracing_subscriber::Registry::default().with(layer).init();
+
+        let cfg = RollupConfig {
+            seq_window_size: 100,
+            max_sequencer_drift: 100,
+            delta_time: Some(0),
+            block_time: 10,
+            ..Default::default()
+        };
+        let l1_block_hash =
+            b256!("3333333333333333333333333333333333333333000000000000000000000000");
+        let block =
+            BlockInfo { number: 11, timestamp: 10, hash: l1_block_hash, ..Default::default() };
+        let second_block =
+            BlockInfo { number: 12, timestamp: 21, hash: l1_block_hash, ..Default::default() };
+        let l1_blocks = vec![block, second_block];
+        let parent_hash = b256!("1111111111111111111111111111111111111111000000000000000000000000");
+        let l2_safe_head = L2BlockInfo {
+            block_info: BlockInfo {
+                number: 41,
+                timestamp: 10,
+                hash: parent_hash,
+                ..Default::default()
+            },
+            l1_origin: BlockNumHash { number: 9, ..Default::default() },
+            ..Default::default()
+        };
+        let inclusion_block = BlockInfo { number: 50, ..Default::default() };
+        let l2_block = L2BlockInfo {
+            block_info: BlockInfo { number: 40, ..Default::default() },
+            ..Default::default()
+        };
+        let mut fetcher: TestBatchValidator =
+            TestBatchValidator { blocks: vec![l2_block], ..Default::default() };
+        let filler_bytes = Bytes::copy_from_slice(&[EIP1559_TX_TYPE_ID]);
+        let first = SpanBatchElement {
+            epoch_num: 10,
+            timestamp: 20,
+            transactions: vec![filler_bytes.clone()],
+        };
+        let second = SpanBatchElement {
+            epoch_num: 10,
+            timestamp: 20,
+            transactions: vec![Bytes::copy_from_slice(&[alloy_consensus::TxType::Eip7702 as u8])],
+        };
+        let third =
+            SpanBatchElement { epoch_num: 11, timestamp: 20, transactions: vec![filler_bytes] };
+        let batch = SpanBatch {
+            batches: vec![first, second, third],
+            parent_check: FixedBytes::<20>::from_slice(&parent_hash[..20]),
+            l1_origin_check: FixedBytes::<20>::from_slice(&l1_block_hash[..20]),
+            txs: SpanBatchTransactions::default(),
+            ..Default::default()
+        };
+        assert_eq!(
+            batch.check_batch(&cfg, &l1_blocks, l2_safe_head, &inclusion_block, &mut fetcher).await,
+            BatchValidity::Drop
+        );
+        let logs = trace_store.get_by_level(Level::WARN);
+        assert_eq!(logs.len(), 1);
+        assert!(
+            logs[0].contains("EIP-7702 transactions are not supported pre-isthmus. tx_index: 0")
+        );
     }
 
     #[tokio::test]

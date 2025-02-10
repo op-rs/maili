@@ -35,3 +35,35 @@ pub fn closing_deposit_context_tx(
 
     deposit_tx.seal_slow()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::L1BlockInfoBedrock;
+    use alloy_primitives::{Address, Bytes, B256};
+
+    #[test]
+    fn test_closing_deposit() {
+        let bedrock_info_tx = L1BlockInfoBedrock {
+            number: 1,
+            time: 2,
+            base_fee: 3,
+            block_hash: B256::from([4; 32]),
+            sequence_number: 5,
+            batcher_address: Address::from([6; 20]),
+            l1_fee_overhead: U256::from(7),
+            l1_fee_scalar: U256::from(8),
+        };
+        let l1_info = L1BlockInfoTx::Bedrock(bedrock_info_tx);
+
+        let sequence_number = 9;
+        let deposit_tx = closing_deposit_context_tx(&l1_info, sequence_number);
+
+        assert_eq!(deposit_tx.from, L1_INFO_DEPOSITOR_ADDRESS);
+        assert_eq!(deposit_tx.to, TxKind::Call(L1_BLOCK_ADDRESS));
+        assert_eq!(deposit_tx.value, U256::ZERO);
+        assert_eq!(deposit_tx.gas_limit, 36_000);
+        assert!(!deposit_tx.is_system_transaction);
+        assert_eq!(deposit_tx.input, Bytes::from(DEPOSIT_CONTEXT_SELECTOR));
+    }
+}

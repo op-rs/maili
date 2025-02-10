@@ -54,6 +54,7 @@ impl TryFrom<&SystemConfigLog> for BatcherUpdate {
 mod tests {
     use super::*;
     use crate::{CONFIG_UPDATE_EVENT_VERSION_0, CONFIG_UPDATE_TOPIC};
+    use alloc::vec;
     use alloy_primitives::{address, hex, Bytes, Log, LogData, B256};
 
     #[test]

@@ -10,7 +10,7 @@ use crate::{
 
 /// System configuration.
 #[derive(Debug, Copy, Clone, Default, Hash, Eq, PartialEq)]
-#[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct SystemConfig {
@@ -127,10 +127,9 @@ mod test {
     use crate::CONFIG_UPDATE_EVENT_VERSION_0;
     use alloc::vec;
     use alloy_primitives::{address, b256, hex, LogData, B256};
-    use arbitrary::Arbitrary;
-    use rand::Rng;
 
     #[test]
+    #[cfg(feature = "serde")]
     fn test_system_config_alias() {
         let sc_str: &'static str = r#"{
           "batcherAddress": "0x6887246668a3b87F54DeB3b94Ba47a6f63F32985",
@@ -152,7 +151,10 @@ mod test {
     }
 
     #[test]
+    #[cfg(feature = "arbitrary")]
     fn test_arbitrary_system_config() {
+        use arbitrary::Arbitrary;
+        use rand::Rng;
         let mut bytes = [0u8; 1024];
         rand::rng().fill(bytes.as_mut_slice());
         SystemConfig::arbitrary(&mut arbitrary::Unstructured::new(&bytes)).unwrap();

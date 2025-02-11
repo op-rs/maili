@@ -9,7 +9,7 @@ use op_alloy_consensus::OpBlock;
 
 /// Block Header Info
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(any(test, feature = "arbitrary"), derive(arbitrary::Arbitrary))]
+#[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 #[derive(Debug, Clone, Copy, Eq, Hash, PartialEq, Default)]
 #[cfg_attr(feature = "serde", serde(rename_all = "camelCase"))]
 pub struct BlockInfo {
@@ -78,7 +78,7 @@ pub struct L2BlockInfo {
     pub seq_num: u64,
 }
 
-#[cfg(any(test, feature = "arbitrary"))]
+#[cfg(feature = "arbitrary")]
 impl arbitrary::Arbitrary<'_> for L2BlockInfo {
     fn arbitrary(g: &mut arbitrary::Unstructured<'_>) -> arbitrary::Result<Self> {
         Ok(Self {
@@ -173,6 +173,7 @@ impl L2BlockInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::string::ToString;
     use alloy_consensus::{Header, TxEnvelope};
     use alloy_primitives::b256;
 

@@ -1,18 +1,21 @@
-use crate::supervisor::{Supervisor, SupervisorError};
+//! Interop Traits
+
+use crate::SupervisorApiClient;
 use alloc::boxed::Box;
 use alloy_primitives::Log;
 use alloy_sol_types::SolEvent;
 use async_trait::async_trait;
 use core::time::Duration;
+use jsonrpsee::core::ClientError;
 use maili_interop::{ExecutingMessage, SafetyLevel, CROSS_L2_INBOX_ADDRESS};
 use tokio::time::error::Elapsed;
 
 /// Failures occurring during validation of [`ExecutingMessage`]s.
 #[derive(thiserror::Error, Debug)]
 pub enum ExecutingMessageValidatorError {
-    /// Failure during Supervisor's validation of [`ExecutingMessage`]s.
+    /// Failure from the [`SupervisorApiClient`] when validating messages.
     #[error("Supervisor determined messages are invalid: {0}")]
-    SupervisorValidationError(#[from] SupervisorError),
+    SupervisorRpcError(#[from] ClientError),
 
     /// Message validation against the Supervisor took longer than allowed.
     #[error("Message validation timed out: {0}")]
@@ -22,8 +25,8 @@ pub enum ExecutingMessageValidatorError {
 /// Interacts with a Supervisor to validate [`ExecutingMessage`]s.
 #[async_trait]
 pub trait ExecutingMessageValidator {
-    /// RPC client to Supervisor instance used for [`ExecutingMessage`] validation.
-    type SupervisorClient: Supervisor<Error = SupervisorError> + Sync;
+    /// The supervisor client type.
+    type SupervisorClient: SupervisorApiClient + Send + Sync;
 
     /// Default duration that message validation is not allowed to exceed.
     const DEFAULT_TIMEOUT: Duration;
@@ -50,9 +53,9 @@ pub trait ExecutingMessageValidator {
         // Construct the future to validate all messages using supervisor.
         let fut = async {
             supervisor
-                .check_messages(messages, safety)
+                .check_messages(messages.to_vec(), safety)
                 .await
-                .map_err(ExecutingMessageValidatorError::SupervisorValidationError)
+                .map_err(ExecutingMessageValidatorError::SupervisorRpcError)
         };
 
         // Await the validation future with timeout.

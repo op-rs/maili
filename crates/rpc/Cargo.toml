@@ -42,7 +42,6 @@ op-alloy-rpc-jsonrpsee = { workspace = true, optional = true }
 thiserror = { workspace = true, optional = true }
 async-trait = { workspace = true, optional = true }
 maili-interop = { workspace = true, features = ["serde"], optional = true }
-alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
 
 # `client` feature
 tokio = { workspace = true, features = ["time"], optional = true }
@@ -74,7 +73,6 @@ serde = [
 interop = [
     "dep:thiserror",
     "dep:maili-interop",
-    "dep:alloy-rpc-client",
     "dep:async-trait",
 ]
 jsonrpsee = [

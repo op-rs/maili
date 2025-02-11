@@ -1,5 +1,5 @@
 //! Isthmus L1 Block Info transaction types.
-use alloc::{format, string::ToString, vec::Vec};
+use alloc::{format, vec::Vec};
 use alloy_primitives::{Address, Bytes, B256, U256};
 
 use crate::DecodeError;
@@ -87,37 +87,57 @@ impl L1BlockInfoIsthmus {
                 r.len()
             )));
         }
-        let base_fee_scalar = u32::from_be_bytes(r[4..8].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for base fee scalar".to_string())
-        })?);
-        let blob_base_fee_scalar = u32::from_be_bytes(r[8..12].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for blob base fee scalar".to_string())
-        })?);
-        let sequence_number = u64::from_be_bytes(r[12..20].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for sequence number".to_string())
-        })?);
-        let time =
-            u64::from_be_bytes(r[20..28].try_into().map_err(|_| {
-                DecodeError::ParseError("Conversion error for timestamp".to_string())
-            })?);
-        let number = u64::from_be_bytes(r[28..36].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for L1 block number".to_string())
-        })?);
-        let base_fee =
-            u64::from_be_bytes(r[60..68].try_into().map_err(|_| {
-                DecodeError::ParseError("Conversion error for base fee".to_string())
-            })?);
-        let blob_base_fee = u128::from_be_bytes(r[84..100].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for blob base fee".to_string())
-        })?);
+
+        // SAFETY: For all below slice operations, the full
+        //         length is validated above to be `176`.
+
+        // SAFETY: 4 bytes are copied directly into the array
+        let mut base_fee_scalar = [0u8; 4];
+        base_fee_scalar.copy_from_slice(&r[4..8]);
+        let base_fee_scalar = u32::from_be_bytes(base_fee_scalar);
+
+        // SAFETY: 4 bytes are copied directly into the array
+        let mut blob_base_fee_scalar = [0u8; 4];
+        blob_base_fee_scalar.copy_from_slice(&r[8..12]);
+        let blob_base_fee_scalar = u32::from_be_bytes(blob_base_fee_scalar);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut sequence_number = [0u8; 8];
+        sequence_number.copy_from_slice(&r[12..20]);
+        let sequence_number = u64::from_be_bytes(sequence_number);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut time = [0u8; 8];
+        time.copy_from_slice(&r[20..28]);
+        let time = u64::from_be_bytes(time);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut number = [0u8; 8];
+        number.copy_from_slice(&r[28..36]);
+        let number = u64::from_be_bytes(number);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut base_fee = [0u8; 8];
+        base_fee.copy_from_slice(&r[60..68]);
+        let base_fee = u64::from_be_bytes(base_fee);
+
+        // SAFETY: 16 bytes are copied directly into the array
+        let mut blob_base_fee = [0u8; 16];
+        blob_base_fee.copy_from_slice(&r[84..100]);
+        let blob_base_fee = u128::from_be_bytes(blob_base_fee);
+
         let block_hash = B256::from_slice(r[100..132].as_ref());
         let batcher_address = Address::from_slice(r[144..164].as_ref());
-        let operator_fee_scalar = u32::from_be_bytes(r[164..168].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for operator fee scalar".to_string())
-        })?);
-        let operator_fee_constant = u64::from_be_bytes(r[168..176].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for operator fee constant".to_string())
-        })?);
+
+        // SAFETY: 4 bytes are copied directly into the array
+        let mut operator_fee_scalar = [0u8; 4];
+        operator_fee_scalar.copy_from_slice(&r[164..168]);
+        let operator_fee_scalar = u32::from_be_bytes(operator_fee_scalar);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut operator_fee_constant = [0u8; 8];
+        operator_fee_constant.copy_from_slice(&r[168..176]);
+        let operator_fee_constant = u64::from_be_bytes(operator_fee_constant);
 
         Ok(Self {
             number,
@@ -132,5 +152,45 @@ impl L1BlockInfoIsthmus {
             operator_fee_scalar,
             operator_fee_constant,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_decode_calldata_invalid_length() {
+        let r = vec![0u8; 1];
+        assert_eq!(
+            L1BlockInfoIsthmus::decode_calldata(&r),
+            Err(DecodeError::InvalidLength(format!(
+                "Invalid calldata length for Isthmus L1 info transaction, expected {}, got {}",
+                L1BlockInfoIsthmus::L1_INFO_TX_LEN,
+                r.len()
+            )))
+        );
+    }
+
+    #[test]
+    fn test_l1_block_info_roundtrip_calldata_encoding() {
+        let info = L1BlockInfoIsthmus {
+            number: 1,
+            time: 2,
+            base_fee: 3,
+            block_hash: B256::from([4; 32]),
+            sequence_number: 5,
+            batcher_address: Address::from_slice(&[6; 20]),
+            blob_base_fee: 7,
+            blob_base_fee_scalar: 8,
+            base_fee_scalar: 9,
+            operator_fee_scalar: 10,
+            operator_fee_constant: 11,
+        };
+
+        let calldata = info.encode_calldata();
+        let decoded_info = L1BlockInfoIsthmus::decode_calldata(&calldata).unwrap();
+
+        assert_eq!(info, decoded_info);
     }
 }

@@ -1,6 +1,6 @@
 //! This module contains the eip7702 transaction data type for a span batch.
 
-use crate::{SpanBatchError, SpanDecodingError};
+use crate::SpanBatchError;
 use alloc::vec::Vec;
 use alloy_consensus::{SignableTransaction, Signed, TxEip7702};
 use alloy_eips::{eip2930::AccessList, eip7702::SignedAuthorization};
@@ -34,19 +34,22 @@ impl SpanBatchEip7702TransactionData {
         chain_id: u64,
         signature: Signature,
     ) -> Result<Signed<TxEip7702>, SpanBatchError> {
+        // SAFETY: A U256 as be bytes is always 32 bytes long.
+        let mut max_fee_per_gas = [0u8; 16];
+        max_fee_per_gas.copy_from_slice(&self.max_fee_per_gas.to_be_bytes::<32>()[16..]);
+        let max_fee_per_gas = u128::from_be_bytes(max_fee_per_gas);
+
+        // SAFETY: A U256 as be bytes is always 32 bytes long.
+        let mut max_priority_fee_per_gas = [0u8; 16];
+        max_priority_fee_per_gas
+            .copy_from_slice(&self.max_priority_fee_per_gas.to_be_bytes::<32>()[16..]);
+        let max_priority_fee_per_gas = u128::from_be_bytes(max_priority_fee_per_gas);
+
         let eip7702_tx = TxEip7702 {
             chain_id,
             nonce,
-            max_fee_per_gas: u128::from_be_bytes(
-                self.max_fee_per_gas.to_be_bytes::<32>()[16..].try_into().map_err(|_| {
-                    SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionData)
-                })?,
-            ),
-            max_priority_fee_per_gas: u128::from_be_bytes(
-                self.max_priority_fee_per_gas.to_be_bytes::<32>()[16..].try_into().map_err(
-                    |_| SpanBatchError::Decoding(SpanDecodingError::InvalidTransactionData),
-                )?,
-            ),
+            max_fee_per_gas,
+            max_priority_fee_per_gas,
             gas_limit: gas,
             to,
             value: self.value,
@@ -66,6 +69,32 @@ mod test {
     use alloc::vec::Vec;
     use alloy_rlp::{Decodable, Encodable};
     use revm::primitives::Authorization;
+
+    #[test]
+    fn test_eip7702_to_signed_tx() {
+        let authorization = Authorization {
+            chain_id: U256::from(0x01),
+            address: Address::left_padding_from(&[0x01, 0x02, 0x03]),
+            nonce: 2,
+        };
+        let signature = Signature::test_signature();
+        let arb_authorization: SignedAuthorization = authorization.into_signed(signature);
+
+        let variable_fee_tx = SpanBatchEip7702TransactionData {
+            value: U256::from(0xFF),
+            max_fee_per_gas: U256::from(0xEE),
+            max_priority_fee_per_gas: U256::from(0xDD),
+            data: Bytes::from(alloc::vec![0x01, 0x02, 0x03]),
+            access_list: AccessList::default(),
+            authorization_list: vec![arb_authorization],
+        };
+
+        let signed_tx = variable_fee_tx
+            .to_signed_tx(0, 0, Address::ZERO, 0, Signature::test_signature())
+            .unwrap();
+
+        assert_eq!(*signed_tx.signature(), Signature::test_signature());
+    }
 
     #[test]
     fn encode_eip7702_tx_data_roundtrip() {

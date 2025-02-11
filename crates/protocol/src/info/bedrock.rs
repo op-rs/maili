@@ -1,6 +1,6 @@
 //! Contains bedrock-specific L1 block info types.
 
-use alloc::{format, string::ToString, vec::Vec};
+use alloc::vec::Vec;
 use alloy_primitives::{Address, Bytes, B256, U256};
 
 use crate::DecodeError;
@@ -68,31 +68,34 @@ impl L1BlockInfoBedrock {
     /// Decodes the [L1BlockInfoBedrock] object from ethereum transaction calldata.
     pub fn decode_calldata(r: &[u8]) -> Result<Self, DecodeError> {
         if r.len() != Self::L1_INFO_TX_LEN {
-            return Err(DecodeError::InvalidLength(format!(
-                "Invalid calldata length for Bedrock L1 info transaction, expected {}, got {}",
-                Self::L1_INFO_TX_LEN,
-                r.len()
-            )));
+            return Err(DecodeError::InvalidBedrockLength(Self::L1_INFO_TX_LEN, r.len()));
         }
 
-        let number = u64::from_be_bytes(
-            r[28..36]
-                .try_into()
-                .map_err(|_| DecodeError::ParseError("Conversion error for number".to_string()))?,
-        );
-        let time = u64::from_be_bytes(
-            r[60..68]
-                .try_into()
-                .map_err(|_| DecodeError::ParseError("Conversion error for time".to_string()))?,
-        );
-        let base_fee =
-            u64::from_be_bytes(r[92..100].try_into().map_err(|_| {
-                DecodeError::ParseError("Conversion error for base fee".to_string())
-            })?);
+        // SAFETY: For all below slice operations, the full
+        //         length is validated above to be `260`.
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut number = [0u8; 8];
+        number.copy_from_slice(&r[28..36]);
+        let number = u64::from_be_bytes(number);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut time = [0u8; 8];
+        time.copy_from_slice(&r[60..68]);
+        let time = u64::from_be_bytes(time);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut base_fee = [0u8; 8];
+        base_fee.copy_from_slice(&r[92..100]);
+        let base_fee = u64::from_be_bytes(base_fee);
+
         let block_hash = B256::from_slice(r[100..132].as_ref());
-        let sequence_number = u64::from_be_bytes(r[156..164].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for sequence number".to_string())
-        })?);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut sequence_number = [0u8; 8];
+        sequence_number.copy_from_slice(&r[156..164]);
+        let sequence_number = u64::from_be_bytes(sequence_number);
+
         let batcher_address = Address::from_slice(r[176..196].as_ref());
         let l1_fee_overhead = U256::from_be_slice(r[196..228].as_ref());
         let l1_fee_scalar = U256::from_be_slice(r[228..260].as_ref());
@@ -107,5 +110,37 @@ impl L1BlockInfoBedrock {
             l1_fee_overhead,
             l1_fee_scalar,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_decode_calldata_bedrock_invalid_length() {
+        let r = vec![0u8; 1];
+        assert_eq!(
+            L1BlockInfoBedrock::decode_calldata(&r),
+            Err(DecodeError::InvalidBedrockLength(L1BlockInfoBedrock::L1_INFO_TX_LEN, r.len(),))
+        );
+    }
+
+    #[test]
+    fn test_l1_block_info_bedrock_roundtrip_calldata_encoding() {
+        let info = L1BlockInfoBedrock {
+            number: 1,
+            time: 2,
+            base_fee: 3,
+            block_hash: B256::from([4u8; 32]),
+            sequence_number: 5,
+            batcher_address: Address::from([6u8; 20]),
+            l1_fee_overhead: U256::from(7),
+            l1_fee_scalar: U256::from(8),
+        };
+
+        let calldata = info.encode_calldata();
+        let decoded_info = L1BlockInfoBedrock::decode_calldata(&calldata).unwrap();
+        assert_eq!(info, decoded_info);
     }
 }

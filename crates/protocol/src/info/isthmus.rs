@@ -1,5 +1,6 @@
-//! Isthmus L1 Block Info transaction types.
-use alloc::{format, vec::Vec};
+//! Isthmus L1 Bl{format, ock Info transaction types.
+
+use alloc::vec::Vec;
 use alloy_primitives::{Address, Bytes, B256, U256};
 
 use crate::DecodeError;
@@ -81,11 +82,7 @@ impl L1BlockInfoIsthmus {
     /// Decodes the [L1BlockInfoIsthmus] object from ethereum transaction calldata.
     pub fn decode_calldata(r: &[u8]) -> Result<Self, DecodeError> {
         if r.len() != Self::L1_INFO_TX_LEN {
-            return Err(DecodeError::InvalidLength(format!(
-                "Invalid calldata length for Isthmus L1 info transaction, expected {}, got {}",
-                Self::L1_INFO_TX_LEN,
-                r.len()
-            )));
+            return Err(DecodeError::InvalidIsthmusLength(Self::L1_INFO_TX_LEN, r.len()));
         }
 
         // SAFETY: For all below slice operations, the full
@@ -160,20 +157,16 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_decode_calldata_invalid_length() {
+    fn test_decode_calldata_isthmus_invalid_length() {
         let r = vec![0u8; 1];
         assert_eq!(
             L1BlockInfoIsthmus::decode_calldata(&r),
-            Err(DecodeError::InvalidLength(format!(
-                "Invalid calldata length for Isthmus L1 info transaction, expected {}, got {}",
-                L1BlockInfoIsthmus::L1_INFO_TX_LEN,
-                r.len()
-            )))
+            Err(DecodeError::InvalidIsthmusLength(L1BlockInfoIsthmus::L1_INFO_TX_LEN, r.len()))
         );
     }
 
     #[test]
-    fn test_l1_block_info_roundtrip_calldata_encoding() {
+    fn test_l1_block_info_isthmus_roundtrip_calldata_encoding() {
         let info = L1BlockInfoIsthmus {
             number: 1,
             time: 2,

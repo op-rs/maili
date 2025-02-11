@@ -1,7 +1,7 @@
 //! Contains ecotone-specific L1 block info types.
 
 use crate::DecodeError;
-use alloc::{format, string::ToString, vec::Vec};
+use alloc::vec::Vec;
 use alloy_primitives::{Address, Bytes, B256, U256};
 
 /// Represents the fields within an Ecotone L1 block info transaction.
@@ -84,41 +84,53 @@ impl L1BlockInfoEcotone {
     /// Decodes the [L1BlockInfoEcotone] object from ethereum transaction calldata.
     pub fn decode_calldata(r: &[u8]) -> Result<Self, DecodeError> {
         if r.len() != Self::L1_INFO_TX_LEN {
-            return Err(DecodeError::InvalidLength(format!(
-                "Invalid calldata length for Ecotone L1 info transaction, expected {}, got {}",
-                Self::L1_INFO_TX_LEN,
-                r.len()
-            )));
+            return Err(DecodeError::InvalidEcotoneLength(Self::L1_INFO_TX_LEN, r.len()));
         }
-        let base_fee_scalar = u32::from_be_bytes(r[4..8].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for base fee scalar".to_string())
-        })?);
-        let blob_base_fee_scalar = u32::from_be_bytes(r[8..12].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for blob base fee scalar".to_string())
-        })?);
-        let sequence_number = u64::from_be_bytes(r[12..20].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for sequence number".to_string())
-        })?);
-        let timestamp =
-            u64::from_be_bytes(r[20..28].try_into().map_err(|_| {
-                DecodeError::ParseError("Conversion error for timestamp".to_string())
-            })?);
-        let l1_block_number = u64::from_be_bytes(r[28..36].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for L1 block number".to_string())
-        })?);
-        let base_fee =
-            u64::from_be_bytes(r[60..68].try_into().map_err(|_| {
-                DecodeError::ParseError("Conversion error for base fee".to_string())
-            })?);
-        let blob_base_fee = u128::from_be_bytes(r[84..100].try_into().map_err(|_| {
-            DecodeError::ParseError("Conversion error for blob base fee".to_string())
-        })?);
+
+        // SAFETY: For all below slice operations, the full
+        //         length is validated above to be `164`.
+
+        // SAFETY: 4 bytes are copied directly into the array
+        let mut base_fee_scalar = [0u8; 4];
+        base_fee_scalar.copy_from_slice(&r[4..8]);
+        let base_fee_scalar = u32::from_be_bytes(base_fee_scalar);
+
+        // SAFETY: 4 bytes are copied directly into the array
+        let mut blob_base_fee_scalar = [0u8; 4];
+        blob_base_fee_scalar.copy_from_slice(&r[8..12]);
+        let blob_base_fee_scalar = u32::from_be_bytes(blob_base_fee_scalar);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut sequence_number = [0u8; 8];
+        sequence_number.copy_from_slice(&r[12..20]);
+        let sequence_number = u64::from_be_bytes(sequence_number);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut time = [0u8; 8];
+        time.copy_from_slice(&r[20..28]);
+        let time = u64::from_be_bytes(time);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut number = [0u8; 8];
+        number.copy_from_slice(&r[28..36]);
+        let number = u64::from_be_bytes(number);
+
+        // SAFETY: 8 bytes are copied directly into the array
+        let mut base_fee = [0u8; 8];
+        base_fee.copy_from_slice(&r[60..68]);
+        let base_fee = u64::from_be_bytes(base_fee);
+
+        // SAFETY: 16 bytes are copied directly into the array
+        let mut blob_base_fee = [0u8; 16];
+        blob_base_fee.copy_from_slice(&r[84..100]);
+        let blob_base_fee = u128::from_be_bytes(blob_base_fee);
+
         let block_hash = B256::from_slice(r[100..132].as_ref());
         let batcher_address = Address::from_slice(r[144..164].as_ref());
 
         Ok(Self {
-            number: l1_block_number,
-            time: timestamp,
+            number,
+            time,
             base_fee,
             block_hash,
             sequence_number,
@@ -133,5 +145,40 @@ impl L1BlockInfoEcotone {
             // Notice: the `l1_fee_overhead` field is not included in the calldata.
             l1_fee_overhead: U256::ZERO,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_decode_calldata_ecotone_invalid_length() {
+        let r = vec![0u8; 1];
+        assert_eq!(
+            L1BlockInfoEcotone::decode_calldata(&r),
+            Err(DecodeError::InvalidEcotoneLength(L1BlockInfoEcotone::L1_INFO_TX_LEN, r.len(),))
+        );
+    }
+
+    #[test]
+    fn test_l1_block_info_ecotone_roundtrip_calldata_encoding() {
+        let info = L1BlockInfoEcotone {
+            number: 1,
+            time: 2,
+            base_fee: 3,
+            block_hash: B256::from([4u8; 32]),
+            sequence_number: 5,
+            batcher_address: Address::from([6u8; 20]),
+            blob_base_fee: 7,
+            blob_base_fee_scalar: 8,
+            base_fee_scalar: 9,
+            empty_scalars: false,
+            l1_fee_overhead: U256::ZERO,
+        };
+
+        let calldata = info.encode_calldata();
+        let decoded_info = L1BlockInfoEcotone::decode_calldata(&calldata).unwrap();
+        assert_eq!(info, decoded_info);
     }
 }

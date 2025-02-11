@@ -1,7 +1,5 @@
 //! Contains error types specific to the L1 block info transaction.
 
-use alloc::string::String;
-
 /// An error type for parsing L1 block info transactions.
 #[derive(Debug, thiserror::Error, PartialEq, Eq, Copy, Clone)]
 pub enum BlockInfoError {
@@ -28,13 +26,26 @@ pub enum BlockInfoError {
 /// An error decoding an L1 block info transaction.
 #[derive(Debug, Eq, PartialEq, Clone, thiserror::Error)]
 pub enum DecodeError {
+    /// Missing selector bytes.
+    #[error("The provided calldata is too short, missing the 4 selector bytes")]
+    MissingSelector,
     /// Invalid selector for the L1 info transaction.
     #[error("Invalid L1 info transaction selector")]
     InvalidSelector,
-    /// Parse error for the L1 info transaction.
-    #[error("Parse error: {0}")]
-    ParseError(String),
-    /// Invalid length for the L1 info transaction.
-    #[error("Invalid data length: {0}")]
-    InvalidLength(String),
+    /// Invalid length for the L1 info bedrock transaction.
+    /// Arguments are the expected length and the actual length.
+    #[error("Invalid bedrock data length. Expected {0}, got {1}")]
+    InvalidBedrockLength(usize, usize),
+    /// Invalid length for the L1 info ecotone transaction.
+    /// Arguments are the expected length and the actual length.
+    #[error("Invalid ecotone data length. Expected {0}, got {1}")]
+    InvalidEcotoneLength(usize, usize),
+    /// Invalid length for the L1 info isthmus transaction.
+    /// Arguments are the expected length and the actual length.
+    #[error("Invalid isthmus data length. Expected {0}, got {1}")]
+    InvalidIsthmusLength(usize, usize),
+    /// Invalid length for the L1 info interop transaction.
+    /// Arguments are the expected length and the actual length.
+    #[error("Invalid interop data length. Expected {0}, got {1}")]
+    InvalidInteropLength(usize, usize),
 }

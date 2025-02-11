@@ -547,6 +547,43 @@ mod tests {
     }
 
     #[test]
+    fn test_peek() {
+        let first_element = SpanBatchElement { epoch_num: 10, ..Default::default() };
+        let second_element = SpanBatchElement { epoch_num: 11, ..Default::default() };
+        let batch =
+            SpanBatch { batches: vec![first_element, second_element], ..Default::default() };
+        assert_eq!(batch.peek(0).epoch_num, 11);
+        assert_eq!(batch.peek(1).epoch_num, 10);
+    }
+
+    #[test]
+    fn test_append_empty_singular_batch() {
+        let mut batch = SpanBatch::default();
+        let singular_batch = SingleBatch {
+            epoch_num: 10,
+            epoch_hash: FixedBytes::from([17u8; 32]),
+            parent_hash: FixedBytes::from([17u8; 32]),
+            timestamp: 10,
+            transactions: vec![],
+        };
+        assert!(batch.append_singular_batch(singular_batch, 0).is_ok());
+        assert_eq!(batch.batches.len(), 1);
+        assert_eq!(batch.origin_bits.get_bit(0), Some(1));
+        assert_eq!(batch.block_tx_counts, vec![0]);
+        assert_eq!(batch.txs.tx_datas.len(), 0);
+
+        // Add another empty single batch.
+        let singular_batch = SingleBatch {
+            epoch_num: 11,
+            epoch_hash: FixedBytes::from([17u8; 32]),
+            parent_hash: FixedBytes::from([17u8; 32]),
+            timestamp: 20,
+            transactions: vec![],
+        };
+        assert!(batch.append_singular_batch(singular_batch, 1).is_ok());
+    }
+
+    #[test]
     fn test_check_origin_hash() {
         let l1_origin_check = FixedBytes::from([17u8; 20]);
         let hash = b256!("1111111111111111111111111111111111111111000000000000000000000000");

@@ -66,7 +66,7 @@ impl SpanBatchEip7702TransactionData {
 mod test {
     use super::*;
     use crate::SpanBatchTransactionData;
-    use alloc::vec::Vec;
+    use alloc::{vec, vec::Vec};
     use alloy_rlp::{Decodable, Encodable};
     use revm::primitives::Authorization;
 

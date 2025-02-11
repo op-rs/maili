@@ -175,6 +175,7 @@ impl SingleBatch {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
     use alloy_consensus::{SignableTransaction, TxEip1559, TxEip7702, TxEnvelope};
     use alloy_eips::eip2718::{Decodable2718, Encodable2718};
     use alloy_primitives::{Address, PrimitiveSignature, Sealed, TxKind, U256};

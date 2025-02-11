@@ -151,6 +151,7 @@ impl L1BlockInfoEcotone {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
 
     #[test]
     fn test_decode_calldata_ecotone_invalid_length() {

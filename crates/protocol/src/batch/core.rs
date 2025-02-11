@@ -74,6 +74,7 @@ impl Batch {
 mod tests {
     use super::*;
     use crate::{SpanBatchElement, SpanBatchError, SpanBatchTransactions};
+    use alloc::{vec, vec::Vec};
     use alloy_consensus::{Signed, TxEip2930, TxEnvelope};
     use alloy_primitives::{address, hex, Bytes, PrimitiveSignature as Signature, TxKind};
 

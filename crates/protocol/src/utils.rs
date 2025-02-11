@@ -154,6 +154,7 @@ pub fn read_tx_data(r: &mut &[u8]) -> Result<(Vec<u8>, TxType), SpanBatchError> 
 mod tests {
     use super::*;
     use crate::test_utils::{RAW_BEDROCK_INFO_TX, RAW_ECOTONE_INFO_TX, RAW_ISTHMUS_INFO_TX};
+    use alloc::vec;
     use alloy_eips::eip1898::BlockNumHash;
     use alloy_primitives::{address, hex, uint, U256};
     use maili_genesis::ChainGenesis;
@@ -223,7 +224,6 @@ mod tests {
 
     #[test]
     fn test_to_system_config_non_deposit() {
-        use alloy_primitives::U256;
         let block = OpBlock {
             header: alloy_consensus::Header { number: 1, ..Default::default() },
             body: alloy_consensus::BlockBody {
@@ -235,7 +235,7 @@ mod tests {
                             gas_price: 1,
                             gas_limit: 1,
                             to: alloy_primitives::TxKind::Create,
-                            value: alloy_primitives::U256::ZERO,
+                            value: U256::ZERO,
                             input: alloy_primitives::Bytes::new(),
                         },
                         alloy_primitives::PrimitiveSignature::new(U256::ZERO, U256::ZERO, false),

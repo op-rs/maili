@@ -13,7 +13,6 @@ highlight = "all"
 [licenses]
 unlicensed = "deny"
 confidence-threshold = 0.9
-# copyleft = "deny"
 
 allow = [
     "MIT",
@@ -55,8 +54,3 @@ license-files = [{ path = "LICENSE", hash = 0x001c7e6c }]
 [sources]
 unknown-registry = "deny"
 unknown-git = "deny"
-# TODO: Remove `alloy-rs/core` once alloy-contract is stable. This is only used in tests for `sol!`.
-allow-git = [
-    "https://github.com/alloy-rs/core",
-    "https://github.com/alloy-rs/alloy",
-]

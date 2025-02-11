@@ -341,6 +341,12 @@ mod test {
     use alloy_primitives::{address, b256};
 
     #[test]
+    fn test_l1_block_info_missing_selector() {
+        let err = L1BlockInfoTx::decode_calldata(&[]);
+        assert_eq!(err, Err(DecodeError::MissingSelector));
+    }
+
+    #[test]
     fn test_l1_block_info_tx_invalid_len() {
         let calldata = L1BlockInfoBedrock::L1_INFO_TX_SELECTOR
             .into_iter()
@@ -582,6 +588,33 @@ mod test {
     }
 
     #[test]
+    fn test_batcher_address() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(bedrock.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(ecotone.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+
+        let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(interop.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(isthmus.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+    }
+
+    #[test]
     fn test_l1_fee_scalar() {
         let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
             l1_fee_scalar: U256::from(123),
@@ -692,7 +725,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(decoded.encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
+        assert_eq!(L1BlockInfoTx::Isthmus(decoded).encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
     }
 
     #[test]
@@ -714,7 +747,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(RAW_BEDROCK_INFO_TX, decoded.encode_calldata().as_ref());
+        assert_eq!(L1BlockInfoTx::Bedrock(decoded).encode_calldata().as_ref(), RAW_BEDROCK_INFO_TX);
     }
 
     #[test]
@@ -739,7 +772,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(decoded.encode_calldata().as_ref(), RAW_ECOTONE_INFO_TX);
+        assert_eq!(L1BlockInfoTx::Ecotone(decoded).encode_calldata().as_ref(), RAW_ECOTONE_INFO_TX);
     }
 
     #[test]
@@ -762,7 +795,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(decoded.encode_calldata().as_ref(), RAW_INTEROP_INFO_TX);
+        assert_eq!(L1BlockInfoTx::Interop(decoded).encode_calldata().as_ref(), RAW_INTEROP_INFO_TX);
     }
 
     #[test]

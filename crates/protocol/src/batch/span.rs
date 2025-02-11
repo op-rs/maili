@@ -806,7 +806,6 @@ mod tests {
         ));
     }
 
-    #[ignore]
     #[tokio::test]
     async fn test_check_batch_overlapping_blocks_tx_mismatch() {
         let trace_store: TraceStorage = Default::default();
@@ -834,7 +833,22 @@ mod tests {
             op_blocks: vec![OpBlock {
                 header: Header { number: 9, ..Default::default() },
                 body: alloy_consensus::BlockBody {
-                    transactions: vec![],
+                    transactions: vec![op_alloy_consensus::OpTxEnvelope::Eip1559(
+                        alloy_consensus::Signed::new_unchecked(
+                            alloy_consensus::TxEip1559 {
+                                chain_id: 0,
+                                nonce: 0,
+                                gas_limit: 2,
+                                max_fee_per_gas: 1,
+                                max_priority_fee_per_gas: 1,
+                                to: alloy_primitives::TxKind::Create,
+                                value: alloy_primitives::U256::from(3),
+                                ..Default::default()
+                            },
+                            alloy_primitives::PrimitiveSignature::test_signature(),
+                            alloy_primitives::B256::ZERO,
+                        ),
+                    )],
                     ommers: Vec::new(),
                     withdrawals: None,
                 },

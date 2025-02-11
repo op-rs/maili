@@ -94,10 +94,22 @@ pub fn decode_deposit(block_hash: B256, index: usize, log: &Log) -> Result<Bytes
         return Err(DepositError::UnalignedData(log.data.data.len()));
     }
 
-    let from = Address::try_from(&topics[1].as_slice()[12..])
-        .map_err(|_| DepositError::FromDecode(topics[1]))?;
-    let to = Address::try_from(&topics[2].as_slice()[12..])
-        .map_err(|_| DepositError::ToDecode(topics[2]))?;
+    // Validate the `from` address.
+    let mut from_bytes = [0u8; 20];
+    from_bytes.copy_from_slice(&topics[1].as_slice()[12..]);
+    if topics[1].iter().take(12).any(|&b| b != 0) {
+        return Err(DepositError::FromDecode(topics[1]));
+    }
+
+    // Validate the `to` address.
+    let mut to_bytes = [0u8; 20];
+    to_bytes.copy_from_slice(&topics[2].as_slice()[12..]);
+    if topics[2].iter().take(12).any(|&b| b != 0) {
+        return Err(DepositError::ToDecode(topics[2]));
+    }
+
+    let from = Address::from(from_bytes);
+    let to = Address::from(to_bytes);
     let version = log.data.topics()[3];
 
     // Solidity serializes the event's Data field as follows:
@@ -274,12 +286,33 @@ mod test {
     }
 
     #[test]
-    #[ignore]
-    const fn test_decode_deposit_invalid_from() {}
+    fn test_decode_deposit_invalid_from() {
+        let invalid_from =
+            b256!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+        let log = Log {
+            address: Address::default(),
+            data: LogData::new_unchecked(
+                vec![DEPOSIT_EVENT_ABI_HASH, invalid_from, B256::default(), B256::default()],
+                Bytes::from(vec![0u8; 64]),
+            ),
+        };
+        let err = decode_deposit(B256::default(), 0, &log).unwrap_err();
+        assert_eq!(err, DepositError::FromDecode(invalid_from));
+    }
 
     #[test]
-    #[ignore]
-    const fn test_decode_deposit_invalid_to() {}
+    fn test_decode_deposit_invalid_to() {
+        let invalid_to = b256!("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+        let log = Log {
+            address: Address::default(),
+            data: LogData::new_unchecked(
+                vec![DEPOSIT_EVENT_ABI_HASH, B256::default(), invalid_to, B256::default()],
+                Bytes::from(vec![0u8; 64]),
+            ),
+        };
+        let err = decode_deposit(B256::default(), 0, &log).unwrap_err();
+        assert_eq!(err, DepositError::ToDecode(invalid_to));
+    }
 
     #[test]
     fn test_decode_deposit_invalid_opaque_data_offset() {
@@ -353,6 +386,8 @@ mod test {
 
     #[test]
     fn test_decode_deposit_empty_succeeds() {
+        let valid_to = b256!("000000000000000000000000bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
+        let valid_from = b256!("000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
         let mut data = vec![0u8; 192];
         let offset: [u8; 8] = U64::from(32).to_be_bytes();
         data[24..32].copy_from_slice(&offset);
@@ -361,12 +396,12 @@ mod test {
         let log = Log {
             address: Address::default(),
             data: LogData::new_unchecked(
-                vec![DEPOSIT_EVENT_ABI_HASH, B256::default(), B256::default(), B256::default()],
+                vec![DEPOSIT_EVENT_ABI_HASH, valid_from, valid_to, B256::default()],
                 Bytes::from(data),
             ),
         };
         let tx = decode_deposit(B256::default(), 0, &log).unwrap();
-        let raw_hex = hex!("7ef887a0ed428e1c45e1d9561b62834e1a2d3015a0caae3bfdc16b4da059ac885b01a14594000000000000000000000000000000000000000094000000000000000000000000000000000000000080808080b700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+        let raw_hex = hex!("7ef887a0ed428e1c45e1d9561b62834e1a2d3015a0caae3bfdc16b4da059ac885b01a14594ffffffffffffffffffffffffffffffffffffffff94bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb80808080b700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
         let expected = Bytes::from(raw_hex);
         assert_eq!(tx, expected);
     }

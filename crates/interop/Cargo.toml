@@ -54,17 +54,18 @@ std = [
 	"serde?/std",
 	"thiserror/std"
 ]
-interop = [
-	"std",
-	"dep:async-trait",
-	"dep:maili-protocol",
-	"dep:alloy-rpc-client",
-]
 serde = [
 	"dep:serde",
 	"alloy-eips/serde",
 	"alloy-primitives/serde",
 	"alloy-consensus/serde",
+]
+interop = [
+	"std",
+	"serde",
+	"dep:async-trait",
+	"dep:maili-protocol",
+	"dep:alloy-rpc-client",
 ]
 arbitrary = [
 	"std",

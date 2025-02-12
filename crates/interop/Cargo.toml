@@ -52,13 +52,15 @@ std = [
 	"alloy-sol-types/std",
 	"derive_more/std",
 	"serde?/std",
-	"thiserror/std"
+	"thiserror/std",
+	"maili-protocol?/std",
 ]
 serde = [
 	"dep:serde",
 	"alloy-eips/serde",
 	"alloy-primitives/serde",
 	"alloy-consensus/serde",
+	"maili-protocol?/serde",
 ]
 interop = [
 	"std",
@@ -66,7 +68,6 @@ interop = [
 	"dep:async-trait",
 	"dep:maili-protocol",
 	"dep:alloy-rpc-client",
-	"maili-protocol/std",
 ]
 arbitrary = [
 	"std",

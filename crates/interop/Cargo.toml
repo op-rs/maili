@@ -26,6 +26,11 @@ alloy-primitives = { workspace = true, features = ["map"] }
 thiserror.workspace = true
 derive_more = { workspace = true, default-features = false, features = ["from", "as_ref"] }
 
+# `interop` feature
+async-trait = { workspace = true, optional = true }
+maili-protocol = { workspace = true, optional = true }
+alloy-rpc-client = { workspace = true, features = ["reqwest"], optional = true }
+
 # `arbitrary` feature
 arbitrary = { workspace = true, features = ["derive"], optional = true }
 
@@ -47,19 +52,28 @@ std = [
 	"alloy-sol-types/std",
 	"derive_more/std",
 	"serde?/std",
-	"thiserror/std"
+	"thiserror/std",
+	"maili-protocol?/std",
 ]
 serde = [
 	"dep:serde",
 	"alloy-eips/serde",
 	"alloy-primitives/serde",
 	"alloy-consensus/serde",
+	"maili-protocol?/serde",
+]
+interop = [
+	"std",
+	"serde",
+	"dep:async-trait",
+	"dep:maili-protocol",
+	"dep:alloy-rpc-client",
 ]
 arbitrary = [
-  "std",
-  "dep:arbitrary",
-  "alloy-consensus/arbitrary",
-  "alloy-eips/arbitrary",
-  "alloy-primitives/rand",
-  "alloy-primitives/arbitrary",
+	"std",
+	"dep:arbitrary",
+	"alloy-consensus/arbitrary",
+	"alloy-eips/arbitrary",
+	"alloy-primitives/rand",
+	"alloy-primitives/arbitrary",
 ]

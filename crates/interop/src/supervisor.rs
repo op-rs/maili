@@ -1,14 +1,12 @@
 //! Defines the supervisor API and Client.
 
+use crate::{DerivedIdPair, ExecutingMessage, MessageIdentifier, SafetyLevel, SuperRootResponse};
 use alloc::{boxed::Box, vec::Vec};
 use alloy_eips::eip1898::BlockNumHash;
 use alloy_primitives::B256;
 use alloy_rpc_client::ReqwestClient;
 use async_trait::async_trait;
 use derive_more::{Display, From};
-use maili_interop::{
-    DerivedIdPair, ExecutingMessage, MessageIdentifier, SafetyLevel, SuperRootResponse,
-};
 use maili_protocol::BlockInfo;
 
 /// An interface for the `op-supervisor` component of the OP Stack.

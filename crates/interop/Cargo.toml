@@ -66,6 +66,7 @@ interop = [
 	"dep:async-trait",
 	"dep:maili-protocol",
 	"dep:alloy-rpc-client",
+	"maili-protocol/std",
 ]
 arbitrary = [
 	"std",

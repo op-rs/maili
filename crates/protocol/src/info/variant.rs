@@ -337,7 +337,7 @@ mod test {
     use crate::test_utils::{
         RAW_BEDROCK_INFO_TX, RAW_ECOTONE_INFO_TX, RAW_INTEROP_INFO_TX, RAW_ISTHMUS_INFO_TX,
     };
-    use alloc::string::ToString;
+    use alloc::{string::ToString, vec::Vec};
     use alloy_primitives::{address, b256};
 
     #[test]

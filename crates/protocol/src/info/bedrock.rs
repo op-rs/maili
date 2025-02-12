@@ -116,6 +116,7 @@ impl L1BlockInfoBedrock {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
 
     #[test]
     fn test_decode_calldata_bedrock_invalid_length() {

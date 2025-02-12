@@ -134,6 +134,7 @@ impl L1BlockInfoInterop {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
 
     #[test]
     fn test_decode_calldata_interop_invalid_length() {

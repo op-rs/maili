@@ -350,6 +350,7 @@ impl SpanBatchTransactions {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::vec;
     use alloy_consensus::{Signed, TxEip1559, TxEip2930, TxEip7702};
     use alloy_primitives::{address, PrimitiveSignature as Signature, TxKind};
 

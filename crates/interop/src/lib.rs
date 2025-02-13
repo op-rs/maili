@@ -5,9 +5,14 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 #![cfg_attr(docsrs, feature(doc_cfg, doc_auto_cfg))]
-#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(any(feature = "std", feature = "interop")), no_std)]
 
 extern crate alloc;
+
+#[cfg(feature = "interop")]
+mod supervisor;
+#[cfg(feature = "interop")]
+pub use supervisor::{Supervisor, SupervisorClient, SupervisorError};
 
 mod root;
 pub use root::{ChainRootInfo, OutputRootWithChain, SuperRoot, SuperRootResponse};

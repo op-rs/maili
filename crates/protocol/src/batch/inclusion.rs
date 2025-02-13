@@ -47,6 +47,7 @@ impl BatchWithInclusionBlock {
 mod tests {
     use super::*;
     use crate::test_utils::TestBatchValidator;
+    use alloc::vec;
 
     #[tokio::test]
     async fn test_single_batch_with_inclusion_block() {

@@ -547,6 +547,43 @@ mod tests {
     }
 
     #[test]
+    fn test_peek() {
+        let first_element = SpanBatchElement { epoch_num: 10, ..Default::default() };
+        let second_element = SpanBatchElement { epoch_num: 11, ..Default::default() };
+        let batch =
+            SpanBatch { batches: vec![first_element, second_element], ..Default::default() };
+        assert_eq!(batch.peek(0).epoch_num, 11);
+        assert_eq!(batch.peek(1).epoch_num, 10);
+    }
+
+    #[test]
+    fn test_append_empty_singular_batch() {
+        let mut batch = SpanBatch::default();
+        let singular_batch = SingleBatch {
+            epoch_num: 10,
+            epoch_hash: FixedBytes::from([17u8; 32]),
+            parent_hash: FixedBytes::from([17u8; 32]),
+            timestamp: 10,
+            transactions: vec![],
+        };
+        assert!(batch.append_singular_batch(singular_batch, 0).is_ok());
+        assert_eq!(batch.batches.len(), 1);
+        assert_eq!(batch.origin_bits.get_bit(0), Some(1));
+        assert_eq!(batch.block_tx_counts, vec![0]);
+        assert_eq!(batch.txs.tx_datas.len(), 0);
+
+        // Add another empty single batch.
+        let singular_batch = SingleBatch {
+            epoch_num: 11,
+            epoch_hash: FixedBytes::from([17u8; 32]),
+            parent_hash: FixedBytes::from([17u8; 32]),
+            timestamp: 20,
+            transactions: vec![],
+        };
+        assert!(batch.append_singular_batch(singular_batch, 1).is_ok());
+    }
+
+    #[test]
     fn test_check_origin_hash() {
         let l1_origin_check = FixedBytes::from([17u8; 20]);
         let hash = b256!("1111111111111111111111111111111111111111000000000000000000000000");
@@ -806,7 +843,6 @@ mod tests {
         ));
     }
 
-    #[ignore]
     #[tokio::test]
     async fn test_check_batch_overlapping_blocks_tx_mismatch() {
         let trace_store: TraceStorage = Default::default();
@@ -834,7 +870,22 @@ mod tests {
             op_blocks: vec![OpBlock {
                 header: Header { number: 9, ..Default::default() },
                 body: alloy_consensus::BlockBody {
-                    transactions: vec![],
+                    transactions: vec![op_alloy_consensus::OpTxEnvelope::Eip1559(
+                        alloy_consensus::Signed::new_unchecked(
+                            alloy_consensus::TxEip1559 {
+                                chain_id: 0,
+                                nonce: 0,
+                                gas_limit: 2,
+                                max_fee_per_gas: 1,
+                                max_priority_fee_per_gas: 1,
+                                to: alloy_primitives::TxKind::Create,
+                                value: alloy_primitives::U256::from(3),
+                                ..Default::default()
+                            },
+                            alloy_primitives::PrimitiveSignature::test_signature(),
+                            alloy_primitives::B256::ZERO,
+                        ),
+                    )],
                     ommers: Vec::new(),
                     withdrawals: None,
                 },

@@ -1,7 +1,6 @@
 //! Contains the `L1BlockInfoTx` enum, containing different variants of the L1 block info
 //! transaction.
 
-use alloc::{format, string::ToString};
 use alloy_consensus::Header;
 use alloy_eips::{eip7840::BlobParams, BlockNumHash};
 use alloy_primitives::{address, Address, Bytes, Sealable, Sealed, TxKind, B256, U256};
@@ -174,29 +173,27 @@ impl L1BlockInfoTx {
         Ok((l1_info, deposit_tx.seal_slow()))
     }
 
-    /// Decodes the [L1BlockInfoEcotone] object from ethereum transaction calldata.
+    /// Decodes the [L1BlockInfoEcotone] object from Ethereum transaction calldata.
     pub fn decode_calldata(r: &[u8]) -> Result<Self, DecodeError> {
-        let selector = r
-            .get(0..4)
-            .ok_or(DecodeError::ParseError("Slice out of range".to_string()))
-            .and_then(|slice| {
-                slice.try_into().map_err(|_| {
-                    DecodeError::ParseError("Failed to convert 4byte slice to array".to_string())
-                })
-            })?;
+        if r.len() < 4 {
+            return Err(DecodeError::MissingSelector);
+        }
+        // SAFETY: The length of `r` must be at least 4 bytes.
+        let mut selector = [0u8; 4];
+        selector.copy_from_slice(&r[0..4]);
         match selector {
-            L1BlockInfoBedrock::L1_INFO_TX_SELECTOR => L1BlockInfoBedrock::decode_calldata(r)
-                .map(Self::Bedrock)
-                .map_err(|e| DecodeError::ParseError(format!("Bedrock decode error: {}", e))),
-            L1BlockInfoEcotone::L1_INFO_TX_SELECTOR => L1BlockInfoEcotone::decode_calldata(r)
-                .map(Self::Ecotone)
-                .map_err(|e| DecodeError::ParseError(format!("Ecotone decode error: {}", e))),
-            L1BlockInfoInterop::L1_INFO_TX_SELECTOR => L1BlockInfoInterop::decode_calldata(r)
-                .map(Self::Interop)
-                .map_err(|e| DecodeError::ParseError(format!("Interop decode error: {}", e))),
-            L1BlockInfoIsthmus::L1_INFO_TX_SELECTOR => L1BlockInfoIsthmus::decode_calldata(r)
-                .map(Self::Isthmus)
-                .map_err(|e| DecodeError::ParseError(format!("Isthmus decode error: {}", e))),
+            L1BlockInfoBedrock::L1_INFO_TX_SELECTOR => {
+                L1BlockInfoBedrock::decode_calldata(r).map(Self::Bedrock)
+            }
+            L1BlockInfoEcotone::L1_INFO_TX_SELECTOR => {
+                L1BlockInfoEcotone::decode_calldata(r).map(Self::Ecotone)
+            }
+            L1BlockInfoInterop::L1_INFO_TX_SELECTOR => {
+                L1BlockInfoInterop::decode_calldata(r).map(Self::Interop)
+            }
+            L1BlockInfoIsthmus::L1_INFO_TX_SELECTOR => {
+                L1BlockInfoIsthmus::decode_calldata(r).map(Self::Isthmus)
+            }
             _ => Err(DecodeError::InvalidSelector),
         }
     }
@@ -340,30 +337,59 @@ mod test {
     use crate::test_utils::{
         RAW_BEDROCK_INFO_TX, RAW_ECOTONE_INFO_TX, RAW_INTEROP_INFO_TX, RAW_ISTHMUS_INFO_TX,
     };
-    use alloc::string::ToString;
+    use alloc::{string::ToString, vec::Vec};
     use alloy_primitives::{address, b256};
 
     #[test]
-    fn test_l1_block_info_invalid_len() {
-        let err = L1BlockInfoBedrock::decode_calldata(&[0xde, 0xad]);
+    fn test_l1_block_info_missing_selector() {
+        let err = L1BlockInfoTx::decode_calldata(&[]);
+        assert_eq!(err, Err(DecodeError::MissingSelector));
+    }
+
+    #[test]
+    fn test_l1_block_info_tx_invalid_len() {
+        let calldata = L1BlockInfoBedrock::L1_INFO_TX_SELECTOR
+            .into_iter()
+            .chain([0xde, 0xad])
+            .collect::<Vec<u8>>();
+        let err = L1BlockInfoTx::decode_calldata(&calldata);
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
-            "Invalid data length: Invalid calldata length for Bedrock L1 info transaction, expected 260, got 2"
+            "Invalid bedrock data length. Expected 260, got 6"
         );
 
-        let err = L1BlockInfoEcotone::decode_calldata(&[0xde, 0xad]);
+        let calldata = L1BlockInfoEcotone::L1_INFO_TX_SELECTOR
+            .into_iter()
+            .chain([0xde, 0xad])
+            .collect::<Vec<u8>>();
+        let err = L1BlockInfoTx::decode_calldata(&calldata);
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
-            "Invalid data length: Invalid calldata length for Ecotone L1 info transaction, expected 164, got 2"
+            "Invalid ecotone data length. Expected 164, got 6"
         );
 
-        let err = L1BlockInfoInterop::decode_calldata(&[0xde, 0xad]);
+        let calldata = L1BlockInfoInterop::L1_INFO_TX_SELECTOR
+            .into_iter()
+            .chain([0xde, 0xad])
+            .collect::<Vec<u8>>();
+        let err = L1BlockInfoTx::decode_calldata(&calldata);
         assert!(err.is_err());
         assert_eq!(
             err.err().unwrap().to_string(),
-            "Invalid data length: Invalid calldata length for Interop L1 info transaction, expected 164, got 2"
+            "Invalid interop data length. Expected 164, got 6"
+        );
+
+        let calldata = L1BlockInfoIsthmus::L1_INFO_TX_SELECTOR
+            .into_iter()
+            .chain([0xde, 0xad])
+            .collect::<Vec<u8>>();
+        let err = L1BlockInfoTx::decode_calldata(&calldata);
+        assert!(err.is_err());
+        assert_eq!(
+            err.err().unwrap().to_string(),
+            "Invalid isthmus data length. Expected 176, got 6"
         );
     }
 
@@ -562,6 +588,33 @@ mod test {
     }
 
     #[test]
+    fn test_batcher_address() {
+        let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(bedrock.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+
+        let ecotone = L1BlockInfoTx::Ecotone(L1BlockInfoEcotone {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(ecotone.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+
+        let interop = L1BlockInfoTx::Interop(L1BlockInfoInterop {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(interop.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+
+        let isthmus = L1BlockInfoTx::Isthmus(L1BlockInfoIsthmus {
+            batcher_address: address!("6887246668a3b87f54deb3b94ba47a6f63f32985"),
+            ..Default::default()
+        });
+        assert_eq!(isthmus.batcher_address(), address!("6887246668a3b87f54deb3b94ba47a6f63f32985"));
+    }
+
+    #[test]
     fn test_l1_fee_scalar() {
         let bedrock = L1BlockInfoTx::Bedrock(L1BlockInfoBedrock {
             l1_fee_scalar: U256::from(123),
@@ -672,7 +725,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(decoded.encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
+        assert_eq!(L1BlockInfoTx::Isthmus(decoded).encode_calldata().as_ref(), RAW_ISTHMUS_INFO_TX);
     }
 
     #[test]
@@ -694,7 +747,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(RAW_BEDROCK_INFO_TX, decoded.encode_calldata().as_ref());
+        assert_eq!(L1BlockInfoTx::Bedrock(decoded).encode_calldata().as_ref(), RAW_BEDROCK_INFO_TX);
     }
 
     #[test]
@@ -719,7 +772,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(decoded.encode_calldata().as_ref(), RAW_ECOTONE_INFO_TX);
+        assert_eq!(L1BlockInfoTx::Ecotone(decoded).encode_calldata().as_ref(), RAW_ECOTONE_INFO_TX);
     }
 
     #[test]
@@ -742,7 +795,7 @@ mod test {
             panic!("Wrong fork");
         };
         assert_eq!(expected, decoded);
-        assert_eq!(decoded.encode_calldata().as_ref(), RAW_INTEROP_INFO_TX);
+        assert_eq!(L1BlockInfoTx::Interop(decoded).encode_calldata().as_ref(), RAW_INTEROP_INFO_TX);
     }
 
     #[test]

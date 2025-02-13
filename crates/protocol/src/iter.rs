@@ -45,6 +45,7 @@ impl Iterator for FrameIter<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::{vec, vec::Vec};
 
     #[test]
     fn test_iterate_none() {

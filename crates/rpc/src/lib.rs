@@ -45,7 +45,7 @@ pub use api::{
     SupervisorApiServer,
 };
 
-#[cfg(all(feature = "jsonrpsee", feature = "client", feature = "interop"))]
+#[cfg(feature = "interop")]
 mod traits;
-#[cfg(all(feature = "jsonrpsee", feature = "client", feature = "interop"))]
+#[cfg(feature = "interop")]
 pub use traits::{ExecutingMessageValidator, ExecutingMessageValidatorError};

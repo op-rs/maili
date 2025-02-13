@@ -70,25 +70,27 @@ serde = [
 	"op-alloy-rpc-types-engine/serde",
 	"maili-interop?/serde"
 ]
-interop = [
-    "dep:thiserror",
-    "dep:maili-interop",
-    "dep:async-trait",
-]
 jsonrpsee = [
     "serde",
     "dep:maili-genesis",
     "dep:maili-interop",
     "dep:jsonrpsee",
     "dep:getrandom",
-    "dep:alloy-sol-types",
     "dep:op-alloy-rpc-jsonrpsee",
 ]
 client = [
+    "dep:tokio",
+    "dep:jsonrpsee",
     "dep:maili-interop",
-    "jsonrpsee",
     "jsonrpsee/client",
     "jsonrpsee/async-client",
     "op-alloy-rpc-jsonrpsee/client",
-    "tokio",
+]
+interop = [
+    "client",
+    "jsonrpsee",
+    "dep:thiserror",
+    "dep:maili-interop",
+    "dep:async-trait",
+    "dep:alloy-sol-types",
 ]

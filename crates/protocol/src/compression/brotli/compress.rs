@@ -1,7 +1,10 @@
 //! Brotli Compression
 
 use crate::{BrotliLevel, ChannelCompressor, CompressorError, CompressorResult, CompressorWriter};
-use std::vec::Vec;
+use std::{cell::RefCell, io::Write, rc::Rc, vec::Vec};
+
+const DEFAULT_BROTLI_LGWIN: i32 = 22;
+const DEFAULT_BROTLI_BUFFER_SIZE: usize = 4096;
 
 /// A Brotli Compression Error.
 #[derive(thiserror::Error, Debug)]
@@ -14,24 +17,81 @@ pub enum BrotliCompressionError {
     CompressionError(#[from] std::io::Error),
 }
 
-/// The brotli compressor.
 #[derive(Debug, Clone)]
+struct BrotliBuffer {
+    buf: Rc<RefCell<Vec<u8>>>,
+}
+
+impl BrotliBuffer {
+    fn new(capacity: usize) -> Self {
+        Self { buf: Rc::new(RefCell::new(Vec::with_capacity(capacity))) }
+    }
+
+    const fn get(&self) -> &Rc<RefCell<Vec<u8>>> {
+        &self.buf
+    }
+
+    fn len(&self) -> usize {
+        self.buf.borrow().len()
+    }
+}
+impl Write for BrotliBuffer {
+    fn write(&mut self, data: &[u8]) -> std::io::Result<usize> {
+        self.buf.borrow_mut().write(data)
+    }
+    fn flush(&mut self) -> std::io::Result<()> {
+        self.buf.borrow_mut().flush()
+    }
+}
+
+/// The brotli compressor.
 pub struct BrotliCompressor {
-    /// The compressed bytes.
-    compressed: Vec<u8>,
-    /// The raw bytes (need to store on reset).
-    raw: Vec<u8>,
+    /// The buffer to store the compressed data.
+    buffer: BrotliBuffer,
     /// Marks that the compressor is closed.
     closed: bool,
     /// The compression level.
     pub level: BrotliLevel,
+    /// The brotli compressor writer.
+    writer: Option<brotli::CompressorWriter<BrotliBuffer>>,
+}
+
+impl std::fmt::Debug for BrotliCompressor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{{buffer:{:?}, closed:{}, level:{:?}}}",
+            self.buffer.get(),
+            self.closed,
+            self.level
+        )
+    }
+}
+
+impl Clone for BrotliCompressor {
+    fn clone(&self) -> Self {
+        Self { buffer: self.buffer.clone(), closed: self.closed, level: self.level, writer: None }
+    }
 }
 
 impl BrotliCompressor {
     /// Creates a new brotli compressor with the given compression level.
     pub fn new(level: impl Into<BrotliLevel>) -> Self {
         let level = level.into();
-        Self { compressed: Vec::new(), raw: Vec::new(), closed: false, level }
+        let buffer = BrotliBuffer::new(DEFAULT_BROTLI_BUFFER_SIZE);
+        let params = brotli::enc::BrotliEncoderParams {
+            quality: level as i32,
+            lgwin: DEFAULT_BROTLI_LGWIN,
+            ..Default::default()
+        };
+
+        let writer = Some(brotli::CompressorWriter::with_params(
+            buffer.clone(),
+            DEFAULT_BROTLI_BUFFER_SIZE, // Buffer size
+            &params,
+        ));
+
+        Self { buffer, closed: false, level, writer }
     }
 }
 
@@ -41,73 +101,52 @@ impl From<BrotliLevel> for BrotliCompressor {
     }
 }
 
-/// Compresses the given bytes data using the Brotli compressor implemented
-/// in the [`brotli`](https://crates.io/crates/brotli) crate.
-///
-/// Note: The level must be between 0 and 11. In Optimism, the levels 9, 10, and 11 are used.
-///       By default, [BrotliLevel::Brotli10] is used.
-#[allow(unused_variables)]
-#[allow(unused_mut)]
-fn compress_brotli(
-    mut input: &[u8],
-    level: BrotliLevel,
-) -> Result<Vec<u8>, BrotliCompressionError> {
-    use brotli::enc::{BrotliCompress, BrotliEncoderParams};
-    let mut output = alloc::vec![];
-    BrotliCompress(
-        &mut input,
-        &mut output,
-        &BrotliEncoderParams { quality: level as i32, ..Default::default() },
-    )?;
-    Ok(output)
-}
-
 impl CompressorWriter for BrotliCompressor {
     fn write(&mut self, data: &[u8]) -> CompressorResult<usize> {
         if self.closed {
             return Err(CompressorError::Brotli);
         }
 
-        // First append the new data to the raw buffer.
-        self.raw.extend_from_slice(data);
+        let writer = self.writer.as_mut().ok_or(CompressorError::Brotli)?;
 
-        // Compress the raw buffer.
-        self.compressed =
-            compress_brotli(&self.raw, self.level).map_err(|_| CompressorError::Brotli)?;
-
-        Ok(data.len())
+        writer.write(data).map_err(|_| CompressorError::Brotli)
     }
 
     fn flush(&mut self) -> CompressorResult<()> {
+        if let Some(writer) = self.writer.as_mut() {
+            writer.flush().map_err(|_| CompressorError::Brotli)?;
+        }
         Ok(())
     }
 
     fn close(&mut self) -> CompressorResult<()> {
         self.flush()?;
+        if let Some(writer) = self.writer.take() {
+            drop(writer); // This should flush the internal brotli buffer
+        }
         self.closed = true;
         Ok(())
     }
 
     fn reset(&mut self) {
         self.closed = false;
-        self.raw.clear();
-        self.compressed.clear();
     }
 
     fn read(&mut self, buf: &mut [u8]) -> CompressorResult<usize> {
-        let len = self.compressed.len().min(buf.len());
-        buf[..len].copy_from_slice(&self.compressed[..len]);
+        let borrowed = self.buffer.get().borrow();
+        let len = borrowed.len().min(buf.len());
+        buf[..len].copy_from_slice(&borrowed[..len]);
         Ok(len)
     }
 
     fn len(&self) -> usize {
-        self.compressed.len()
+        self.buffer.len()
     }
 }
 
 impl ChannelCompressor for BrotliCompressor {
     fn get_compressed(&self) -> Vec<u8> {
-        self.compressed.clone()
+        self.buffer.get().borrow().clone()
     }
 }
 
@@ -139,7 +178,13 @@ mod test {
         compressor.write(&raw_batch_decompressed).unwrap();
         compressor.close().unwrap();
         let compressed = compressor.get_compressed();
-        assert_eq!(compressed, raw_batch);
+        assert!(compressed == raw_batch,
+            "Compression mismatch! Lengths: expected={}, got={}\nFirst bytes: expected={:?}, got={:?}", 
+            raw_batch.len(),
+            compressed.len(),
+            &raw_batch[..20],
+            &compressed[..20]
+        );
     }
 
     #[test]

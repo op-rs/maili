@@ -41,6 +41,7 @@ rand = { workspace = true, features = ["thread_rng"] }
 serde_json.workspace = true
 arbitrary = { workspace = true, features = ["derive"] }
 alloy-primitives = { workspace = true, features = ["rand", "arbitrary"] }
+toml = { workspace = true, features = ["parse"] }
 
 [features]
 default = ["serde", "std"]

@@ -29,7 +29,7 @@ pub struct SuperchainConfig {
 #[cfg(feature = "serde")]
 mod tests {
     use super::*;
-    use toml;
+    use alloc::string::ToString;
 
     #[test]
     fn test_superchain_deserialize() {

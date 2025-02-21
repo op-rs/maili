@@ -1,3 +1,21 @@
+> [!CAUTION]
+>
+> All `maili` crates have been moved to [kona](https://github.com/op-rs/kona).
+>
+> `maili` crates will be remain compatible for a short while, re-exporting
+> their new `kona` counterpart types, but will be deprecated soon. Please
+> migrate over to the kona equivalent repositories.
+>
+> Below outlines the migrated crates.
+>
+> - [`maili-rpc`](https://crates.io/crates/maili-rpc) -> [`kona-rpc`](https://crates.io/crates/kona-rpc)
+> - [`maili-serde`](https://crates.io/crates/maili-serde) -> [`kona-serde`](https://crates.io/crates/kona-serde)
+> - [`maili-genesis`](https://crates.io/crates/maili-genesis) -> [`kona-genesis`](https://crates.io/crates/kona-genesis)
+> - [`maili-interop`](https://crates.io/crates/maili-interop) -> [`kona-interop`](https://crates.io/crates/kona-interop)
+> - [`maili-protocol`](https://crates.io/crates/maili-protocol) -> [`kona-protocol`](https://crates.io/crates/kona-protocol)
+> - [`maili-registry`](https://crates.io/crates/maili-registry) -> [`kona-registry`](https://crates.io/crates/kona-registry)
+
+
 # maili
 
 <a href="https://crates.io/crates/v/maili"><img src="https://img.shields.io/crates/v/maili?label=maili" alt="Maili Crate"></a>
@@ -29,7 +47,7 @@ The following crates are provided by `maili`.
 ## Development Status
 
 > [!WARNING]
-> 
+>
 > `maili` is currently in active development, and is not yet ready for use in production.
 
 
@@ -82,7 +100,7 @@ Licensed under either of <a href="LICENSE-APACHE">Apache License, Version
 2.0</a> or <a href="LICENSE-MIT">MIT license</a> at your option.
 
 > [!NOTE]
-> 
+>
 > Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in these crates by you, as defined in the Apache-2.0 license,
 shall be dual licensed as above, without any additional terms or conditions.
